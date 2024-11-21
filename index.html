@@ -3,75 +3,57 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mr. Afsah's Dashboard</title>
+  <title>Personal Dashboard</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="dashboard">
+    <!-- Header Section -->
     <header class="header">
-      <div class="welcome">
-        <h1>Greetings, Mr. Afsah</h1>
-        <p>Here’s your command center</p>
-      </div>
+      <h1>Welcome to Your Dashboard</h1>
+      <p>Your one-stop location for everything important.</p>
     </header>
 
+    <!-- Content Section -->
     <main class="content">
-      <div class="tile" id="profile">
+      <!-- Tile 1 -->
+      <div class="tile">
         <div class="tile-header">
-          <h2>Profile</h2>
+          <h2>Current Time</h2>
         </div>
         <div class="tile-body">
-          <p>Name: Muhammad Afsah Mumtaz</p>
-          <p>Location: Dubai, UAE</p>
-          <p>Field: IT, AI Development</p>
-          <button>Update Profile</button>
+          <p id="event">Current Time: Loading...</p>
         </div>
       </div>
 
-      <div class="tile" id="shortcuts">
+      <!-- Tile 2 -->
+      <div class="tile">
         <div class="tile-header">
-          <h2>Shortcuts</h2>
+          <h2>Weather</h2>
         </div>
         <div class="tile-body">
-          <button onclick="window.location.href='https://github.com/NAME0x0'">GitHub</button>
-          <button onclick="window.location.href='https://blueskyweb.xyz'">Bluesky</button>
-          <button onclick="window.location.href='https://uiverse.io'">UIverse</button>
+          <p id="weather">Loading weather...</p>
         </div>
       </div>
 
-      <div class="tile" id="tools">
+      <!-- Tile 3 -->
+      <div class="tile">
         <div class="tile-header">
-          <h2>Tools</h2>
+          <h2>Quick Actions</h2>
         </div>
         <div class="tile-body">
-          <p>Access essential productivity tools:</p>
-          <ul>
-            <li><button>Task Manager</button></li>
-            <li><button>Time Tracker</button></li>
-            <li><button>AI Assistant</button></li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="tile" id="widgets">
-        <div class="tile-header">
-          <h2>Interactive Widgets</h2>
-        </div>
-        <div class="tile-body">
-          <p>Real-time weather: <span id="weather">Loading...</span></p>
-          <p>Next event: <span id="event">AI Development Workshop</span></p>
+          <button>Click Me</button>
         </div>
       </div>
     </main>
 
+    <!-- Footer Section -->
     <footer class="footer">
-      <p>&copy; 2024 | Developed by Mr. Afsah</p>
+      <p>© 2024 NAME0x0. All rights reserved.</p>
     </footer>
   </div>
 
-  <script>
-    // Dynamic Content Simulation
-    document.getElementById("weather").textContent = "Sunny, 28°C";
-  </script>
+  <!-- JavaScript File -->
+  <script src="script.js"></script>
 </body>
 </html>
