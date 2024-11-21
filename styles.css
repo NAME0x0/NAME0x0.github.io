@@ -132,3 +132,16 @@ ul li button:hover {
   background: #ffdd57;
   color: #000;
 }
+/* Weather Tile Style */
+#weather {
+  font-size: 1.2rem;
+  color: #ffdd57;
+  margin-top: 10px;
+}
+
+/* Time Update Style */
+#event {
+  font-size: 1.2rem;
+  color: #ffdd57;
+  margin-top: 10px;
+}
