@@ -1,59 +1,100 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Personal Dashboard</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Muhammad Afsah Mumtaz</title>
+  <link rel="stylesheet" href="styles.css" media="all" />
+  <meta name="robots" content="max-image-preview:large" />
+  <link rel="stylesheet" href="https://use.typekit.net/kjo5qge.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+    .preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #121212;
+      overflow: hidden;
+      z-index: 100000;
+    }
+    .video-container video {
+      width: 100%;
+      height: 100vh;
+      object-fit: cover;
+    }
+  </style>
 </head>
 <body>
-  <div class="dashboard">
-    <!-- Header Section -->
-    <header class="header">
-      <h1>Welcome to Your Dashboard</h1>
-      <p>Your one-stop location for everything important.</p>
-    </header>
-
-    <!-- Content Section -->
-    <main class="content">
-      <!-- Tile 1 -->
-      <div class="tile">
-        <div class="tile-header">
-          <h2>Current Time</h2>
-        </div>
-        <div class="tile-body">
-          <p id="event">Current Time: Loading...</p>
-        </div>
-      </div>
-
-      <!-- Tile 2 -->
-      <div class="tile">
-        <div class="tile-header">
-          <h2>Weather</h2>
-        </div>
-        <div class="tile-body">
-          <p id="weather">Loading weather...</p>
-        </div>
-      </div>
-
-      <!-- Tile 3 -->
-      <div class="tile">
-        <div class="tile-header">
-          <h2>Quick Actions</h2>
-        </div>
-        <div class="tile-body">
-          <button>Click Me</button>
-        </div>
-      </div>
-    </main>
-
-    <!-- Footer Section -->
-    <footer class="footer">
-      <p>© 2024 NAME0x0. All rights reserved.</p>
-    </footer>
+  <!-- Preloader Section -->
+  <div class="preloader">
+    <div class="video-container">
+      <video id="preloaderVideo" autoplay muted playsinline>
+        <source src="https://placeholder-video-link.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
   </div>
 
-  <!-- JavaScript File -->
-  <script src="script.js"></script>
+  <!-- JavaScript to handle preloader -->
+  <script>
+    const video = document.getElementById('preloaderVideo');
+    video.addEventListener('ended', () => {
+      document.querySelector(".preloader").style.display = "none";
+      document.body.style.overflow = "auto";
+    });
+  </script>
+
+  <!-- Main Content -->
+  <div data-elementor-type="wp-page" data-elementor-id="13" class="elementor elementor-13" data-elementor-post-type="page">
+    <!-- Hero Section -->
+    <div class="elementor-element elementor-element-0da0f6d" data-id="0da0f6d">
+      <video class="elementor-background-video-hosted" autoplay muted playsinline loop></video>
+      <div class="elementor-element elementor-element-308408d">
+        <div>
+          <img src="https://placeholder-image-link.png" alt="Welcome Image" />
+          <h1>Muhammad Afsah Mumtaz</h1>
+          <p>Welcome to my digital hub.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Links Section -->
+    <div class="elementor-element elementor-element-09164d9">
+      <div>
+        <h2>Quick Links</h2>
+        <ul>
+          <li><a href="https://github.com/NAME0x0" target="_blank">GitHub</a></li>
+          <li><a href="https://www.linkedin.com/in/afsah" target="_blank">LinkedIn</a></li>
+          <li><a href="https://blueskyweb.xyz" target="_blank">Bluesky</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Audio Player -->
+    <div class="elementor-element elementor-element-4e85e8a">
+      <div class="tp-audio-player-wrapper">
+        <div class="tp-player">
+          <div class="trackDetails">
+            <span class="title">Custom Track</span>
+            <span class="splitTxt"> by </span>
+            <span class="artist">Your Name</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2024 Muhammad Afsah Mumtaz. All rights reserved.</p>
+  </footer>
 </body>
 </html>
