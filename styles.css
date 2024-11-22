@@ -1,147 +1,136 @@
 /* General Reset */
-body, h1, h2, p, ul {
+body, h1, h2, p, ul, li {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* Body Styling */
+/* Body and General Styling */
 body {
   font-family: 'Arial', sans-serif;
   background: linear-gradient(135deg, #1f1f1f, #121212);
   color: #fff;
+  overflow-x: hidden;
+}
+
+/* Preloader */
+.preloader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #121212;
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 9999;
+}
+
+.video-container video {
+  width: 100%;
   height: 100vh;
-  margin: 0;
+  object-fit: cover;
 }
 
-/* Dashboard Container */
-.dashboard {
-  width: 90%;
-  max-width: 1200px;
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  gap: 20px;
-  border-radius: 10px;
-  overflow: hidden;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
-  padding: 20px;
-}
-
-/* Header Styling */
-.header {
+/* Hero Section */
+.hero {
   text-align: center;
-  background: rgba(0, 0, 0, 0.5);
-  padding: 20px;
-  border-radius: 10px;
+  padding: 40px 20px;
 }
 
-.header h1 {
+.hero-content {
+  margin: auto;
+}
+
+.profile-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  margin-bottom: 20px;
+}
+
+.hero h1 {
   font-size: 2.5rem;
-  margin-bottom: 10px;
   color: #ffdd57;
 }
 
-.header p {
+.hero p {
   font-size: 1.2rem;
   color: #ccc;
 }
 
-/* Main Content */
-.content {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
+/* Quick Links Section */
+.links {
+  text-align: center;
+  margin: 30px 20px;
 }
 
-.tile {
-  background: rgba(0, 0, 0, 0.7);
+.links h2 {
+  font-size: 1.8rem;
+  color: #ffdd57;
+  margin-bottom: 20px;
+}
+
+.links ul {
+  list-style: none;
+}
+
+.links ul li {
+  margin: 10px 0;
+}
+
+.links ul li a {
+  text-decoration: none;
+  color: #61dafb;
+  font-size: 1.2rem;
+  transition: color 0.3s ease;
+}
+
+.links ul li a:hover {
+  color: #ffc400;
+}
+
+/* Audio Player */
+.audio {
+  text-align: center;
+  margin: 30px 20px;
+}
+
+.audio h2 {
+  font-size: 1.8rem;
+  color: #ffdd57;
+  margin-bottom: 20px;
+}
+
+#audioPlayer {
+  background: #333;
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.tile:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.8);
-}
-
-.tile-header h2 {
-  font-size: 1.5rem;
-  margin-bottom: 15px;
-  color: #ffdd57;
-}
-
-.tile-body p {
-  font-size: 1rem;
-  margin-bottom: 10px;
-}
-
-.tile-body button {
   display: inline-block;
-  padding: 10px 20px;
+}
+
+.track-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.track-artist {
   font-size: 1rem;
-  color: #fff;
-  background: #ffdd57;
+  color: #aaa;
+}
+
+#playPause {
+  margin-top: 15px;
+  padding: 10px 20px;
   border: none;
+  background: #ffdd57;
+  color: #121212;
+  font-weight: bold;
   border-radius: 5px;
   cursor: pointer;
-  transition: background 0.3s ease;
 }
 
-.tile-body button:hover {
+#playPause:hover {
   background: #ffc400;
-}
-
-/* Footer Styling */
-.footer {
-  text-align: center;
-  padding: 10px;
-  font-size: 0.9rem;
-  color: #ccc;
-  background: rgba(0, 0, 0, 0.5);
-  border-radius: 10px;
-}
-
-/* Additional Styling */
-ul {
-  list-style-type: none;
-}
-
-ul li {
-  margin: 5px 0;
-}
-
-ul li button {
-  width: 100%;
-  text-align: left;
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
-  padding: 10px;
-  border: 1px solid #ffdd57;
-  border-radius: 5px;
-  transition: background 0.3s ease, color 0.3s ease;
-}
-
-ul li button:hover {
-  background: #ffdd57;
-  color: #000;
-}
-/* Weather Tile Style */
-#weather {
-  font-size: 1.2rem;
-  color: #ffdd57;
-  margin-top: 10px;
-}
-
-/* Time Update Style */
-#event {
-  font-size: 1.2rem;
-  color: #ffdd57;
-  margin-top: 10px;
 }
