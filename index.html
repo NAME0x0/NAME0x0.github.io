@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal Dashboard</title>
+    <title>Personal AI Dashboard</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         :root {
-            --primary: #2a2d3e;
-            --secondary: #1a1b26;
-            --accent: #7aa2f7;
-            --text: #a9b1d6;
-            --hover: #414868;
-            --neon: #bb9af7;
+            --primary: #111111;
+            --secondary: #000000;
+            --accent: #00ffff;
+            --text: #ffffff;
+            --hover: #1a1a1a;
+            --neon: #7b68ee;
+            --card-bg: rgba(17, 17, 17, 0.7);
         }
 
         * {
@@ -27,123 +28,126 @@
             color: var(--text);
             min-height: 100vh;
             overflow: hidden;
+            position: relative;
         }
 
-        .dashboard {
-            display: grid;
-            grid-template-columns: 240px 1fr;
-            min-height: 100vh;
-        }
-
-        /* Sidebar Styles */
-        .sidebar {
-            background: var(--primary);
-            padding: 1.5rem;
-            border-right: 1px solid var(--hover);
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .profile {
+        .welcome-container {
+            position: absolute;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
             text-align: center;
-            padding: 1rem 0;
+            z-index: 10;
         }
 
-        .profile-img {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            margin-bottom: 1rem;
-            border: 2px solid var(--accent);
-        }
-
-        .nav-item {
-            padding: 0.75rem 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .nav-item:hover {
-            background: var(--hover);
+        .welcome-text {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
             color: var(--accent);
+            text-shadow: 0 0 10px var(--accent);
         }
 
-        /* Main Content */
-        .main-content {
-            padding: 2rem;
-            position: relative;
-        }
-
-        .search-bar {
-            background: var(--primary);
-            padding: 0.75rem 1rem;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .search-bar input {
-            background: none;
-            border: none;
+        .assist-text {
+            font-size: 1.2rem;
             color: var(--text);
-            width: 100%;
-            outline: none;
+            opacity: 0.8;
         }
 
-        /* Grid Layout */
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            padding: 1rem;
+        /* Grid Layout for Corner Cards */
+        .corner-container {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none; /* Allow clicks to pass through to elements below */
         }
 
-        .card {
-            background: var(--primary);
-            border-radius: 12px;
+        .corner-card {
+            position: absolute;
+            width: 300px;
+            height: 250px;
+            background: var(--card-bg);
+            border: 1px solid var(--accent);
+            border-radius: 15px;
             padding: 1.5rem;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
-            position: relative;
+            backdrop-filter: blur(10px);
+            pointer-events: auto; /* Re-enable clicking for cards */
+            transition: all 0.3s ease;
             overflow: hidden;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-        }
-
-        .card::after {
+        .corner-card::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, transparent, rgba(122, 162, 247, 0.1));
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            animation: scanline 2s linear infinite;
         }
 
-        .card:hover::after {
-            opacity: 1;
+        .corner-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
         }
 
-        /* Hero Section */
+        /* Corner Positioning */
+        .top-left {
+            top: 2rem;
+            left: 2rem;
+        }
+
+        .top-right {
+            top: 2rem;
+            right: 2rem;
+        }
+
+        .bottom-left {
+            bottom: 2rem;
+            left: 2rem;
+        }
+
+        .bottom-right {
+            bottom: 2rem;
+            right: 2rem;
+        }
+
+        .card-title {
+            color: var(--accent);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-content {
+            opacity: 0.9;
+        }
+
+        .link-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0;
+            color: var(--text);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .link-item:hover {
+            color: var(--accent);
+            transform: translateX(5px);
+        }
+
+        /* Center Globe */
         .hero {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 300px;
-            height: 300px;
+            width: 400px;
+            height: 400px;
         }
 
         #globe-container {
@@ -151,144 +155,244 @@
             height: 100%;
         }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .dashboard {
-                grid-template-columns: 1fr;
-            }
-
-            .sidebar {
-                display: none;
-            }
-
-            .mobile-nav {
-                display: flex;
-            }
+        /* Search Bar */
+        .search-container {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 500px;
+            z-index: 10;
         }
 
-        /* Animation Keyframes */
-        @keyframes glow {
+        .search-bar {
+            background: var(--card-bg);
+            border: 1px solid var(--accent);
+            padding: 1rem 1.5rem;
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .search-bar input {
+            background: none;
+            border: none;
+            color: var(--text);
+            width: 100%;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .search-bar input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Animations */
+        @keyframes scanline {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        @keyframes pulse {
             0% { box-shadow: 0 0 5px var(--accent); }
             50% { box-shadow: 0 0 20px var(--accent); }
             100% { box-shadow: 0 0 5px var(--accent); }
         }
+
+        .typing-cursor {
+            display: inline-block;
+            width: 3px;
+            height: 1.2em;
+            background-color: var(--accent);
+            margin-left: 5px;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .corner-card {
+                width: calc(50% - 3rem);
+                height: auto;
+                min-height: 200px;
+            }
+
+            .search-container {
+                width: 90%;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="dashboard">
-        <aside class="sidebar">
-            <div class="profile">
-                <img src="/api/placeholder/80/80" alt="Profile" class="profile-img">
-                <h3>John Doe</h3>
-                <p>Full Stack Developer</p>
-            </div>
-            <nav>
-                <div class="nav-item">
-                    <span>📊</span>
-                    <span>Dashboard</span>
-                </div>
-                <div class="nav-item">
-                    <span>👤</span>
-                    <span>Personal Hub</span>
-                </div>
-                <div class="nav-item">
+    <div class="welcome-container">
+        <div class="welcome-text" id="welcome-text"></div>
+        <div class="assist-text" id="assist-text"></div>
+    </div>
+
+    <div class="corner-container">
+        <!-- Personal Hub -->
+        <div class="corner-card top-left">
+            <h3 class="card-title">🌐 Personal Hub</h3>
+            <div class="card-content">
+                <a href="#" class="link-item">
+                    <span>👨‍💻</span>
+                    <span>GitHub</span>
+                </a>
+                <a href="#" class="link-item">
                     <span>💼</span>
-                    <span>Projects</span>
-                </div>
-                <div class="nav-item">
-                    <span>📚</span>
-                    <span>Learning</span>
-                </div>
-                <div class="nav-item">
-                    <span>🛠️</span>
-                    <span>Tools</span>
-                </div>
-            </nav>
-        </aside>
-
-        <main class="main-content">
-            <div class="search-bar">
-                <span>🔍</span>
-                <input type="text" placeholder="Search anything...">
+                    <span>LinkedIn</span>
+                </a>
+                <a href="#" class="link-item">
+                    <span>📸</span>
+                    <span>Instagram</span>
+                </a>
             </div>
+        </div>
 
-            <div class="hero">
-                <div id="globe-container"></div>
-            </div>
-
-            <div class="grid-container">
-                <!-- Personal Hub Section -->
-                <div class="card">
-                    <h3>Personal Hub</h3>
-                    <div class="social-links">
-                        <a href="#" class="social-link">GitHub</a>
-                        <a href="#" class="social-link">LinkedIn</a>
-                        <a href="#" class="social-link">Instagram</a>
-                    </div>
+        <!-- Project Showcase -->
+        <div class="corner-card top-right">
+            <h3 class="card-title">💡 Projects</h3>
+            <div class="card-content">
+                <div class="link-item">
+                    <span>🤖</span>
+                    <span>AVA - AI Assistant</span>
                 </div>
-
-                <!-- Project Showcase -->
-                <div class="card">
-                    <h3>Project Showcase</h3>
-                    <div class="project">
-                        <h4>AVA</h4>
-                        <p>Personal AI Assistant</p>
-                    </div>
-                </div>
-
-                <!-- Learning Dashboard -->
-                <div class="card">
-                    <h3>Learning</h3>
-                    <div class="learning-resources">
-                        <a href="#" class="resource">Coursera</a>
-                        <a href="#" class="resource">GitHub</a>
-                        <a href="#" class="resource">Stack Overflow</a>
-                    </div>
-                </div>
-
-                <!-- Daily Tools -->
-                <div class="card">
-                    <h3>Daily Tools</h3>
-                    <div class="weather-widget">
-                        <!-- Weather widget content -->
-                    </div>
+                <div class="link-item">
+                    <span>🚀</span>
+                    <span>Portfolio Website</span>
                 </div>
             </div>
-        </main>
+        </div>
+
+        <!-- Learning Dashboard -->
+        <div class="corner-card bottom-left">
+            <h3 class="card-title">📚 Learning</h3>
+            <div class="card-content">
+                <a href="#" class="link-item">
+                    <span>🎓</span>
+                    <span>Coursera</span>
+                </a>
+                <a href="#" class="link-item">
+                    <span>💻</span>
+                    <span>LeetCode</span>
+                </a>
+                <a href="#" class="link-item">
+                    <span>📝</span>
+                    <span>Documentation</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Daily Tools -->
+        <div class="corner-card bottom-right">
+            <h3 class="card-title">🛠️ Tools</h3>
+            <div class="card-content">
+                <div class="link-item">
+                    <span>⛅</span>
+                    <span>Weather: 22°C Clear</span>
+                </div>
+                <div class="link-item">
+                    <span>📅</span>
+                    <span>Calendar</span>
+                </div>
+                <div class="link-item">
+                    <span>✅</span>
+                    <span>Tasks</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero">
+        <div id="globe-container"></div>
+    </div>
+
+    <div class="search-container">
+        <div class="search-bar">
+            <span>🔍</span>
+            <input type="text" placeholder="How can I assist you today?">
+        </div>
     </div>
 
     <script>
+        // Typing Animation for Welcome Message
+        const welcomeText = document.getElementById('welcome-text');
+        const assistText = document.getElementById('assist-text');
+        
+        function typeWriter(element, text, speed = 50) {
+            let i = 0;
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML = text.substring(0, i + 1) + '<span class="typing-cursor"></span>';
+                    i++;
+                    setTimeout(type, speed);
+                } else {
+                    element.innerHTML = text;
+                    if (element === welcomeText) {
+                        typeWriter(assistText, "How can I assist you today?", 50);
+                    }
+                }
+            }
+            type();
+        }
+
+        // Start typing animation
+        typeWriter(welcomeText, "Welcome back, Mr. Afsah!");
+
         // Initialize Three.js Scene
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         const container = document.getElementById('globe-container');
-        renderer.setSize(300, 300);
+        renderer.setSize(400, 400);
         container.appendChild(renderer.domElement);
 
-        // Create sphere geometry
+        // Create sphere geometry with more complex structure
         const geometry = new THREE.SphereGeometry(5, 32, 32);
         const material = new THREE.MeshPhongMaterial({
-            color: 0x7aa2f7,
+            color: 0x00ffff,
             wireframe: true,
             transparent: true,
             opacity: 0.8
         });
         const sphere = new THREE.Mesh(geometry, material);
+        
+        // Add outer sphere
+        const outerGeometry = new THREE.SphereGeometry(6, 32, 32);
+        const outerMaterial = new THREE.MeshPhongMaterial({
+            color: 0x7b68ee,
+            wireframe: true,
+            transparent: true,
+            opacity: 0.3
+        });
+        const outerSphere = new THREE.Mesh(outerGeometry, outerMaterial);
+        
         scene.add(sphere);
+        scene.add(outerSphere);
 
         // Add lights
-        const light = new THREE.PointLight(0xffffff, 1, 100);
+        const light = new THREE.PointLight(0x00ffff, 1, 100);
         light.position.set(10, 10, 10);
         scene.add(light);
 
+        const ambientLight = new THREE.AmbientLight(0x404040);
+        scene.add(ambientLight);
+
         camera.position.z = 15;
 
-        // Animation loop
+        // Animation loop with more complex rotation
         function animate() {
             requestAnimationFrame(animate);
-            sphere.rotation.x += 0.01;
-            sphere.rotation.y += 0.01;
+            sphere.rotation.x += 0.005;
+            sphere.rotation.y += 0.007;
+            outerSphere.rotation.x -= 0.003;
+            outerSphere.rotation.y -= 0.005;
             renderer.render(scene, camera);
         }
         animate();
@@ -297,23 +401,21 @@
         const searchInput = document.querySelector('.search-bar input');
         searchInput.addEventListener('input', (e) => {
             const searchTerm = e.target.value.toLowerCase();
-            const cards = document.querySelectorAll('.card');
+            const cards = document.querySelectorAll('.corner-card');
             
             cards.forEach(card => {
                 const content = card.textContent.toLowerCase();
-                if (content.includes(searchTerm)) {
-                    card.style.display = 'block';
+                if (searchTerm === '') {
+                    card.style.opacity = '1';
+                } else if (content.includes(searchTerm)) {
+                    card.style.opacity = '1';
+                    card.style.animation = 'pulse 2s infinite';
                 } else {
-                    card.style.display = 'none';
+                    card.style.opacity = '0.3';
+                    card.style.animation = 'none';
                 }
             });
         });
-
-        // Responsive Navigation
-        function toggleSidebar() {
-            const sidebar = document.querySelector('.sidebar');
-            sidebar.classList.toggle('active');
-        }
     </script>
 </body>
 </html>
