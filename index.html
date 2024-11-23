@@ -1,59 +1,319 @@
 <!DOCTYPE html>
-<html lang="en-US">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Muhammad Afsah Mumtaz</title>
-  <link rel="stylesheet" href="styles.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        :root {
+            --primary: #2a2d3e;
+            --secondary: #1a1b26;
+            --accent: #7aa2f7;
+            --text: #a9b1d6;
+            --hover: #414868;
+            --neon: #bb9af7;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background: var(--secondary);
+            color: var(--text);
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            background: var(--primary);
+            padding: 1.5rem;
+            border-right: 1px solid var(--hover);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .profile {
+            text-align: center;
+            padding: 1rem 0;
+        }
+
+        .profile-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+            border: 2px solid var(--accent);
+        }
+
+        .nav-item {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .nav-item:hover {
+            background: var(--hover);
+            color: var(--accent);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 2rem;
+            position: relative;
+        }
+
+        .search-bar {
+            background: var(--primary);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .search-bar input {
+            background: none;
+            border: none;
+            color: var(--text);
+            width: 100%;
+            outline: none;
+        }
+
+        /* Grid Layout */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            padding: 1rem;
+        }
+
+        .card {
+            background: var(--primary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(122, 162, 247, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card:hover::after {
+            opacity: 1;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+        }
+
+        #globe-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .mobile-nav {
+                display: flex;
+            }
+        }
+
+        /* Animation Keyframes */
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px var(--accent); }
+            50% { box-shadow: 0 0 20px var(--accent); }
+            100% { box-shadow: 0 0 5px var(--accent); }
+        }
+    </style>
 </head>
 <body>
-  <!-- Preloader Section -->
-  <div class="preloader">
-    <div class="video-container">
-      <video id="preloaderVideo" autoplay muted playsinline>
-        <source src="https://www.youtube.com/watch?v=QvDUSKLxDh0" type="video/mp4">
-        Your browser does not support the video tag.
-      </video>
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="profile">
+                <img src="/api/placeholder/80/80" alt="Profile" class="profile-img">
+                <h3>John Doe</h3>
+                <p>Full Stack Developer</p>
+            </div>
+            <nav>
+                <div class="nav-item">
+                    <span>📊</span>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item">
+                    <span>👤</span>
+                    <span>Personal Hub</span>
+                </div>
+                <div class="nav-item">
+                    <span>💼</span>
+                    <span>Projects</span>
+                </div>
+                <div class="nav-item">
+                    <span>📚</span>
+                    <span>Learning</span>
+                </div>
+                <div class="nav-item">
+                    <span>🛠️</span>
+                    <span>Tools</span>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="search-bar">
+                <span>🔍</span>
+                <input type="text" placeholder="Search anything...">
+            </div>
+
+            <div class="hero">
+                <div id="globe-container"></div>
+            </div>
+
+            <div class="grid-container">
+                <!-- Personal Hub Section -->
+                <div class="card">
+                    <h3>Personal Hub</h3>
+                    <div class="social-links">
+                        <a href="#" class="social-link">GitHub</a>
+                        <a href="#" class="social-link">LinkedIn</a>
+                        <a href="#" class="social-link">Instagram</a>
+                    </div>
+                </div>
+
+                <!-- Project Showcase -->
+                <div class="card">
+                    <h3>Project Showcase</h3>
+                    <div class="project">
+                        <h4>AVA</h4>
+                        <p>Personal AI Assistant</p>
+                    </div>
+                </div>
+
+                <!-- Learning Dashboard -->
+                <div class="card">
+                    <h3>Learning</h3>
+                    <div class="learning-resources">
+                        <a href="#" class="resource">Coursera</a>
+                        <a href="#" class="resource">GitHub</a>
+                        <a href="#" class="resource">Stack Overflow</a>
+                    </div>
+                </div>
+
+                <!-- Daily Tools -->
+                <div class="card">
+                    <h3>Daily Tools</h3>
+                    <div class="weather-widget">
+                        <!-- Weather widget content -->
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
-  </div>
 
-  <!-- Main Content -->
-  <div class="dashboard">
-    <!-- Hero Section -->
-    <header class="hero">
-      <div class="hero-content">
-        <img src="https://example.com/profile-image.jpg" alt="Profile Image" class="profile-image">
-        <h1>Muhammad Afsah Mumtaz</h1>
-        <p>Innovating for a brighter future in IT and AI Development.</p>
-      </div>
-    </header>
+    <script>
+        // Initialize Three.js Scene
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        const container = document.getElementById('globe-container');
+        renderer.setSize(300, 300);
+        container.appendChild(renderer.domElement);
 
-    <!-- Quick Links Section -->
-    <section class="links">
-      <h2>Quick Links</h2>
-      <ul>
-        <li><a href="https://github.com/NAME0x0" target="_blank">GitHub</a></li>
-        <li><a href="https://blueskyweb.xyz" target="_blank">Bluesky</a></li>
-        <li><a href="https://www.linkedin.com/in/afsah" target="_blank">LinkedIn</a></li>
-      </ul>
-    </section>
+        // Create sphere geometry
+        const geometry = new THREE.SphereGeometry(5, 32, 32);
+        const material = new THREE.MeshPhongMaterial({
+            color: 0x7aa2f7,
+            wireframe: true,
+            transparent: true,
+            opacity: 0.8
+        });
+        const sphere = new THREE.Mesh(geometry, material);
+        scene.add(sphere);
 
-    <!-- Audio Player Section -->
-    <section class="audio">
-      <h2>Now Playing</h2>
-      <div id="audioPlayer">
-        <span class="track-title">Ambient Sounds</span> by <span class="track-artist">Afsah</span>
-        <button id="playPause">Play</button>
-      </div>
-    </section>
-  </div>
+        // Add lights
+        const light = new THREE.PointLight(0xffffff, 1, 100);
+        light.position.set(10, 10, 10);
+        scene.add(light);
 
-  <!-- Footer -->
-  <footer>
-    <p>&copy; 2024 Muhammad Afsah Mumtaz. All rights reserved.</p>
-  </footer>
+        camera.position.z = 15;
 
-  <!-- Scripts -->
-  <script src="script.js"></script>
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            sphere.rotation.x += 0.01;
+            sphere.rotation.y += 0.01;
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Search Functionality
+        const searchInput = document.querySelector('.search-bar input');
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const cards = document.querySelectorAll('.card');
+            
+            cards.forEach(card => {
+                const content = card.textContent.toLowerCase();
+                if (content.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // Responsive Navigation
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.classList.toggle('active');
+        }
+    </script>
 </body>
 </html>
