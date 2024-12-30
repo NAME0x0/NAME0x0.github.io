@@ -150,3 +150,130 @@ body {
     color: var(--neon-green);
     text-shadow: 0 0 5px var(--neon-green);
 }
+
+.system-time {
+    font-size: 1.2em;
+    color: var(--neon-blue);
+    margin-top: 10px;
+    text-shadow: 0 0 5px var(--neon-blue);
+}
+
+.status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--neon-green);
+    margin-right: 8px;
+    box-shadow: 0 0 10px var(--neon-green);
+    animation: pulse 2s infinite;
+}
+
+.project-progress {
+    float: right;
+    color: var(--neon-blue);
+}
+
+.skill-bar {
+    height: 4px;
+    background: var(--glass-bg);
+    margin: 5px 0 15px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.skill-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: var(--neon-blue);
+    animation: loadSkill 1.5s ease-out forwards;
+}
+
+.action-btn {
+    background: transparent;
+    border: 1px solid var(--neon-blue);
+    color: var(--neon-blue);
+    padding: 8px 15px;
+    margin: 5px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.action-btn:hover {
+    background: var(--neon-blue);
+    color: var(--primary-bg);
+    box-shadow: 0 0 15px var(--neon-blue);
+}
+
+.progress-bar {
+    width: 100%;
+    height: 2px;
+    background: var(--glass-bg);
+    margin-top: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 30%;
+    background: var(--neon-green);
+    animation: progress 2s infinite;
+}
+
+.search-prefix {
+    position: absolute;
+    left: -60px;
+    color: var(--neon-green);
+    font-size: 0.9em;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+@keyframes loadSkill {
+    from { width: 0; }
+    to { width: var(--skill-level); }
+}
+
+@keyframes progress {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(400%); }
+}
+
+.interactive {
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.interactive:hover {
+    transform: translateX(10px);
+    text-shadow: 0 0 10px var(--neon-blue);
+}
+
+.icon {
+    margin-right: 8px;
+    opacity: 0.8;
+}
+
+/* Add responsive design for smaller screens */
+@media (max-width: 768px) {
+    .card {
+        width: 200px;
+    }
+    
+    .search-container {
+        width: 80%;
+    }
+}

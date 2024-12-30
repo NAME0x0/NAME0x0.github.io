@@ -11,50 +11,101 @@
     <div class="matrix-bg"></div>
     
     <div class="welcome-message">
-        <h1 class="cyber-text">> SYSTEM INTERFACE v2.0_</h1>
-        <p class="typing-text">Initializing holographic interface...</p>
+        <h1 class="cyber-text">> PERSONAL NEXUS v2.0_</h1>
+        <p class="typing-text">Welcome back, Commander. Systems online.</p>
+        <div class="system-time"></div>
     </div>
 
     <div class="corner-cards">
         <div class="card top-left">
-            <h3>SYSTEM STATUS</h3>
+            <h3>DEVELOPER STATS</h3>
             <div class="card-content">
-                <div class="status-item">CPU: 32%</div>
-                <div class="status-item">MEMORY: 4.2GB</div>
-                <div class="status-item">NETWORK: ACTIVE</div>
+                <div class="status-item">
+                    <span class="icon">⚡</span>
+                    <span class="label">Active Projects:</span>
+                    <span class="value">4</span>
+                </div>
+                <div class="status-item">
+                    <span class="icon">📊</span>
+                    <span class="label">Commits Today:</span>
+                    <span class="value">12</span>
+                </div>
+                <div class="status-item">
+                    <span class="icon">🎯</span>
+                    <span class="label">Tasks Complete:</span>
+                    <span class="value">85%</span>
+                </div>
+                <div class="progress-bar"></div>
             </div>
         </div>
         <div class="card top-right">
-            <h3>PROJECTS</h3>
+            <h3>CURRENT PROJECTS</h3>
             <div class="card-content">
-                <div class="project-item">Neural Network v3</div>
-                <div class="project-item">Quantum Analysis</div>
-                <div class="project-item">AI Integration</div>
+                <div class="project-item active">
+                    <span class="status-dot"></span>
+                    Personal Dashboard
+                    <div class="project-progress">90%</div>
+                </div>
+                <div class="project-item">
+                    <span class="status-dot"></span>
+                    AI Research Platform
+                    <div class="project-progress">45%</div>
+                </div>
+                <div class="project-item">
+                    <span class="status-dot"></span>
+                    Neural Interface
+                    <div class="project-progress">30%</div>
+                </div>
             </div>
         </div>
         <div class="card bottom-left">
-            <h3>DASHBOARD</h3>
+            <h3>SKILL MATRIX</h3>
             <div class="card-content">
-                <div class="metric-item">Security: 98%</div>
-                <div class="metric-item">Systems: Online</div>
-                <div class="metric-item">Updates: 2 Pending</div>
+                <div class="skill-item">
+                    <span class="skill-name">JavaScript</span>
+                    <div class="skill-bar" data-level="92"></div>
+                </div>
+                <div class="skill-item">
+                    <span class="skill-name">Python</span>
+                    <div class="skill-bar" data-level="88"></div>
+                </div>
+                <div class="skill-item">
+                    <span class="skill-name">Machine Learning</span>
+                    <div class="skill-bar" data-level="75"></div>
+                </div>
             </div>
         </div>
         <div class="card bottom-right">
-            <h3>TOOLS</h3>
+            <h3>COMMAND CENTER</h3>
             <div class="card-content">
-                <div class="tool-item">Analytics</div>
-                <div class="tool-item">Diagnostics</div>
-                <div class="tool-item">Command Center</div>
+                <div class="tool-item interactive">
+                    <span class="icon">🔍</span>
+                    Code Analysis
+                </div>
+                <div class="tool-item interactive">
+                    <span class="icon">🔧</span>
+                    System Debug
+                </div>
+                <div class="tool-item interactive">
+                    <span class="icon">📡</span>
+                    Network Status
+                </div>
+                <div class="quick-actions">
+                    <button class="action-btn">Deploy</button>
+                    <button class="action-btn">Analyze</button>
+                </div>
             </div>
         </div>
     </div>
 
-    <div id="globe-container"></div>
+    <div id="globe-container" class="interactive"></div>
 
     <div class="search-container">
-        <input type="text" class="search-bar" placeholder="Enter command...">
+        <div class="search-prefix">> root@system:</div>
+        <input type="text" class="search-bar" placeholder="Enter command (type 'help' for commands)...">
         <div class="search-border"></div>
     </div>
+
+    <script src="main.js"></script>
 </body>
 </html>
