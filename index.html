@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal AI Dashboard</title>
+    <title>JARVIS Personal Interface</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         :root {
-            --primary: #111111;
-            --secondary: #000000;
-            --accent: #00ffff;
-            --text: #ffffff;
-            --hover: #1a1a1a;
-            --neon: #7b68ee;
-            --card-bg: rgba(17, 17, 17, 0.7);
+            --primary: #0a192f;
+            --secondary: #020c1b;
+            --accent: #64ffda;
+            --text: #8892b0;
+            --hover: #112240;
+            --neon: #00bfff;
+            --hologram: rgba(100, 255, 218, 0.1);
         }
 
         * {
@@ -41,10 +41,11 @@
         }
 
         .welcome-text {
-            font-size: 2rem;
+            font-size: 2.5rem;
             margin-bottom: 0.5rem;
             color: var(--accent);
-            text-shadow: 0 0 10px var(--accent);
+            text-shadow: 0 0 15px var(--accent);
+            font-family: 'Orbitron', sans-serif;
         }
 
         .assist-text {
@@ -65,7 +66,7 @@
             position: absolute;
             width: 300px;
             height: 250px;
-            background: var(--card-bg);
+            background: var(--hologram);
             border: 1px solid var(--accent);
             border-radius: 15px;
             padding: 1.5rem;
@@ -74,6 +75,8 @@
             pointer-events: auto; /* Re-enable clicking for cards */
             transition: all 0.3s ease;
             overflow: hidden;
+            box-shadow: 0 0 20px rgba(100, 255, 218, 0.1);
+            animation: hologramPulse 2s infinite;
         }
 
         .corner-card::before {
@@ -167,8 +170,8 @@
         }
 
         .search-bar {
-            background: var(--card-bg);
-            border: 1px solid var(--accent);
+            background: var(--hologram);
+            border: 2px solid var(--accent);
             padding: 1rem 1.5rem;
             border-radius: 25px;
             display: flex;
@@ -176,6 +179,7 @@
             gap: 1rem;
             -webkit-backdrop-filter: blur(10px);
             backdrop-filter: blur(10px);
+            animation: scanline 2s linear infinite;
         }
 
         .search-bar input {
@@ -203,6 +207,12 @@
             100% { box-shadow: 0 0 5px var(--accent); }
         }
 
+        @keyframes hologramPulse {
+            0% { box-shadow: 0 0 20px rgba(100, 255, 218, 0.1); }
+            50% { box-shadow: 0 0 30px rgba(100, 255, 218, 0.2); }
+            100% { box-shadow: 0 0 20px rgba(100, 255, 218, 0.1); }
+        }
+
         .typing-cursor {
             display: inline-block;
             width: 3px;
@@ -215,6 +225,20 @@
         @keyframes blink {
             0%, 100% { opacity: 1; }
             50% { opacity: 0; }
+        }
+
+        /* Add new scanning animation */
+        .scan-line {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: var(--accent);
+            animation: scan 2s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100vh); }
         }
 
         /* Responsive Design */
@@ -232,28 +256,29 @@
     </style>
 </head>
 <body>
+    <div class="scan-line"></div>
     <div class="welcome-container">
         <div class="welcome-text" id="welcome-text"></div>
         <div class="assist-text" id="assist-text"></div>
     </div>
 
     <div class="corner-container">
-        <!-- Personal Hub -->
+        <!-- System Status -->
         <div class="corner-card top-left">
-            <h3 class="card-title">🌐 Personal Hub</h3>
+            <h3 class="card-title">🔬 System Status</h3>
             <div class="card-content">
-                <a href="#" class="link-item">
-                    <span>👨‍💻</span>
-                    <span>GitHub</span>
-                </a>
-                <a href="#" class="link-item">
-                    <span>💼</span>
-                    <span>LinkedIn</span>
-                </a>
-                <a href="#" class="link-item">
-                    <span>📸</span>
-                    <span>Instagram</span>
-                </a>
+                <div class="link-item">
+                    <span>💻</span>
+                    <span>CPU: 32% Utilized</span>
+                </div>
+                <div class="link-item">
+                    <span>🔋</span>
+                    <span>Power: 97% Available</span>
+                </div>
+                <div class="link-item">
+                    <span>📡</span>
+                    <span>Network: Connected</span>
+                </div>
             </div>
         </div>
 
@@ -345,7 +370,7 @@
         }
 
         // Start typing animation
-        typeWriter(welcomeText, "Welcome back, Mr. Afsah!");
+        typeWriter(welcomeText, "Welcome back, Sir. All systems operational.");
 
         // Initialize Three.js Scene
         const scene = new THREE.Scene();

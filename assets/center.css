@@ -16,6 +16,8 @@
   width: 344px;
   height: 344px;
   fill: none;
+  stroke: #64ffda;
+  filter: drop-shadow(0 0 10px rgba(100, 255, 218, 0.5));
 }
 
 .svg-frame:hover svg {
@@ -39,7 +41,7 @@
 #out3 {
   animation: rotate16 3s ease-in-out infinite alternate;
   transform-origin: center;
-  stroke: #ff0;
+  stroke: #64ffda;
 }
 
 #inner3,
@@ -49,13 +51,14 @@
 }
 
 #center1 {
-  fill: #ff0;
+  fill: #64ffda;
   animation: rotate16 2s ease-in-out infinite alternate;
   transform-origin: center;
+  filter: drop-shadow(0 0 5px rgba(100, 255, 218, 0.8));
 }
 
 @keyframes rotate16 {
   to {
-    transform: rotate(360deg);
+    transform: rotate(360deg) scale(1.05);
   }
 }

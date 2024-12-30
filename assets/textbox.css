@@ -7,10 +7,13 @@
 .card {
   height: 100%;
   border-radius: 50px;
-  background: linear-gradient(135deg, rgb(0, 255, 214) 0%, rgb(8, 226, 96) 100%);
+  background: linear-gradient(135deg, rgba(100, 255, 218, 0.1) 0%, rgba(0, 191, 255, 0.1) 100%);
   transition: all 0.5s ease-in-out;
   transform-style: preserve-3d;
-  box-shadow: rgba(5, 71, 17, 0) 40px 50px 25px -40px, rgba(5, 71, 17, 0.2) 0px 25px 25px -5px;
+  box-shadow: 0 0 30px rgba(100, 255, 218, 0.2);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(100, 255, 218, 0.3);
 }
 
 .glass {
@@ -19,13 +22,20 @@
   inset: 8px;
   border-radius: 55px;
   border-top-right-radius: 100%;
-  background: linear-gradient(0deg, rgba(255, 255, 255, 0.349) 0%, rgba(255, 255, 255, 0.815) 100%);
+  background: linear-gradient(0deg, rgba(100, 255, 218, 0.1) 0%, rgba(0, 191, 255, 0.2) 100%);
   /* -webkit-backdrop-filter: blur(5px);
   backdrop-filter: blur(5px); */
   transform: translate3d(0px, 0px, 25px);
   border-left: 1px solid white;
   border-bottom: 1px solid white;
   transition: all 0.5s ease-in-out;
+  animation: hologramFlicker 2s infinite;
+}
+
+@keyframes hologramFlicker {
+  0% { opacity: 0.8; }
+  50% { opacity: 1; }
+  100% { opacity: 0.8; }
 }
 
 .content {
