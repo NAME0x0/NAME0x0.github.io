@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyberpunk Dashboard</title>
+    <link rel="stylesheet" href="main.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <div class="matrix-bg"></div>
+    
+    <div class="welcome-message">
+        <h1 class="cyber-text">> SYSTEM INTERFACE v2.0_</h1>
+        <p class="typing-text">Initializing holographic interface...</p>
+    </div>
+
+    <div class="corner-cards">
+        <div class="card top-left">
+            <h3>SYSTEM STATUS</h3>
+            <div class="card-content">
+                <div class="status-item">CPU: 32%</div>
+                <div class="status-item">MEMORY: 4.2GB</div>
+                <div class="status-item">NETWORK: ACTIVE</div>
+            </div>
+        </div>
+        <div class="card top-right">
+            <h3>PROJECTS</h3>
+            <div class="card-content">
+                <div class="project-item">Neural Network v3</div>
+                <div class="project-item">Quantum Analysis</div>
+                <div class="project-item">AI Integration</div>
+            </div>
+        </div>
+        <div class="card bottom-left">
+            <h3>DASHBOARD</h3>
+            <div class="card-content">
+                <div class="metric-item">Security: 98%</div>
+                <div class="metric-item">Systems: Online</div>
+                <div class="metric-item">Updates: 2 Pending</div>
+            </div>
+        </div>
+        <div class="card bottom-right">
+            <h3>TOOLS</h3>
+            <div class="card-content">
+                <div class="tool-item">Analytics</div>
+                <div class="tool-item">Diagnostics</div>
+                <div class="tool-item">Command Center</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="globe-container"></div>
+
+    <div class="search-container">
+        <input type="text" class="search-bar" placeholder="Enter command...">
+        <div class="search-border"></div>
+    </div>
+</body>
+</html>
