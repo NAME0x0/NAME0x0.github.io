@@ -3,39 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cyberpunk Dashboard</title>
+    <title>NEXUS AI Assistant</title>
     <link rel="stylesheet" href="main.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
     <div class="matrix-bg"></div>
     
+    <div class="ai-presence">
+        <div class="ai-circle"></div>
+        <div class="ai-waves"></div>
+    </div>
+
     <div class="welcome-message">
-        <h1 class="cyber-text">> PERSONAL NEXUS v2.0_</h1>
-        <p class="typing-text">Welcome back, Commander. Systems online.</p>
-        <div class="system-time"></div>
+        <h1 class="cyber-text">> NEXUS AI ONLINE</h1>
+        <p class="typing-text">Good evening, Commander. How may I assist you today?</p>
+        <div class="ai-status">
+            <span class="status-indicator active"></span>
+            AI Core Status: Operational | Processing Power: 98% | Response Time: 0.003ms
+        </div>
     </div>
 
     <div class="corner-cards">
         <div class="card top-left">
-            <h3>DEVELOPER STATS</h3>
+            <h3><span class="ai-icon">🧠</span> AI INSIGHTS</h3>
             <div class="card-content">
+                <div class="ai-message">Analyzing your current workflow...</div>
                 <div class="status-item">
-                    <span class="icon">⚡</span>
-                    <span class="label">Active Projects:</span>
-                    <span class="value">4</span>
-                </div>
-                <div class="status-item">
-                    <span class="icon">📊</span>
-                    <span class="label">Commits Today:</span>
-                    <span class="value">12</span>
+                    <span class="icon">📈</span>
+                    <span class="label">Productivity Score:</span>
+                    <span class="value">92%</span>
                 </div>
                 <div class="status-item">
                     <span class="icon">🎯</span>
-                    <span class="label">Tasks Complete:</span>
-                    <span class="value">85%</span>
+                    <span class="label">Focus Areas:</span>
+                    <span class="value">ML Research</span>
                 </div>
-                <div class="progress-bar"></div>
+                <div class="ai-suggestion">
+                    Recommended: Review latest quantum computing papers
+                </div>
             </div>
         </div>
         <div class="card top-right">
@@ -76,23 +82,25 @@
             </div>
         </div>
         <div class="card bottom-right">
-            <h3>COMMAND CENTER</h3>
+            <h3><span class="ai-icon">🤖</span> AI COMMAND CENTER</h3>
             <div class="card-content">
-                <div class="tool-item interactive">
-                    <span class="icon">🔍</span>
-                    Code Analysis
+                <div class="ai-function interactive">
+                    <span class="icon">🔮</span>
+                    Predictive Analysis
                 </div>
-                <div class="tool-item interactive">
-                    <span class="icon">🔧</span>
-                    System Debug
+                <div class="ai-function interactive">
+                    <span class="icon">🧪</span>
+                    Research Assistant
                 </div>
-                <div class="tool-item interactive">
-                    <span class="icon">📡</span>
-                    Network Status
+                <div class="ai-function interactive">
+                    <span class="icon">🔄</span>
+                    System Optimization
                 </div>
-                <div class="quick-actions">
-                    <button class="action-btn">Deploy</button>
-                    <button class="action-btn">Analyze</button>
+                <div class="voice-interface">
+                    <button class="voice-btn">
+                        <span class="pulse"></span>
+                        Activate Voice Interface
+                    </button>
                 </div>
             </div>
         </div>
@@ -100,10 +108,17 @@
 
     <div id="globe-container" class="interactive"></div>
 
-    <div class="search-container">
-        <div class="search-prefix">> root@system:</div>
-        <input type="text" class="search-bar" placeholder="Enter command (type 'help' for commands)...">
-        <div class="search-border"></div>
+    <div class="chat-interface">
+        <div class="ai-response" id="aiResponse">
+            Ready to assist. What would you like to know?
+        </div>
+        <div class="search-container">
+            <div class="search-prefix">> NEXUS://</div>
+            <input type="text" class="search-bar" placeholder="Ask me anything...">
+            <button class="voice-trigger" title="Activate voice input">
+                <div class="voice-wave"></div>
+            </button>
+        </div>
     </div>
 
     <script src="main.js"></script>
