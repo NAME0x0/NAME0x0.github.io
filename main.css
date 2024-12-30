@@ -8,6 +8,8 @@
     --ai-primary: #00fff2;
     --ai-secondary: #0ff;
     --hologram: rgba(0, 255, 242, 0.1);
+    --ava-primary: #64ffda;
+    --ava-glow: rgba(100, 255, 218, 0.15);
 }
 
 body {
@@ -42,7 +44,8 @@ body {
 .cyber-text {
     color: var(--neon-green);
     text-shadow: 0 0 10px var(--neon-green);
-    font-size: 2em;
+    font-size: 1.8em;
+    letter-spacing: 1px;
     margin: 0;
 }
 
@@ -51,6 +54,8 @@ body {
     animation: typing 4s steps(50) infinite;
     white-space: nowrap;
     overflow: hidden;
+    font-size: 1.2em;
+    opacity: 0.9;
 }
 
 .corner-cards {
@@ -63,7 +68,7 @@ body {
 .card {
     position: absolute;
     width: 250px;
-    background: var(--glass-bg);
+    background: rgba(10, 25, 47, 0.85);
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(100, 255, 218, 0.2);
@@ -72,11 +77,12 @@ body {
     color: var(--text-primary);
     pointer-events: auto;
     transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 0 20px rgba(100, 255, 218, 0.1);
 }
 
 .card:hover {
-    transform: scale(1.05) translateZ(20px);
-    box-shadow: 0 0 20px var(--neon-blue);
+    transform: scale(1.02);
+    box-shadow: 0 0 30px rgba(100, 255, 218, 0.2);
 }
 
 .card h3 {
@@ -110,6 +116,8 @@ body {
     font-family: 'Courier New', monospace;
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
+    font-size: 1.1em;
+    letter-spacing: 0.5px;
 }
 
 .search-border {
@@ -143,10 +151,11 @@ body {
 }
 
 .status-item, .project-item, .metric-item, .tool-item {
-    margin: 10px 0;
+    margin: 15px 0;
     padding: 5px;
     border-left: 2px solid var(--neon-blue);
     transition: color 0.3s;
+    opacity: 0.9;
 }
 
 .status-item:hover, .project-item:hover, .metric-item:hover, .tool-item:hover {
@@ -240,9 +249,9 @@ body {
 }
 
 @keyframes pulse {
-    0% { opacity: 1; }
-    50% { opacity: 0.5; }
-    100% { opacity: 1; }
+    0% { opacity: 0.5; }
+    50% { opacity: 0.8; }
+    100% { opacity: 0.5; }
 }
 
 @keyframes loadSkill {
@@ -301,11 +310,12 @@ body {
 
 .ai-status {
     margin-top: 15px;
-    font-size: 0.9em;
+    font-size: 0.85em;
     color: var(--ai-primary);
     display: flex;
     align-items: center;
     gap: 10px;
+    opacity: 0.8;
 }
 
 .status-indicator {
@@ -362,6 +372,10 @@ body {
     transform: translateX(-50%);
     width: 70%;
     text-align: center;
+    background: rgba(10, 25, 47, 0.95);
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid var(--ava-primary);
 }
 
 .ai-response {
@@ -413,6 +427,28 @@ body {
     0% { opacity: 1; }
     50% { opacity: 0.5; }
     100% { opacity: 1; }
+}
+
+.ai-core {
+    width: 200px;
+    height: 200px;
+    border: 2px solid var(--ava-primary);
+    border-radius: 50%;
+    position: relative;
+    animation: rotate 20s linear infinite;
+    opacity: 0.7;
+}
+
+.ai-rings {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--ava-glow) 0%, transparent 70%);
+    animation: pulse 3s ease-out infinite;
 }
 
 /* Add responsive design for smaller screens */

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEXUS AI Assistant</title>
+    <title>AVA AI Assistant</title>
     <link rel="stylesheet" href="main.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
@@ -11,95 +11,61 @@
     <div class="matrix-bg"></div>
     
     <div class="ai-presence">
-        <div class="ai-circle"></div>
-        <div class="ai-waves"></div>
+        <div class="ai-core"></div>
+        <div class="ai-rings"></div>
     </div>
 
     <div class="welcome-message">
-        <h1 class="cyber-text">> NEXUS AI ONLINE</h1>
-        <p class="typing-text">Good evening, Commander. How may I assist you today?</p>
+        <h1 class="cyber-text">> AVA SYSTEM ONLINE</h1>
+        <p class="typing-text">Welcome back, Mr. Afsah. How may I assist you today?</p>
         <div class="ai-status">
             <span class="status-indicator active"></span>
-            AI Core Status: Operational | Processing Power: 98% | Response Time: 0.003ms
+            AVA Core: Active | Systems: Optimal
         </div>
     </div>
 
     <div class="corner-cards">
         <div class="card top-left">
-            <h3><span class="ai-icon">🧠</span> AI INSIGHTS</h3>
+            <h3><span class="ai-icon">⚡</span> SYSTEM STATUS</h3>
             <div class="card-content">
-                <div class="ai-message">Analyzing your current workflow...</div>
+                <div class="ai-message">Current Priority: ML Research</div>
                 <div class="status-item">
-                    <span class="icon">📈</span>
-                    <span class="label">Productivity Score:</span>
-                    <span class="value">92%</span>
+                    <span class="label">Active Tasks:</span>
+                    <span class="value">3</span>
                 </div>
                 <div class="status-item">
-                    <span class="icon">🎯</span>
-                    <span class="label">Focus Areas:</span>
-                    <span class="value">ML Research</span>
-                </div>
-                <div class="ai-suggestion">
-                    Recommended: Review latest quantum computing papers
+                    <span class="label">System Health:</span>
+                    <span class="value">Optimal</span>
                 </div>
             </div>
         </div>
+
         <div class="card top-right">
-            <h3>CURRENT PROJECTS</h3>
+            <h3><span class="ai-icon">📊</span> ANALYTICS</h3>
             <div class="card-content">
                 <div class="project-item active">
                     <span class="status-dot"></span>
-                    Personal Dashboard
-                    <div class="project-progress">90%</div>
+                    Research Progress
+                    <div class="project-progress">85%</div>
                 </div>
                 <div class="project-item">
                     <span class="status-dot"></span>
-                    AI Research Platform
-                    <div class="project-progress">45%</div>
-                </div>
-                <div class="project-item">
-                    <span class="status-dot"></span>
-                    Neural Interface
-                    <div class="project-progress">30%</div>
+                    Next Milestone: 2 days
                 </div>
             </div>
         </div>
-        <div class="card bottom-left">
-            <h3>SKILL MATRIX</h3>
-            <div class="card-content">
-                <div class="skill-item">
-                    <span class="skill-name">JavaScript</span>
-                    <div class="skill-bar" data-level="92"></div>
-                </div>
-                <div class="skill-item">
-                    <span class="skill-name">Python</span>
-                    <div class="skill-bar" data-level="88"></div>
-                </div>
-                <div class="skill-item">
-                    <span class="skill-name">Machine Learning</span>
-                    <div class="skill-bar" data-level="75"></div>
-                </div>
-            </div>
-        </div>
+
         <div class="card bottom-right">
-            <h3><span class="ai-icon">🤖</span> AI COMMAND CENTER</h3>
+            <h3><span class="ai-icon">🤖</span> AVA CONTROLS</h3>
             <div class="card-content">
                 <div class="ai-function interactive">
                     <span class="icon">🔮</span>
-                    Predictive Analysis
-                </div>
-                <div class="ai-function interactive">
-                    <span class="icon">🧪</span>
-                    Research Assistant
-                </div>
-                <div class="ai-function interactive">
-                    <span class="icon">🔄</span>
-                    System Optimization
+                    Assist Mode
                 </div>
                 <div class="voice-interface">
                     <button class="voice-btn">
                         <span class="pulse"></span>
-                        Activate Voice Interface
+                        Voice Interface
                     </button>
                 </div>
             </div>
@@ -110,11 +76,11 @@
 
     <div class="chat-interface">
         <div class="ai-response" id="aiResponse">
-            Ready to assist. What would you like to know?
+            I'm here to help, Mr. Afsah. What can I do for you?
         </div>
         <div class="search-container">
-            <div class="search-prefix">> NEXUS://</div>
-            <input type="text" class="search-bar" placeholder="Ask me anything...">
+            <div class="search-prefix">> AVA://</div>
+            <input type="text" class="search-bar" placeholder="How can I assist you, Mr. Afsah?">
             <button class="voice-trigger" title="Activate voice input">
                 <div class="voice-wave"></div>
             </button>
