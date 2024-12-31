@@ -12,21 +12,7 @@
     <div id="particles-js" class="matrix-bg"></div>
     <div class="dynamic-overlay"></div>
     
-    <div class="ai-presence">
-        <div class="loader-container">
-            <div class="circle-loader">
-                <div class="circle outer"></div>
-                <div class="circle middle"></div>
-                <div class="circle inner"></div>
-                <div class="scanning-dot"></div>
-            </div>
-            <div class="globe-container">
-                <div class="globe"></div>
-                <div class="globe-overlay"></div>
-            </div>
-        </div>
-    </div>
-
+    <!-- Header -->
     <div class="welcome-message">
         <h1 class="cyber-text">> AVA SYSTEM ONLINE</h1>
         <p class="typing-text">Welcome back, Mr. Afsah. How may I assist you today?</p>
@@ -36,8 +22,9 @@
         </div>
     </div>
 
-    <div class="corner-cards">
-        <div class="card top-left">
+    <!-- Left Widgets -->
+    <div class="left-widgets">
+        <div class="card system-status">
             <div class="card-header">
                 <h3><span class="ai-icon pulse-icon">⚡</span> SYSTEM STATUS</h3>
                 <div class="real-time-indicator"></div>
@@ -59,8 +46,7 @@
                 </div>
             </div>
         </div>
-
-        <div class="card top-right">
+        <div class="card analytics">
             <h3><span class="ai-icon">📊</span> ANALYTICS</h3>
             <div class="card-content">
                 <div class="project-item active">
@@ -74,8 +60,29 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="card bottom-right">
+    <!-- Center Content -->
+    <div class="center-content">
+        <div class="ai-presence">
+            <div class="loader-container">
+                <div class="circle-loader">
+                    <div class="circle outer"></div>
+                    <div class="circle middle"></div>
+                    <div class="circle inner"></div>
+                    <div class="scanning-dot"></div>
+                </div>
+                <div class="globe-container">
+                    <div class="globe"></div>
+                    <div class="globe-overlay"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Widgets -->
+    <div class="right-widgets">
+        <div class="card controls">
             <h3><span class="ai-icon">🤖</h3>
             <div class="card-content">
                 <div class="ai-function interactive">
@@ -92,12 +99,7 @@
         </div>
     </div>
 
-    <div id="globe-container" class="interactive"></div>
-
-    <div class="audio-visualizer">
-        <canvas id="visualizer"></canvas>
-    </div>
-
+    <!-- Footer -->
     <div class="chat-interface">
         <div class="ai-response" id="aiResponse">
             <span class="response-text">I'm here to help, Mr. Afsah. What can I do for you?</span>

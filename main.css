@@ -18,6 +18,8 @@
     --circle-border: 2px;
     --rotation-speed: 15s;
     --hover-speed: 8s;
+    --widget-margin: 20px;
+    --header-height: 80px;
 }
 
 body {
@@ -27,6 +29,17 @@ body {
     color: var(--text-primary);
     font-family: 'Courier New', monospace;
     overflow: hidden;
+    display: grid;
+    grid-template-areas:
+        "header header header"
+        "left-widgets center right-widgets"
+        "footer footer footer";
+    grid-template-columns: 300px 1fr 300px;
+    grid-template-rows: var(--header-height) 1fr 100px;
+    height: 100vh;
+    gap: var(--widget-margin);
+    padding: var(--widget-margin);
+    box-sizing: border-box;
 }
 
 .matrix-bg {
@@ -72,10 +85,12 @@ body {
 }
 
 .welcome-message {
-    position: absolute;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
+    position: relative;
+    grid-area: header;
+    transform: none;
+    left: auto;
+    top: auto;
+    margin: 0 auto;
     text-align: center;
     z-index: 100;
 }
@@ -98,15 +113,17 @@ body {
 }
 
 .corner-cards {
-    position: fixed;
-    width: 100%;
+    position: relative;
+    pointer-events: all;
     height: 100%;
-    pointer-events: none;
+    display: contents;
 }
 
 .card {
-    position: absolute;
-    width: 250px;
+    position: relative;
+    width: 100%;
+    margin-bottom: var(--widget-margin);
+    box-sizing: border-box;
     background: rgba(10, 25, 47, 0.85);
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
@@ -151,10 +168,27 @@ body {
     padding-bottom: 5px;
 }
 
-.top-left { top: 20px; left: 20px; }
-.top-right { top: 20px; right: 20px; }
-.bottom-left { bottom: 20px; left: 20px; }
-.bottom-right { bottom: 20px; right: 20px; }
+.left-widgets {
+    grid-area: left-widgets;
+    display: flex;
+    flex-direction: column;
+    gap: var(--widget-margin);
+}
+
+.right-widgets {
+    grid-area: right-widgets;
+    display: flex;
+    flex-direction: column;
+    gap: var(--widget-margin);
+}
+
+.center-content {
+    grid-area: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
 
 .search-container {
     position: fixed;
@@ -521,11 +555,14 @@ body {
 }
 
 .chat-interface {
-    position: fixed;
-    bottom: 40px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 70%;
+    grid-area: footer;
+    position: relative;
+    transform: none;
+    left: auto;
+    bottom: auto;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
     text-align: center;
     background: rgba(10, 25, 47, 0.95);
     padding: 20px;
@@ -753,6 +790,12 @@ body {
 }
 
 /* Add responsive design for smaller screens */
+@media (max-width: 1200px) {
+    body {
+        grid-template-columns: 250px 1fr 250px;
+    }
+}
+
 @media (max-width: 768px) {
     .card {
         width: 200px;
@@ -761,4 +804,27 @@ body {
     .search-container {
         width: 80%;
     }
+
+    body {
+        grid-template-areas:
+            "header"
+            "center"
+            "left-widgets"
+            "right-widgets"
+            "footer";
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto auto auto;
+    }
+
+    .left-widgets, .right-widgets {
+        padding: 0 var(--widget-margin);
+    }
+}
+
+.top-left, .top-right, .bottom-left, .bottom-right {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    bottom: auto;
 }
