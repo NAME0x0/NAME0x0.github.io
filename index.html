@@ -6,9 +6,11 @@
     <title>AVA AI Assistant</title>
     <link rel="stylesheet" href="main.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
 </head>
 <body>
-    <div class="matrix-bg"></div>
+    <div id="particles-js" class="matrix-bg"></div>
+    <div class="dynamic-overlay"></div>
     
     <div class="ai-presence">
         <div class="svg-frame">
@@ -49,6 +51,8 @@
                 <path fill="var(--ava-primary)" d="M180.956 186.056C183.849 184.212 186.103 181.521 187.41 178.349C188.717 175.177 189.013 171.679 188.258 168.332C187.503 164.986 185.734 161.954 183.192 159.65C180.649 157.346 177.458 155"></path>
             </svg>
         </div>
+        <div class="energy-field"></div>
+        <div class="scanning-line"></div>
     </div>
 
     <div class="welcome-message">
@@ -62,16 +66,24 @@
 
     <div class="corner-cards">
         <div class="card top-left">
-            <h3><span class="ai-icon">⚡</span> SYSTEM STATUS</h3>
+            <div class="card-header">
+                <h3><span class="ai-icon pulse-icon">⚡</span> SYSTEM STATUS</h3>
+                <div class="real-time-indicator"></div>
+            </div>
             <div class="card-content">
-                <div class="ai-message">Current Priority: ML Research</div>
-                <div class="status-item">
-                    <span class="label">Active Tasks:</span>
-                    <span class="value">3</span>
-                </div>
-                <div class="status-item">
-                    <span class="label">System Health:</span>
-                    <span class="value">Optimal</span>
+                <div class="system-monitor">
+                    <div class="monitor-item">
+                        <div class="label">CPU Load</div>
+                        <div class="dynamic-bar">
+                            <div class="bar-fill cpu-load" data-min="30" data-max="80"></div>
+                        </div>
+                    </div>
+                    <div class="monitor-item">
+                        <div class="label">Memory</div>
+                        <div class="dynamic-bar">
+                            <div class="bar-fill memory-load"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -92,7 +104,7 @@
         </div>
 
         <div class="card bottom-right">
-            <h3><span class="ai-icon">🤖</span> AVA CONTROLS</h3>
+            <h3><span class="ai-icon">🤖</h3>
             <div class="card-content">
                 <div class="ai-function interactive">
                     <span class="icon">🔮</span>
@@ -110,9 +122,14 @@
 
     <div id="globe-container" class="interactive"></div>
 
+    <div class="audio-visualizer">
+        <canvas id="visualizer"></canvas>
+    </div>
+
     <div class="chat-interface">
         <div class="ai-response" id="aiResponse">
-            I'm here to help, Mr. Afsah. What can I do for you?
+            <span class="response-text">I'm here to help, Mr. Afsah. What can I do for you?</span>
+            <div class="response-visualizer"></div>
         </div>
         <div class="search-container">
             <div class="search-prefix">> AVA://</div>
@@ -123,6 +140,8 @@
         </div>
     </div>
 
+    <script src="particles-config.js"></script>
+    <script src="animations.js"></script>
     <script src="main.js"></script>
 </body>
 </html>
