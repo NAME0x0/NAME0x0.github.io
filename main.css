@@ -14,6 +14,10 @@
     --scan-animation: scan 1.5s linear infinite;
     --monitor-animation-duration: 3s;
     --visualizer-color: var(--ava-primary);
+    --loader-size: 300px;
+    --circle-border: 2px;
+    --rotation-speed: 15s;
+    --hover-speed: 8s;
 }
 
 body {
@@ -335,91 +339,128 @@ body {
     opacity: 0.8;
 }
 
-.ai-presence {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 0;
+.loader-container {
+    position: relative;
+    width: var(--loader-size);
+    height: var(--loader-size);
+    transition: transform 0.5s ease;
+    transform-style: preserve-3d;
+    perspective: 1000px;
 }
 
-.energy-field {
-    position: absolute;
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, var(--ava-glow) 0%, transparent 70%);
-    animation: energy-pulse 4s ease-in-out infinite;
-}
-
-.scanning-line {
+.circle-loader {
     position: absolute;
     width: 100%;
-    height: 2px;
-    background: var(--ava-primary);
-    filter: blur(1px);
-    animation: scan-vertical 2s linear infinite;
+    height: 100%;
+    transition: opacity 0.3s ease;
 }
 
-.svg-frame {
-    position: relative;
-    width: 300px;
-    height: 300px;
-    transform-style: preserve-3d;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.svg-frame svg {
+.circle {
     position: absolute;
-    transition: .5s;
-    z-index: calc(1 - (0.2 * var(--j)));
-    transform-origin: center;
-    width: 344px;
-    height: 344px;
-    fill: none;
+    border-radius: 50%;
+    border: var(--circle-border) solid transparent;
+    border-top-color: var(--ava-primary);
+    border-left-color: var(--ava-primary);
 }
 
-.svg-frame:hover svg {
-    transform: rotate(-80deg) skew(30deg) translateX(calc(45px * var(--i))) translateY(calc(-35px * var(--i)));
+.outer {
+    width: 100%;
+    height: 100%;
+    animation: rotate var(--rotation-speed) linear infinite;
 }
 
-.svg-frame svg #center {
-    transition: .5s;
-    transform-origin: center;
+.middle {
+    width: 70%;
+    height: 70%;
+    top: 15%;
+    left: 15%;
+    animation: rotate var(--rotation-speed) linear infinite reverse;
 }
 
-.svg-frame:hover svg #center {
-    transform: rotate(-30deg) translateX(45px) translateY(-3px);
+.inner {
+    width: 40%;
+    height: 40%;
+    top: 30%;
+    left: 30%;
+    animation: rotate calc(var(--rotation-speed) * 0.75) linear infinite;
 }
 
-#out2 {
-    animation: rotate16 7s ease-in-out infinite alternate;
-    transform-origin: center;
+.scanning-dot {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: var(--ava-primary);
+    border-radius: 50%;
+    top: 0;
+    left: 50%;
+    transform-origin: 50% 150px;
+    animation: scan-circle var(--rotation-speed) linear infinite;
+    box-shadow: 0 0 10px var(--ava-primary),
+                0 0 20px var(--ava-primary);
 }
 
-#out3 {
-    animation: rotate16 3s ease-in-out infinite alternate;
-    transform-origin: center;
-    stroke: var(--ava-primary);
+.globe-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    transform-style: preserve-3d;
 }
 
-#inner3,
-#inner1 {
-    animation: rotate16 4s ease-in-out infinite alternate;
-    transform-origin: center;
+.globe {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: 
+        linear-gradient(90deg, transparent 0%, var(--ava-glow) 50%, transparent 100%),
+        repeating-linear-gradient(
+            0deg,
+            transparent 0%,
+            transparent 2px,
+            var(--ava-primary) 2px,
+            var(--ava-primary) 3px
+        );
+    animation: rotate-globe var(--hover-speed) linear infinite;
+    transform-style: preserve-3d;
 }
 
-#center1 {
-    fill: var(--ava-primary);
-    animation: rotate16 2s ease-in-out infinite alternate;
-    transform-origin: center;
+.globe-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 2px solid var(--ava-primary);
+    box-shadow: 0 0 20px var(--ava-glow);
+    opacity: 0.5;
 }
 
-@keyframes rotate16 {
-    to {
-        transform: rotate(360deg);
-    }
+.loader-container:hover {
+    transform: rotateX(60deg) rotateZ(-30deg);
+}
+
+.loader-container:hover .circle-loader {
+    opacity: 0;
+}
+
+.loader-container:hover .globe-container {
+    opacity: 1;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes rotate-globe {
+    from { transform: rotateY(0deg); }
+    to { transform: rotateY(360deg); }
+}
+
+@keyframes scan-circle {
+    from { transform: rotate(0deg) translateX(0); }
+    to { transform: rotate(360deg) translateX(0); }
 }
 
 .ai-status {
