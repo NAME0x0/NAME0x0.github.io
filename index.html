@@ -48,31 +48,66 @@
 
     <!-- Left Widgets -->
     <div class="widget-dock left">
-        <button class="widget-trigger" data-widget-trigger="weather" title="Weather & Time" type="button">
-            <span class="widget-icon">🌍</span>
+        <button class="widget-trigger" data-widget-trigger="weather">
+            🌍
         </button>
-        <button class="widget-trigger" data-widget-trigger="calendar" title="Calendar" type="button">
-            <span class="widget-icon">📅</span>
+        <button class="widget-trigger" data-widget-trigger="calendar">
+            📅
         </button>
-        <button class="widget-trigger" data-widget-trigger="system" title="System Status" type="button">
-            <span class="widget-icon">⚡</span>
+        <button class="widget-trigger" data-widget-trigger="system">
+            ⚡
         </button>
     </div>
 
     <div class="widget-container left">
         <div class="widget" data-widget="weather">
-            <!-- Copy your weather widget content here -->
             <div class="widget-content">
                 <div class="time-display">
-                    <!-- ... weather content ... -->
+                    <div class="digital-clock">--:--:--</div>
+                    <div class="date-display">Loading...</div>
+                    <div class="timezone">Detecting timezone...</div>
+                </div>
+                <div class="weather-display">
+                    <div class="weather-main">
+                        <div class="weather-temp">--°C</div>
+                        <div class="weather-icon">⏳</div>
+                    </div>
+                    <div class="weather-details">
+                        <div class="weather-desc">Loading weather data...</div>
+                        <div class="weather-stats">
+                            <span>Humidity: --</span>
+                            <span>Wind: --</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+        
         <div class="widget" data-widget="calendar">
-            <!-- Calendar widget content -->
+            <div class="widget-content">
+                <div class="calendar-content">
+                    <!-- Calendar content from calendar.js will be inserted here -->
+                </div>
+            </div>
         </div>
+        
         <div class="widget" data-widget="system">
-            <!-- System widget content -->
+            <div class="widget-content">
+                <div class="system-monitor">
+                    <div class="monitor-item">
+                        <div class="label">CPU Load</div>
+                        <div class="dynamic-bar">
+                            <div class="bar-fill cpu-load"></div>
+                        </div>
+                    </div>
+                    <div class="monitor-item">
+                        <div class="label">Memory</div>
+                        <div class="dynamic-bar">
+                            <div class="bar-fill memory-load"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

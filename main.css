@@ -1749,3 +1749,75 @@ button {
 .widget-container {
     z-index: 999;
 }
+
+/* Update widget-related styles */
+
+.widget-trigger {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--glass);
+    border: 1px solid var(--accent-glow);
+    color: var(--accent);
+    font-size: 1.2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+    margin: 5px 0;
+}
+
+.widget-container {
+    position: fixed;
+    top: var(--header-height);
+    bottom: var(--footer-height);
+    width: var(--widget-width);
+    background: var(--glass);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border-right: 1px solid var(--accent-glow);
+    padding: 20px;
+    z-index: 100;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.widget {
+    opacity: 1;
+    display: none;
+    background: var(--glass);
+    border: 1px solid var(--accent-glow);
+    border-radius: var(--card-radius);
+    overflow: hidden;
+    margin-bottom: var(--spacing);
+}
+
+.widget.active {
+    display: block;
+}
+
+.widget-content {
+    padding: 20px;
+    opacity: 1;
+    transform: none;
+}
+
+/* Ensure content is visible */
+.widget-container.active {
+    transform: translateX(0) !important;
+}
+
+.widget-container.left {
+    left: 0;
+    transform: translateX(calc(-100% + 60px));
+    border-right: 1px solid var(--accent-glow);
+}
+
+.widget-container.right {
+    right: 0;
+    transform: translateX(calc(100% - 60px));
+    border-left: 1px solid var(--accent-glow);
+}
+
+/* ...rest of existing styles... */

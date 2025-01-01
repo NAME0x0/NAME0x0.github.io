@@ -96,13 +96,37 @@ class WidgetSystem {
             trigger.classList.add('active');
             this.activeWidgets.add(trigger);
 
-            // Ensure widget is visible after display change
-            setTimeout(() => {
-                widget.style.opacity = '1';
-                widget.style.transform = 'translateX(0)';
-            }, 50);
+            // Force a reflow to ensure the transition works
+            widget.offsetHeight;
+            
+            widget.style.opacity = '1';
+            widget.style.transform = 'translateX(0)';
 
+            // Update widget content if needed
+            this.updateWidgetContent(widget);
+            
             console.log('Widget opened:', trigger.dataset.widgetTrigger);
+        }
+    }
+
+    updateWidgetContent(widget) {
+        // Update content based on widget type
+        const widgetType = widget.dataset.widget;
+        
+        switch(widgetType) {
+            case 'weather':
+                // Trigger weather update
+                if (window.initializeWeatherTime) {
+                    window.initializeWeatherTime();
+                }
+                break;
+            case 'calendar':
+                // Refresh calendar
+                if (window.calendar) {
+                    window.calendar.renderEvents();
+                }
+                break;
+            // Add other widget type updates as needed
         }
     }
 
