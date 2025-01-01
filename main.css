@@ -15,6 +15,10 @@
     /* Layout */
     --spacing: 20px;
     --card-radius: 10px;
+    --header-height: 120px;
+    --footer-height: 100px;
+    --widget-width: 350px;
+    --max-width: 1800px;
 }
 
 body {
@@ -29,12 +33,16 @@ body {
         "header header header"
         "left-widgets center right-widgets"
         "footer footer footer";
-    grid-template-columns: 300px 1fr 300px;
-    grid-template-rows: var(--header-height) 1fr 100px;
+    grid-template-columns: var(--widget-width) 1fr var(--widget-width);
+    grid-template-rows: var(--header-height) 1fr var(--footer-height);
     height: 100vh;
     gap: var(--spacing);
     padding: var(--spacing);
     box-sizing: border-box;
+    max-width: var(--max-width);
+    margin: 0 auto;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .matrix-bg {
@@ -172,6 +180,24 @@ body {
     display: flex;
     flex-direction: column;
     gap: var(--spacing);
+    height: calc(100vh - var(--header-height) - var(--footer-height));
+    overflow-y: auto;
+    padding: var(--spacing);
+    /* Cross-browser scrollbar styling */
+    overflow: -moz-scrollbars-none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    
+    /* Webkit scrollbar styling */
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+    &::-webkit-scrollbar-track {
+        background: var(--primary-bg);
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: var(--accent);
+        border-radius: 4px;
+    }
 }
 
 .right-widgets {
@@ -179,6 +205,40 @@ body {
     display: flex;
     flex-direction: column;
     gap: var(--spacing);
+    height: calc(100vh - var(--header-height) - var(--footer-height));
+    overflow-y: auto;
+    padding: var(--spacing);
+    /* Cross-browser scrollbar styling */
+    overflow: -moz-scrollbars-none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    
+    /* Webkit scrollbar styling */
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+    &::-webkit-scrollbar-track {
+        background: var(--primary-bg);
+    }
+    &::-webkit-scrollbar-thumb {
+        background: var(--accent);
+        border-radius: 4px;
+    }
+}
+
+.left-widgets::-webkit-scrollbar,
+.right-widgets::-webkit-scrollbar {
+    width: 5px;
+}
+
+.left-widgets::-webkit-scrollbar-track,
+.right-widgets::-webkit-scrollbar-track {
+    background: var(--primary-bg);
+}
+
+.left-widgets::-webkit-scrollbar-thumb,
+.right-widgets::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border-radius: 10px;
 }
 
 .center-content {
@@ -187,6 +247,13 @@ body {
     justify-content: center;
     align-items: center;
     position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing);
+    padding: var(--spacing);
 }
 
 .search-container {
@@ -566,6 +633,18 @@ body {
     padding: 20px;
     border-radius: 10px;
     border: 1px solid var(--accent);
+    position: fixed;
+    bottom: var(--spacing);
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 2 * var(--widget-width) - 4 * var(--spacing));
+    z-index: 1000;
+}
+
+@media (max-width: 1200px) {
+    .chat-interface {
+        width: calc(100% - 2 * var(--spacing));
+    }
 }
 
 .ai-response {
@@ -788,9 +867,31 @@ body {
 }
 
 /* Add responsive design for smaller screens */
+@media (max-width: 1400px) {
+    :root {
+        --widget-width: 300px;
+    }
+}
+
 @media (max-width: 1200px) {
     body {
         grid-template-columns: 250px 1fr 250px;
+    }
+}
+
+@media (max-width: 1200px) {
+    body {
+        grid-template-areas:
+            "header header"
+            "left-widgets right-widgets"
+            "center center"
+            "footer footer";
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto 1fr auto;
+    }
+
+    .center-content {
+        margin: var(--spacing) 0;
     }
 }
 
@@ -816,6 +917,8 @@ body {
 
     .left-widgets, .right-widgets {
         padding: 0 var(--spacing);
+        height: auto;
+        max-height: 500px;
     }
 }
 
@@ -1023,8 +1126,9 @@ body {
     margin-bottom: var(--spacing);
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
-
     overflow: hidden;
+    min-height: 50px;
+    max-height: 500px;
 }
 
 .widget-header {
@@ -1035,67 +1139,31 @@ body {
     justify-content: space-between;
     align-items: center;
     color: var(--accent);
+    cursor: pointer;
+    position: relative;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--glass);
 }
 
 .widget-content {
     padding: 15px;
-}
-
-/* Time Widget */
-.time-widget .digital-clock {
-    font-size: 2.5em;
-    font-family: 'Courier New', monospace;
-    color: var(--accent);
-    text-align: center;
-    text-shadow: 0 0 10px var(--accent-glow);
-    margin: 10px 0;
-}
-
-.time-widget .date-display {
-    text-align: center;
-    color: var(--text);
-    font-size: 1.1em;
-    opacity: 0.8;
-}
-
-/* Weather Widget */
-.weather-widget .weather-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-}
-
-.weather-temp {
-    font-size: 2em;
-    color: var(--accent);
-}
-
-.weather-desc {
-    color: var(--text);
-}
-
-/* Calendar Widget */
-.calendar-widget .calendar-content {
-    max-height: 200px;
     overflow-y: auto;
-}
-
-.calendar-event {
-    padding: 8px;
-    border-left: 2px solid var(--accent);
-    margin: 5px 0;
-    background: rgba(100, 255, 218, 0.05);
-}
-
-.calendar-event:hover {
-    background: rgba(100, 255, 218, 0.1);
-}
-
-/* CSS-only Collapsible Implementation */
-.widget-header {
-    cursor: pointer;
-    position: relative;
+    /* Standard scrollbar styling */
+    -ms-overflow-style: none;  /* IE and Edge */
+    /* Webkit scrollbar styling */
+    &::-webkit-scrollbar {
+        width: 8px;
+        display: block;
+    }
+    &::-webkit-scrollbar-track {
+        background: var(--primary-bg);
+    }
+    &::-webkit-scrollbar-thumb {
+        background: var(--accent);
+        border-radius: 4px;
+    }
 }
 
 .widget-header::after {
@@ -1217,7 +1285,7 @@ body {
 .location-select {
     background: rgba(10, 25, 47, 0.95);
     border: 1px solid var(--accent);
-    color: var(--accent);
+    color: var (--accent);
     padding: 8px 15px;
     border-radius: 5px;
     width: 100%;
@@ -1388,4 +1456,17 @@ body {
 @keyframes visualizer-active {
     0%, 100% { transform: scaleY(0.5); }
     50% { transform: scaleY(1.2); }
+}
+
+.voice-btn, .mode-btn, .search-bar {
+    &:focus {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+    }
+}
+
+/* Add focus styles for interactive elements */
+.interactive:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
 }

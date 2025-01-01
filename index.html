@@ -10,6 +10,13 @@
     <script src="js/weather-time.js" defer></script>
     <script src="js/calendar.js" defer></script>
     <script src="js/ai-interface.js" defer></script>
+    <meta name="description" content="AVA Dashboard">
+    <link rel="manifest" href="manifest.json">
+    <meta name="msapplication-navbutton-color" content="#020c1b">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#020c1b">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="images/icon-192x192.png">
 </head>
 <body>
     <div class="background-loaders">
@@ -128,7 +135,7 @@
     </div>
 
     <!-- Center Content -->
-    <div class="center-content">
+    <main class="center-content" role="main">
         <div class="ai-presence">
             <div class="loader-container">
                 <div class="circle-loader">
@@ -143,7 +150,24 @@
                 </div>
             </div>
         </div>
-    </div>
+        <div class="quick-actions">
+            <button class="action-btn" aria-label="Create New Task">
+                <span class="icon">📝</span> New Task
+            </button>
+            <button class="action-btn" aria-label="System Analysis">
+                <span class="icon">📊</span> Analysis
+            </button>
+            <button class="action-btn" aria-label="Settings">
+                <span class="icon">⚙️</span> Settings
+            </button>
+        </div>
+        <div class="system-overview">
+            <h2 class="section-title">System Overview</h2>
+            <div class="overview-grid">
+                <!-- Add system stats here -->
+            </div>
+        </div>
+    </main>
 
     <!-- Right Widgets -->
     <div class="right-widgets">
@@ -180,7 +204,7 @@
                     </div>
                 </div>
                 <div class="voice-interface">
-                    <button class="voice-btn">
+                    <button class="voice-btn" role="button" aria-label="Activate Voice Control">
                         <span class="pulse"></span>
                         Voice Interface
                     </button>
@@ -190,7 +214,7 @@
     </div>
 
     <!-- Footer -->
-    <div class="chat-interface">
+    <div class="chat-interface" role="complementary">
         <div class="ai-response" id="aiResponse">
             <span class="response-text">I'm here to help, Mr. Afsah. What can I do for you?</span>
             <div class="response-visualizer"></div>
@@ -200,6 +224,14 @@
             <input type="text" class="search-bar" placeholder="How can I assist you, Mr. Afsah?">
             <button class="voice-trigger" title="Activate voice input">
                 <div class="voice-wave"></div>
+            </button>
+        </div>
+        <div class="chat-actions">
+            <button class="action-btn" aria-label="Clear Chat">
+                <span class="icon">🗑️</span>
+            </button>
+            <button class="action-btn" aria-label="Save Chat">
+                <span class="icon">💾</span>
             </button>
         </div>
     </div>
@@ -223,5 +255,15 @@
     <script src="particles-config.js"></script>
     <script src="animations.js"></script>
     <script src="main.js"></script>
+    <script>
+    document.addEventListener('keydown', (e) => {
+        if (e.key === '?' && e.shiftKey) {
+            document.querySelector('.shortcut-overlay').classList.toggle('visible');
+        }
+        if (e.key === 'Escape') {
+            document.querySelector('.shortcut-overlay').classList.remove('visible');
+        }
+    });
+    </script>
 </body>
 </html>
