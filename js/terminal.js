@@ -1,64 +1,51 @@
-class TerminalEmulator {
+class Terminal {
     constructor() {
         this.init();
-        this.commandHistory = [];
+        this.inputHistory = [];
         this.historyIndex = -1;
-        this.commands = {
+        
+        this.customCommands = {
+            clear: () => this.clear(),
             help: () => this.showHelp(),
-            clear: () => this.clearTerminal(),
-            time: () => this.showTime(),
-            weather: () => this.getWeather(),
-            system: () => this.showSystemStatus(),
-            ai: () => this.activateAI(),
-            widgets: () => this.listWidgets(),
-            // Add more commands
+            history: () => this.showHistory()
         };
     }
 
     init() {
-        this.terminal = document.querySelector('.terminal');
+        this.container = document.querySelector('.terminal');
         this.output = document.querySelector('.terminal-output');
         this.input = document.querySelector('.terminal-input');
+        this.prompt = document.querySelector('.terminal-prompt');
         
-        this.input.addEventListener('keydown', (e) => this.handleInput(e));
+        this.setupEventListeners();
         this.showWelcome();
     }
 
-    handleInput(e) {
-        if (e.key === 'Enter') {
-            const cmd = this.input.value.trim();
-            this.executeCommand(cmd);
-            this.commandHistory.push(cmd);
-            this.historyIndex = this.commandHistory.length;
-            this.input.value = '';
-        } else if (e.key === 'ArrowUp') {
-            e.preventDefault();
-            this.navigateHistory(-1);
-        } else if (e.key === 'ArrowDown') {
-            e.preventDefault();
-            this.navigateHistory(1);
+    async processCommand(input) {
+        this.addToHistory(input);
+        this.print(`> ${input}`, 'command');
+
+        if (this.customCommands[input]) {
+            this.customCommands[input]();
+            return;
         }
+
+        const response = await window.AVA.processInput(input);
+        this.handleResponse(response);
     }
 
-    executeCommand(cmd) {
-        const [command, ...args] = cmd.split(' ');
-        
-        this.print(`> ${cmd}`);
-        
-        if (this.commands[command]) {
-            this.commands[command](args);
-        } else {
-            this.print(`Command not found: ${command}`);
+    handleResponse(response) {
+        if (response.type === 'error') {
+            this.print(response.message, 'error');
+            if (response.suggestions) {
+                this.print('Did you mean:', 'hint');
+                response.suggestions.forEach(s => this.print(`  ${s}`, 'suggestion'));
+            }
+            return;
         }
+
+        this.print(response.message, response.type || 'success');
     }
 
-    print(text, className = '') {
-        const line = document.createElement('div');
-        line.className = `terminal-line ${className}`;
-        line.innerHTML = text;
-        this.output.appendChild(line);
-        this.output.scrollTop = this.output.scrollHeight;
-    }
-
-    // ... implement other terminal methods
+    // ... rest of terminal methods
 }

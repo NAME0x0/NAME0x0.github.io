@@ -19,6 +19,12 @@
     --footer-height: 100px;
     --widget-width: 350px;
     --max-width: 1800px;
+
+    /* Add new widget-specific variables */
+    --widget-header-height: 40px;
+    --widget-min-width: 300px;
+    --widget-min-height: 200px;
+    --widget-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 body {
@@ -2121,4 +2127,160 @@ button {
     background: var(--accent-glow);
 }
 
-/* ...existing code... */
+/* Enhanced widget styles */
+.widget {
+    position: relative;
+    min-width: var(--widget-min-width);
+    min-height: var(--widget-min-height);
+    resize: both;
+    overflow: auto;
+    transition: var(--widget-transition);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-fliter: blur(10px);
+
+}
+
+.widget-header {
+    height: var(--widget-header-height);
+    padding: 0 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(
+        90deg,
+        var(--glass) 0%,
+        rgba(100, 255, 218, 0.05) 100%
+    );
+    border-bottom: 1px solid var(--accent-glow);
+    cursor: move;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.metric-item {
+    padding: 10px;
+    border-radius: var(--card-radius);
+    background: rgba(100, 255, 218, 0.05);
+    margin-bottom: 10px;
+}
+
+.metric-label {
+    color: var(--accent);
+    font-size: 0.9em;
+    margin-bottom: 5px;
+}
+
+.metric-value {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: var(--accent);
+    text-shadow: 0 0 10px var(--accent-glow);
+}
+
+.process-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.process-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    border-bottom: 1px solid var(--accent-glow);
+    transition: background-color 0.2s;
+}
+
+.process-item:hover {
+    background: rgba(100, 255, 218, 0.05);
+}
+
+.task-list {
+    margin-bottom: 15px;
+}
+
+.analytics-container {
+    height: 300px;
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+/* Widget resize handle */
+.widget-resize-handle {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 15px;
+    height: 15px;
+    cursor: nwse-resize;
+    background: linear-gradient(
+        135deg,
+        transparent 50%,
+        var(--accent) 50%
+    );
+    opacity: 0.3;
+    transition: opacity 0.2s;
+}
+
+.widget-resize-handle:hover {
+    opacity: 1;
+}
+
+/* AI modes styling */
+.ai-modes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+    margin-bottom: 15px;
+}
+
+.mode-btn {
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.mode-btn.active {
+    background: var(--accent);
+    color: var(--primary-bg);
+}
+
+.mode-btn:hover:not(.active) {
+    background: var(--accent-glow);
+}
+
+/* Progress bar animations */
+.progress-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.5s ease-out;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+    );
+    animation: progress-shine 2s linear infinite;
+}
+
+@keyframes progress-shine {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(100%); }
+}
+
+/* ...rest of existing styles... */

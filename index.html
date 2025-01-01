@@ -20,247 +20,125 @@
     <link rel="apple-touch-icon" href="images/icon-192x192.png">
 </head>
 <body>
-    <div class="background-loaders">
-        <div class="loader-circle loader-1"></div>
-        <div class="loader-circle loader-2"></div>
-        <div class="loader-circle loader-3"></div>
-        <div class="loader-circle loader-4"></div>
-    </div>
-    <div id="particles-js" class="matrix-bg"></div>
-    <div class="background-circles">
-        <div class="bg-circle circle-1"></div>
-        <div class="bg-circle circle-2"></div>
-        <div class="bg-circle circle-3"></div>
-        <div class="bg-circle circle-4"></div>
-        <div class="bg-circle circle-5"></div>
-    </div>
-    <div class="dynamic-overlay"></div>
+    <div class="matrix-bg"></div>
+    <div class="system-overlay"></div>
     
-    <!-- Header -->
-    <div class="welcome-message">
-        <h1 class="cyber-text">> AVA SYSTEM ONLINE</h1>
-        <p class="typing-text">Welcome back, Mr. Afsah. How may I assist you today?</p>
+    <header>
+        <h1 class="cyber-text">AVA CORE</h1>
         <div class="ai-status">
-            <span class="status-indicator active"></span>
-            AVA Core: Active | Systems: Optimal
+            <div class="status-indicator"></div>
+            <span class="status-text">Initializing...</span>
         </div>
-    </div>
+    </header>
 
-    <!-- Left Widgets -->
-    <div class="widget-dock left">
-        <button class="widget-trigger" data-widget-trigger="weather">
-            🌍
-        </button>
-        <button class="widget-trigger" data-widget-trigger="calendar">
-            📅
-        </button>
-        <button class="widget-trigger" data-widget-trigger="system">
-            ⚡
-        </button>
-    </div>
+    <main>
+        <div class="widget-dock left">
+            <button class="widget-trigger" data-widget-trigger="system">⚡</button>
+            <button class="widget-trigger" data-widget-trigger="monitoring">📊</button>
+            <button class="widget-trigger" data-widget-trigger="tasks">📝</button>
+        </div>
 
-    <div class="widget-container left">
-        <div class="widget" data-widget="weather">
-            <div class="widget-content">
-                <div class="time-display">
-                    <div class="digital-clock">--:--:--</div>
-                    <div class="date-display">Loading...</div>
-                    <div class="timezone">Detecting timezone...</div>
-                </div>
-                <div class="weather-display">
-                    <div class="weather-main">
-                        <div class="weather-temp">--°C</div>
-                        <div class="weather-icon">⏳</div>
-                    </div>
-                    <div class="weather-details">
-                        <div class="weather-desc">Loading weather data...</div>
-                        <div class="weather-stats">
-                            <span>Humidity: --</span>
-                            <span>Wind: --</span>
+        <div class="widget-container left">
+            <!-- System Status Widget -->
+            <div class="widget" data-widget="system">
+                <div class="widget-header">System Status</div>
+                <div class="widget-content">
+                    <div class="system-metrics">
+                        <div class="metric-item">
+                            <div class="metric-label">CPU Usage</div>
+                            <div class="metric-value" id="cpuUsage">0%</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill cpu"></div>
+                            </div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-label">Memory</div>
+                            <div class="metric-value" id="memoryUsage">0%</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill memory"></div>
+                            </div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-label">Network</div>
+                            <div class="metric-value" id="networkSpeed">0 Mb/s</div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="widget" data-widget="calendar">
-            <div class="widget-content">
-                <div class="calendar-content">
-                    <!-- Calendar content from calendar.js will be inserted here -->
-                </div>
-            </div>
-        </div>
-        
-        <div class="widget" data-widget="system">
-            <div class="widget-content">
-                <div class="system-monitor">
-                    <div class="monitor-item">
-                        <div class="label">CPU Load</div>
-                        <div class="dynamic-bar">
-                            <div class="bar-fill cpu-load"></div>
-                        </div>
-                    </div>
-                    <div class="monitor-item">
-                        <div class="label">Memory</div>
-                        <div class="dynamic-bar">
-                            <div class="bar-fill memory-load"></div>
-                        </div>
+
+            <!-- Monitoring Widget -->
+            <div class="widget" data-widget="monitoring">
+                <div class="widget-header">Active Processes</div>
+                <div class="widget-content">
+                    <div class="process-list" id="processList">
+                        <!-- Processes will be dynamically inserted here -->
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Right Widgets -->
-    <div class="widget-dock right">
-        <button class="widget-trigger" data-widget-trigger="ai" title="AI Controls">
-            🤖
-        </button>
-    </div>
-
-    <div class="widget-container right">
-        <div class="widget" data-widget="ai">
-            <!-- AI controls content -->
-        </div>
-    </div>
-
-    <!-- Center Content -->
-    <main class="center-content" role="main">
-        <div class="ai-presence">
-            <div class="loader-container">
-                <div class="circle-loader">
-                    <div class="circle outer"></div>
-                    <div class="circle middle"></div>
-                    <div class="circle inner"></div>
-                    <div class="scanning-dot"></div>
-                </div>
-                <div class="globe-container">
-                    <div class="globe"></div>
-                    <div class="globe-overlay"></div>
+            <!-- Tasks Widget -->
+            <div class="widget" data-widget="tasks">
+                <div class="widget-header">Active Tasks</div>
+                <div class="widget-content">
+                    <div class="task-list" id="taskList">
+                        <!-- Tasks will be dynamically inserted here -->
+                    </div>
+                    <button class="action-btn" onclick="createNewTask()">
+                        <span class="icon">+</span> New Task
+                    </button>
                 </div>
             </div>
         </div>
-        <div class="quick-actions">
-            <button class="action-btn" aria-label="Create New Task">
-                <span class="icon">📝</span> New Task
-            </button>
-            <button class="action-btn" aria-label="System Analysis">
-                <span class="icon">📊</span> Analysis
-            </button>
-            <button class="action-btn" aria-label="Settings">
-                <span class="icon">⚙️</span> Settings
-            </button>
+
+        <div class="main-terminal">
+            <div class="terminal">
+                <div class="terminal-output"></div>
+                <div class="input-line">
+                    <span class="prompt">ava://$</span>
+                    <input type="text" class="terminal-input" 
+                           placeholder="Enter command or query..."
+                           autofocus>
+                </div>
+            </div>
         </div>
-        <div class="system-overview">
-            <h2 class="section-title">System Overview</h2>
-            <div class="overview-grid">
-                <!-- Add system stats here -->
+
+        <div class="widget-dock right">
+            <button class="widget-trigger" data-widget-trigger="ai">🤖</button>
+            <button class="widget-trigger" data-widget-trigger="analytics">📈</button>
+        </div>
+
+        <div class="widget-container right">
+            <!-- AI Control Widget -->
+            <div class="widget" data-widget="ai">
+                <div class="widget-header">AI Control</div>
+                <div class="widget-content">
+                    <div class="ai-modes">
+                        <button class="mode-btn active" data-mode="assistant">Assistant</button>
+                        <button class="mode-btn" data-mode="analysis">Analysis</button>
+                        <button class="mode-btn" data-mode="system">System</button>
+                    </div>
+                    <div class="ai-status-details">
+                        <!-- AI status details will be dynamically updated -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Widget -->
+            <div class="widget" data-widget="analytics">
+                <div class="widget-header">System Analytics</div>
+                <div class="widget-content">
+                    <div class="analytics-container">
+                        <!-- Analytics charts and data will be inserted here -->
+                    </div>
+                </div>
             </div>
         </div>
     </main>
 
-    <!-- Add after center-content section -->
-    <div class="cyber-status-bar">
-        <div class="status-item">
-            <span class="status-icon">⚡</span>
-            <span class="status-label">System Power</span>
-            <span class="status-value">98%</span>
-        </div>
-        <div class="status-item">
-            <span class="status-icon">📡</span>
-            <span class="status-label">Network</span>
-            <span class="status-value">320 Mb/s</span>
-        </div>
-        <div class="status-item">
-            <span class="status-icon">🔒</span>
-            <span class="status-label">Security</span>
-            <span class="status-value">Active</span>
-        </div>
-    </div>
-
-    <div class="floating-actions">
-        <button class="action-btn cyber-btn" onclick="toggleTerminal()">
-            <span class="btn-glitch"></span>
-            <span class="btn-label">Terminal</span>
-        </button>
-        <button class="action-btn cyber-btn" onclick="toggleAIMode()">
-            <span class="btn-glitch"></span>
-            <span class="btn-label">AI Mode</span>
-        </button>
-    </div>
-
-    <!-- Footer -->
-    <div class="chat-interface" role="complementary">
-        <div class="ai-response" id="aiResponse">
-            <span class="response-text">I'm here to help, Mr. Afsah. What can I do for you?</span>
-            <div class="response-visualizer"></div>
-        </div>
-        <div class="search-container">
-            <div class="search-prefix">> AVA://</div>
-            <input type="text" class="search-bar" placeholder="How can I assist you, Mr. Afsah?">
-            <button class="voice-trigger" title="Activate voice input">
-                <div class="voice-wave"></div>
-            </button>
-        </div>
-        <div class="chat-actions">
-            <button class="action-btn" aria-label="Clear Chat">
-                <span class="icon">🗑️</span>
-            </button>
-            <button class="action-btn" aria-label="Save Chat">
-                <span class="icon">💾</span>
-            </button>
-        </div>
-    </div>
-
-    <!-- Add this after the chat-interface section -->
-    <div class="terminal-container">
-        <div class="terminal-header">
-            <span class="terminal-title">AVA Terminal</span>
-            <div class="terminal-controls">
-                <button class="terminal-min">−</button>
-                <button class="terminal-max">□</button>
-                <button class="terminal-close">×</button>
-            </div>
-        </div>
-        <div class="terminal">
-            <div class="terminal-output"></div>
-            <div class="terminal-input-line">
-                <span class="terminal-prompt">ava@system:~$</span>
-                <label for="terminal-command" class="sr-only">Terminal Command Input</label>
-                <input type="text" id="terminal-command" class="terminal-input" placeholder="Enter command..." title="Terminal command input" autofocus>
-            </div>
-        </div>
-    </div>
-
-    <!-- Keyboard Shortcut Overlay -->
-    <div class="shortcut-overlay">
-        <div class="shortcut-grid">
-            <div class="shortcut-category">
-                <h3>Navigation</h3>
-                <div class="shortcut-item">
-                    <kbd>?</kbd> Show/Hide Shortcuts
-                </div>
-                <div class="shortcut-item">
-                    <kbd>ESC</kbd> Close Overlay
-                </div>
-                <!-- Add more shortcuts -->
-            </div>
-        </div>
-    </div>
-
-    <script src="particles-config.js"></script>
-    <script src="animations.js"></script>
-    <script src="main.js"></script>
-    <script src="js/widget-system.js" defer></script>
-    <script>
-    document.addEventListener('keydown', (e) => {
-        if (e.key === '?' && e.shiftKey) {
-            document.querySelector('.shortcut-overlay').classList.toggle('visible');
-        }
-        if (e.key === 'Escape') {
-            document.querySelector('.shortcut-overlay').classList.remove('visible');
-        }
-    });
-    </script>
+    <script src="js/ai-core.js"></script>
+    <script src="js/terminal.js"></script>
+    <script src="js/widget-system.js"></script>
+    <script src="js/widget-types.js"></script>
+    <script src="js/widget-manager.js"></script>
 </body>
 </html>
