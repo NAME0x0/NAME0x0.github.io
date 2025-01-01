@@ -182,6 +182,26 @@
         </div>
     </div>
 
+    <!-- Add this after the chat-interface section -->
+    <div class="terminal-container">
+        <div class="terminal-header">
+            <span class="terminal-title">AVA Terminal</span>
+            <div class="terminal-controls">
+                <button class="terminal-min">−</button>
+                <button class="terminal-max">□</button>
+                <button class="terminal-close">×</button>
+            </div>
+        </div>
+        <div class="terminal">
+            <div class="terminal-output"></div>
+            <div class="terminal-input-line">
+                <span class="terminal-prompt">ava@system:~$</span>
+                <label for="terminal-command" class="sr-only">Terminal Command Input</label>
+                <input type="text" id="terminal-command" class="terminal-input" placeholder="Enter command..." title="Terminal command input" autofocus>
+            </div>
+        </div>
+    </div>
+
     <!-- Keyboard Shortcut Overlay -->
     <div class="shortcut-overlay">
         <div class="shortcut-grid">

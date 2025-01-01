@@ -1,160 +1,179 @@
 class WidgetSystem {
     constructor() {
         this.init();
-        this.activeWidgets = new Set();
+        this.activeWidgets = new Map();
+        this.widgetStates = new Map();
     }
 
     init() {
-        // Wait for DOM content to be loaded
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => this.setupWidgets());
-        } else {
+        document.addEventListener('DOMContentLoaded', () => {
             this.setupWidgets();
-        }
+            this.setupTerminal();
+            this.initializeAICore();
+        });
     }
 
     setupWidgets() {
-        // Setup widget triggers
-        const triggers = document.querySelectorAll('.widget-trigger');
-        
-        triggers.forEach(trigger => {
+        document.querySelectorAll('.widget-trigger').forEach(trigger => {
             const widgetId = trigger.dataset.widgetTrigger;
             const widget = document.querySelector(`[data-widget="${widgetId}"]`);
             const container = widget?.closest('.widget-container');
             
             if (widget && container) {
-                // Store references
-                trigger.widget = widget;
-                trigger.container = container;
+                this.widgetStates.set(widgetId, {
+                    trigger,
+                    widget,
+                    container,
+                    active: false,
+                    content: widget.innerHTML,
+                    position: {
+                        x: 0,
+                        y: 0
+                    }
+                });
+
+                // Make widgets draggable
+                this.makeWidgetDraggable(widget);
                 
-                // Add click handler
                 trigger.addEventListener('click', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    this.toggleWidget(trigger);
+                    this.toggleWidget(widgetId);
                 });
 
-                // Ensure widget starts closed
+                // Initialize widget in closed state
                 widget.style.display = 'none';
                 container.classList.remove('active');
-                trigger.classList.remove('active');
             }
         });
 
-        // Close widgets when clicking outside
+        // Add global click handler for closing widgets
         document.addEventListener('click', (e) => {
             if (!e.target.closest('.widget-container') && 
-                !e.target.closest('.widget-trigger')) {
-                this.closeAllWidgets();
+                !e.target.closest('.widget-trigger') &&
+                !e.target.closest('.terminal-container')) {
+                this.minimizeAllWidgets();
             }
         });
-
-        // Touch event handling for mobile
-        document.addEventListener('touchstart', (e) => {
-            if (!e.target.closest('.widget-container') && 
-                !e.target.closest('.widget-trigger')) {
-                this.closeAllWidgets();
-            }
-        }, { passive: true });
-
-        // ESC key to close widgets
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                this.closeAllWidgets();
-            }
-        });
-
-        // Handle widget container interactions
-        document.querySelectorAll('.widget-container').forEach(container => {
-            container.addEventListener('click', (e) => e.stopPropagation());
-            container.addEventListener('touchstart', (e) => e.stopPropagation(), { passive: true });
-        });
-
-        // Debug logging
-        console.log('Widget system initialized');
-        console.log('Found triggers:', triggers.length);
     }
 
-    toggleWidget(trigger) {
-        const widget = trigger.widget;
-        const container = trigger.container;
+    toggleWidget(widgetId) {
+        const state = this.widgetStates.get(widgetId);
+        if (!state) return;
+
+        const isActive = state.active;
         
-        if (!widget || !container) {
-            console.error('Widget or container not found');
-            return;
-        }
-
-        const isActive = this.activeWidgets.has(trigger);
-
-        // Close other widgets first
-        this.closeAllWidgets();
+        // Minimize other widgets
+        this.minimizeAllWidgets();
 
         if (!isActive) {
-            // Open this widget
-            widget.style.display = 'block';
-            container.classList.add('active');
-            trigger.classList.add('active');
-            this.activeWidgets.add(trigger);
-
-            // Force a reflow to ensure the transition works
-            widget.offsetHeight;
-            
-            widget.style.opacity = '1';
-            widget.style.transform = 'translateX(0)';
-
-            // Update widget content if needed
-            this.updateWidgetContent(widget);
-            
-            console.log('Widget opened:', trigger.dataset.widgetTrigger);
+            this.showWidget(widgetId);
         }
     }
 
-    updateWidgetContent(widget) {
-        // Update content based on widget type
-        const widgetType = widget.dataset.widget;
+    showWidget(widgetId) {
+        const state = this.widgetStates.get(widgetId);
+        if (!state) return;
+
+        state.active = true;
+        state.widget.style.display = 'block';
+        state.container.classList.add('active');
+        state.trigger.classList.add('active');
+
+        // Force reflow
+        state.widget.offsetHeight;
+
+        requestAnimationFrame(() => {
+            state.widget.style.opacity = '1';
+            state.widget.style.transform = 'translateX(0)';
+        });
+
+        // Update content if needed
+        this.updateWidgetContent(widgetId);
+    }
+
+    minimizeWidget(widgetId) {
+        const state = this.widgetStates.get(widgetId);
+        if (!state || !state.active) return;
+
+        state.active = false;
+        state.widget.style.opacity = '0';
+        state.widget.style.transform = 'translateX(-20px)';
+        state.container.classList.remove('active');
+        state.trigger.classList.remove('active');
+
+        setTimeout(() => {
+            if (!state.active) {
+                state.widget.style.display = 'none';
+            }
+        }, 300);
+    }
+
+    minimizeAllWidgets() {
+        this.widgetStates.forEach((_, widgetId) => {
+            this.minimizeWidget(widgetId);
+        });
+    }
+
+    makeWidgetDraggable(widget) {
+        let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+        const header = widget.querySelector('.widget-header') || widget;
+
+        header.style.cursor = 'move';
+        header.onmousedown = dragMouseDown;
+
+        function dragMouseDown(e) {
+            e.preventDefault();
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            document.onmouseup = closeDragElement;
+            document.onmousemove = elementDrag;
+        }
+
+        function elementDrag(e) {
+            e.preventDefault();
+            pos1 = pos3 - e.clientX;
+            pos2 = pos4 - e.clientY;
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            
+            widget.style.top = (widget.offsetTop - pos2) + "px";
+            widget.style.left = (widget.offsetLeft - pos1) + "px";
+        }
+
+        function closeDragElement() {
+            document.onmouseup = null;
+            document.onmousemove = null;
+        }
+    }
+
+    updateWidgetContent(widgetId) {
+        const state = this.widgetStates.get(widgetId);
+        if (!state) return;
+
+        const widgetType = state.widget.dataset.widget;
         
         switch(widgetType) {
             case 'weather':
-                // Trigger weather update
                 if (window.initializeWeatherTime) {
                     window.initializeWeatherTime();
                 }
                 break;
             case 'calendar':
-                // Refresh calendar
                 if (window.calendar) {
                     window.calendar.renderEvents();
                 }
                 break;
-            // Add other widget type updates as needed
         }
     }
 
     closeWidget(trigger) {
-        const widget = trigger.widget;
-        const container = trigger.container;
-
-        if (widget && container) {
-            widget.style.opacity = '0';
-            widget.style.transform = 'translateX(-20px)';
-            container.classList.remove('active');
-            trigger.classList.remove('active');
-            
-            // Hide after animation
-            setTimeout(() => {
-                widget.style.display = 'none';
-            }, 300);
-
-            this.activeWidgets.delete(trigger);
-            console.log('Widget closed:', trigger.dataset.widgetTrigger);
-        }
+        const widgetId = trigger.dataset.widgetTrigger;
+        this.minimizeWidget(widgetId);
     }
 
     closeAllWidgets() {
-        document.querySelectorAll('.widget-trigger').forEach(trigger => {
-            this.closeWidget(trigger);
-        });
-        this.activeWidgets.clear();
+        this.minimizeAllWidgets();
     }
 }
 
