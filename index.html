@@ -5,88 +5,112 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AVA | Personal AI Dashboard</title>
     <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/three-dots@0.3.2/dist/three-dots.min.css">
 </head>
 <body>
-    <div id="ava-container">
-        <!-- Background Elements -->
-        <div class="matrix-bg"></div>
+    <!-- Preloader for smooth initialization -->
+    <div id="preloader" class="preloader">
+        <div class="loader">
+            <div class="cyber-spinner"></div>
+            <div class="loading-text">Initializing AVA Core</div>
+        </div>
+    </div>
+
+    <div id="ava-container" class="hidden">
+        <!-- Enhanced Background Elements -->
+        <div class="matrix-rain"></div>
         <div class="grid-overlay"></div>
         <div class="scan-line"></div>
-
-        <!-- AI Assistant Interface -->
-        <div class="ai-interface">
+        <div class="noise-overlay"></div>
+        
+        <!-- Holographic Interface -->
+        <div class="holo-interface">
+            <!-- Central AI Core Visualization -->
             <div class="ai-core">
-                <div class="ai-visualization"></div>
+                <div class="core-visualization">
+                    <canvas id="core-canvas"></canvas>
+                    <div class="core-stats">
+                        <div class="stat-ring cpu"></div>
+                        <div class="stat-ring memory"></div>
+                        <div class="stat-ring network"></div>
+                    </div>
+                </div>
                 <div class="ai-status">
-                    <div class="status-indicator active"></div>
-                    <span class="status-text">AVA Active - Ready to assist</span>
+                    <div class="status-indicator pulse"></div>
+                    <div class="status-details">
+                        <span class="status-text">AVA Core Online</span>
+                        <span class="version">v1.0.0</span>
+                    </div>
                 </div>
             </div>
-            <div class="ai-interaction">
-                <div class="chat-history"></div>
-                <div class="input-area">
-                    <input type="text" class="ai-input" placeholder="Ask me anything..." autofocus>
-                    <button class="voice-trigger" title="Voice Command">
+
+            <!-- Main Dashboard -->
+            <div class="dashboard">
+                <!-- Quick Actions Bar -->
+                <nav class="quick-actions">
+                    <button class="action-btn" data-action="search">
+                        <i class="icon-search"></i>
+                        <span>Global Search</span>
+                    </button>
+                    <!-- ... other quick actions ... -->
+                </nav>
+
+                <!-- Widget Grid -->
+                <div class="widget-grid">
+                    <!-- Widget containers will be dynamically populated -->
+                </div>
+            </div>
+
+            <!-- Enhanced Command Interface -->
+            <div class="command-interface">
+                <div class="command-bar">
+                    <span class="prompt">ava://$</span>
+                    <input type="text" class="command-input" 
+                           placeholder="Enter command or ask anything..."
+                           autocomplete="off"
+                           spellcheck="false">
+                    <button class="voice-trigger" title="Activate voice command">
                         <div class="voice-indicator"></div>
                     </button>
                 </div>
+                <div class="suggestions-panel hidden">
+                    <!-- Dynamic command suggestions -->
+                </div>
             </div>
         </div>
 
-        <!-- Dashboard Grid -->
-        <div class="dashboard-grid">
-            <!-- Quick Access -->
-            <div class="widget" data-widget="quick-access">
-                <div class="widget-header">
-                    <span>Quick Access</span>
-                    <div class="widget-controls"></div>
-                </div>
-                <div class="widget-content">
-                    <div class="quick-links"></div>
-                    <div class="recent-items"></div>
-                </div>
-            </div>
-
-            <!-- Smart Search -->
-            <div class="widget" data-widget="smart-search">
-                <!-- Smart search widget content -->
-            </div>
-
-            <!-- Task Management -->
-            <div class="widget" data-widget="tasks">
-                <!-- Task management widget content -->
-            </div>
-
-            <!-- System Monitor -->
-            <div class="widget" data-widget="system">
-                <!-- System monitoring widget content -->
-            </div>
-
-            <!-- Weather & Time -->
-            <div class="widget" data-widget="weather-time"></div>
-                <!-- Weather and time widget content -->
-            </div>
-
-            <!-- Notes & Reminders -->
-            <div class="widget" data-widget="notes">
-                <!-- Notes widget content -->
-            </div>
+        <!-- Context Menu -->
+        <div class="context-menu hidden">
+            <!-- Dynamic context menu items -->
         </div>
 
-        <!-- Command Center -->
-        <div class="command-center">
-            <div class="terminal-toggle" title="Toggle Terminal">
-                <span class="icon">⌘</span>
-            </div>
-            <div class="terminal-container collapsed">
-                <!-- Terminal content -->
-            </div>
+        <!-- Toast Notifications -->
+        <div class="toast-container">
+            <!-- Dynamic notifications -->
+        </div>
+
+        <!-- Keyboard Shortcuts Guide -->
+        <div class="shortcuts-overlay hidden">
+            <!-- Keyboard shortcuts help -->
+        </div>
+    </div>
+
+    <!-- Error Boundary -->
+    <div id="error-boundary" class="hidden">
+        <div class="error-content">
+            <h2>System Error Detected</h2>
+            <p class="error-message"></p>
+            <button class="restart-btn">Restart AVA</button>
         </div>
     </div>
 
     <!-- Core Scripts -->
+    <script src="js/lib/three.min.js"></script>
+    <script src="js/lib/particles.min.js"></script>
     <script src="js/ava-core.js"></script>
     <script src="js/widgets.js"></script>
     <script src="js/animations.js"></script>
+    <script src="js/error-boundary.js"></script>
 </body>
 </html>

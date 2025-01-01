@@ -1,23 +1,47 @@
+import { WIDGET_TYPES, WidgetFactory } from './widget-types.js';
+
 class WidgetSystem {
     constructor() {
         this.widgets = new Map();
+        this.grid = null;
+        this.errorBoundary = new ErrorBoundary();
         this.init();
     }
 
-    init() {
-        // Register core widgets
-        this.registerWidget('quick-access', new QuickAccessWidget());
-        this.registerWidget('smart-search', new SmartSearchWidget());
-        this.registerWidget('tasks', new TaskManagementWidget());
-        this.registerWidget('system', new SystemMonitorWidget());
-        this.registerWidget('weather-time', new WeatherTimeWidget());
-        this.registerWidget('notes', new NotesWidget());
-
-        this.setupDragAndDrop();
-        this.loadLayout();
+    async init() {
+        try {
+            await this.setupGrid();
+            await this.loadSavedLayout();
+            this.registerEventListeners();
+            this.startPerformanceMonitoring();
+        } catch (error) {
+            this.errorBoundary.handleError(error);
+        }
     }
 
-    // ... rest of existing widget system code ...
+    async setupGrid() {
+        this.grid = new GridLayout({
+            container: '.widget-grid',
+            columns: 12,
+            rowHeight: 60,
+            gap: 10,
+            animate: true
+        });
+    }
+
+    createWidget(type, config = {}) {
+        try {
+            const widget = WidgetFactory.create(type, config);
+            this.widgets.set(widget.id, widget);
+            this.grid.addWidget(widget);
+            return widget;
+        } catch (error) {
+            this.errorBoundary.handleError(error);
+            return null;
+        }
+    }
+
+    // ... rest of the widget system implementation ...
 }
 
 // Widget Classes
@@ -65,5 +89,12 @@ class SystemMonitorWidget {
     }
 }
 
-// Initialize widget system
-const widgetSystem = new WidgetSystem();
+// Initialize with error handling
+try {
+    const widgetSystem = new WidgetSystem();
+    window.widgetSystem = widgetSystem; // Global access for debugging
+} catch (error) {
+    console.error('Failed to initialize widget system:', error);
+    // Show user-friendly error message
+    document.getElementById('error-boundary').classList.remove('hidden');
+}
