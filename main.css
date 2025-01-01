@@ -916,3 +916,69 @@ body {
 .circle-3::before { animation-duration: 35s; }
 .circle-4::before { animation-duration: 28s; }
 .circle-5::before { animation-duration: 32s; }
+
+.background-loaders {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    pointer-events: none;
+}
+
+.loader-circle {
+    position: absolute;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-top-color: var(--ava-primary);
+    border-left-color: var(--ava-primary);
+    opacity: 0.15;
+}
+
+.loader-1 {
+    width: 300px;
+    height: 300px;
+    top: 20%;
+    left: 10%;
+    animation: rotate 20s linear infinite;
+}
+
+.loader-2 {
+    width: 200px;
+    height: 200px;
+    top: 60%;
+    right: 15%;
+    animation: rotate 15s linear infinite reverse;
+}
+
+.loader-3 {
+    width: 150px;
+    height: 150px;
+    top: 30%;
+    right: 25%;
+    animation: rotate 12s linear infinite;
+}
+
+.loader-4 {
+    width: 400px;
+    height: 400px;
+    bottom: 10%;
+    left: 20%;
+    animation: rotate 25s linear infinite reverse;
+}
+
+.loader-circle::after {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    bottom: 15px;
+    border: 2px solid transparent;
+    border-top-color: var(--ava-primary);
+    border-left-color: var(--ava-primary);
+    border-radius: 50%;
+    opacity: 0.5;
+    animation: rotate 10s linear infinite reverse;
+}
