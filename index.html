@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="main.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+    <script src="js/weather-time.js" defer></script>
+    <script src="js/calendar.js" defer></script>
+    <script src="js/ai-interface.js" defer></script>
 </head>
 <body>
     <div class="background-loaders">
@@ -37,23 +40,30 @@
 
     <!-- Left Widgets -->
     <div class="left-widgets">
-        <div class="widget time-widget">
-            <input type="checkbox" id="time-toggle" checked>
-            <label class="widget-header" for="time-toggle">System Time</label>
+        <div class="widget time-weather-group">
+            <input type="checkbox" id="time-weather-toggle" checked>
+            <label class="widget-header" for="time-weather-toggle">
+                <span class="header-title">Local Status</span>
+                <div class="location-display">Detecting location...</div>
+            </label>
             <div class="widget-content">
-                <div class="digital-clock">12:00:00</div>
-                <div class="date-display">Monday, January 1</div>
-            </div>
-        </div>
-        
-        <div class="widget weather-widget">
-            <input type="checkbox" id="weather-toggle" checked>
-            <label class="widget-header" for="weather-toggle">Weather Status</label>
-            <div class="widget-content">
-                <div class="weather-content">
-                    <div class="weather-temp">72°F</div>
-                    <div class="weather-desc">Clear Sky</div>
-                    <div class="weather-location">New York, NY</div>
+                <div class="time-display">
+                    <div class="digital-clock">--:--:--</div>
+                    <div class="date-display">Loading...</div>
+                    <div class="timezone">Detecting timezone...</div>
+                </div>
+                <div class="weather-display">
+                    <div class="weather-main">
+                        <div class="weather-temp">--°C</div>
+                        <div class="weather-icon">⏳</div>
+                    </div>
+                    <div class="weather-details">
+                        <div class="weather-desc">Loading weather data...</div>
+                        <div class="weather-stats">
+                            <span>Humidity: --</span>
+                            <span>Wind: --</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -137,12 +147,37 @@
 
     <!-- Right Widgets -->
     <div class="right-widgets">
-        <div class="card controls">
-            <h3><span class="ai-icon">🤖</h3>
-            <div class="card-content">
-                <div class="ai-function interactive">
-                    <span class="icon">🔮</span>
-                    Assist Mode
+        <div class="widget ai-controls">
+            <input type="checkbox" id="ai-controls-toggle" checked>
+            <label class="widget-header" for="ai-controls-toggle">
+                <span class="header-title">AI Controls</span>
+                <div class="ai-mode">Assistant Mode</div>
+            </label>
+            <div class="widget-content">
+                <div class="ai-modes">
+                    <button class="mode-btn active" data-mode="assistant">
+                        <span class="icon">🤖</span> Assistant
+                    </button>
+                    <button class="mode-btn" data-mode="analysis">
+                        <span class="icon">📊</span> Analysis
+                    </button>
+                    <button class="mode-btn" data-mode="system">
+                        <span class="icon">⚙️</span> System
+                    </button>
+                </div>
+                <div class="ai-status-details">
+                    <div class="status-item">
+                        <span class="label">Core Status:</span>
+                        <span class="value">Optimal</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="label">Response Time:</span>
+                        <span class="value">23ms</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="label">Active Tasks:</span>
+                        <span class="value">2</span>
+                    </div>
                 </div>
                 <div class="voice-interface">
                     <button class="voice-btn">
