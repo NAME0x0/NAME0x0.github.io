@@ -2136,7 +2136,7 @@ button {
     overflow: auto;
     transition: var(--widget-transition);
     -webkit-backdrop-filter: blur(10px);
-    backdrop-fliter: blur(10px);
+    backdrop-filter: blur(10px);
 
 }
 
@@ -2284,3 +2284,43 @@ button {
 }
 
 /* ...rest of existing styles... */
+
+/* AI Assistant Specific Styles */
+.ava-response {
+    color: var(--accent);
+    font-style: italic;
+    padding: 10px;
+    margin: 10px 0;
+    border-left: 2px solid var(--accent);
+    animation: fadeIn 0.3s ease-out;
+}
+
+.voice-indicator {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--accent-glow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+.voice-indicator.active {
+    animation: pulse 1s infinite;
+}
+
+.command-history {
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 10px;
+    background: var(--glass);
+    border-radius: var(--card-radius);
+    margin: 10px 0;
+}
+
+/* ...existing code... */
