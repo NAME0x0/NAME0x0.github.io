@@ -1,59 +1,67 @@
-class AnimationSystem {
+class AVAAnimationSystem {
     constructor() {
-        this.initializeParticles();
-        this.setupHolographicEffects();
+        this.init();
     }
 
-    initializeParticles() {
-        particlesJS('particles-js', {
-            particles: {
-                number: { value: 80 },
-                color: { value: '#64ffda' },
-                shape: { type: 'circle' },
-                opacity: {
-                    value: 0.5,
-                    random: true
-                },
-                size: {
-                    value: 3,
-                    random: true
-                },
-                move: {
-                    enable: true,
-                    speed: 2,
-                    direction: 'none',
-                    random: true,
-                    out_mode: 'out'
-                }
-            },
-            interactivity: {
-                detect_on: 'canvas',
-                events: {
-                    onhover: {
-                        enable: true,
-                        mode: 'repulse'
-                    }
-                }
+    init() {
+        this.setupBackgroundEffects();
+        this.setupTerminalAnimations();
+        this.setupWidgetAnimations();
+    }
+
+    setupBackgroundEffects() {
+        // Grid animation
+        this.animateGrid();
+        
+        // Scan line effect
+        this.animateScanLine();
+    }
+
+    animateGrid() {
+        const grid = document.querySelector('.grid-overlay');
+        // Implement grid animations
+    }
+
+    animateScanLine() {
+        const scanLine = document.querySelector('.scan-line');
+        // Implement scan line animation
+    }
+
+    setupTerminalAnimations() {
+        // Terminal typing and response animations
+        this.terminalEffects = {
+            typeSpeed: 50,
+            cursorBlink: true
+        };
+    }
+
+    typeText(element, text, callback) {
+        let index = 0;
+        const interval = setInterval(() => {
+            if (index < text.length) {
+                element.textContent += text.charAt(index);
+                index++;
+            } else {
+                clearInterval(interval);
+                if (callback) callback();
             }
+        }, this.terminalEffects.typeSpeed);
+    }
+
+    setupWidgetAnimations() {
+        // Widget transition animations
+        document.querySelectorAll('.widget').forEach(widget => {
+            this.addWidgetAnimations(widget);
         });
     }
 
-    setupHolographicEffects() {
-        const glitchElements = document.querySelectorAll('.cyber-glitch');
-        glitchElements.forEach(element => {
-            element.dataset.text = element.textContent;
+    addWidgetAnimations(widget) {
+        // Add entrance/exit animations
+        widget.addEventListener('mouseenter', () => {
+            // Implement hover effects
         });
-    }
-
-    addCommandAnimation(command) {
-        const terminal = document.querySelector('.terminal-output');
-        const line = document.createElement('div');
-        line.classList.add('terminal-line');
-        line.innerHTML = `<span class="terminal-prompt">ava://$</span> ${command}`;
-        terminal.appendChild(line);
-        line.scrollIntoView({ behavior: 'smooth' });
     }
 }
 
-// Initialize the animation system
-const animationSystem = new AnimationSystem();
+// Initialize animation system
+const animationSystem = new AVAAnimationSystem();

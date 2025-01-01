@@ -1,39 +1,35 @@
-class WidgetManager {
+class AVAWidgetSystem {
     constructor() {
         this.widgets = new Map();
-        this.initializeWidgets();
+        this.init();
+    }
+
+    init() {
+        this.registerCoreWidgets();
         this.setupEventListeners();
     }
 
-    initializeWidgets() {
-        // System monitoring widget
-        this.registerWidget('system', {
-            init: () => this.initSystemMonitoring(),
-            update: () => this.updateSystemMetrics()
-        });
-
-        // AI control widget
-        this.registerWidget('ai', {
-            init: () => this.initAIControls(),
-            update: (data) => this.updateAIStatus(data)
-        });
-
-        // Task management widget
-        this.registerWidget('tasks', {
-            init: () => this.initTaskManager(),
-            update: (tasks) => this.updateTasks(tasks)
+    registerCoreWidgets() {
+        // System Monitor Widget
+        this.registerWidget('system-monitor', {
+            update: this.updateSystemMetrics.bind(this),
+            interval: 1000
         });
     }
 
-    registerWidget(id, handlers) {
+    registerWidget(id, config) {
         this.widgets.set(id, {
-            element: document.querySelector(`[data-widget="${id}"]`),
-            ...handlers
+            element: document.getElementById(id),
+            config: config,
+            data: {}
         });
-        handlers.init();
+
+        if (config.interval) {
+            setInterval(() => config.update(), config.interval);
+        }
     }
 
-    async updateSystemMetrics() {
+    updateSystemMetrics() {
         // Simulate system metrics (replace with real monitoring)
         const metrics = {
             cpu: Math.random() * 100,
@@ -41,59 +37,41 @@ class WidgetManager {
             network: Math.floor(Math.random() * 1000)
         };
 
-        document.getElementById('cpuUsage').textContent = `${metrics.cpu.toFixed(1)}%`;
-        document.getElementById('memoryUsage').textContent = `${metrics.memory.toFixed(1)}%`;
-        document.getElementById('networkSpeed').textContent = `${metrics.network} Mb/s`;
+        // Update UI
+        document.getElementById('cpu-usage').textContent = 
+            `CPU: ${metrics.cpu.toFixed(1)}%`;
+        document.getElementById('memory-usage').textContent = 
+            `Memory: ${metrics.memory.toFixed(1)}%`;
+        document.getElementById('network-status').textContent = 
+            `Network: ${metrics.network} Mb/s`;
     }
 
-    initAIControls() {
-        const modes = document.querySelectorAll('.mode-btn');
-        modes.forEach(btn => {
-            btn.addEventListener('click', () => {
-                modes.forEach(m => m.classList.remove('active'));
-                btn.classList.add('active');
-                AVACore.setMode(btn.dataset.mode);
-            });
+    setupEventListeners() {
+        // Implement widget drag and resize functionality
+        this.widgets.forEach((widget, id) => {
+            if (widget.element) {
+                this.makeWidgetDraggable(widget.element);
+                this.makeWidgetResizable(widget.element);
+            }
         });
     }
 
-    makeWidgetsDraggable() {
-        const widgets = document.querySelectorAll('.widget');
-        widgets.forEach(widget => {
-            const header = widget.querySelector('.widget-header');
-            let isDragging = false;
-            let currentX;
-            let currentY;
-            let initialX;
-            let initialY;
-            let xOffset = 0;
-            let yOffset = 0;
+    makeWidgetDraggable(element) {
+        const header = element.querySelector('.widget-header');
+        let isDragging = false;
+        let currentX, currentY, initialX, initialY;
 
-            header.addEventListener('mousedown', (e) => {
-                initialX = e.clientX - xOffset;
-                initialY = e.clientY - yOffset;
-                if (e.target === header) {
-                    isDragging = true;
-                }
-            });
+        header.addEventListener('mousedown', startDragging);
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('mouseup', stopDragging);
 
-            document.addEventListener('mousemove', (e) => {
-                if (isDragging) {
-                    e.preventDefault();
-                    currentX = e.clientX - initialX;
-                    currentY = e.clientY - initialY;
-                    xOffset = currentX;
-                    yOffset = currentY;
-                    widget.style.transform = `translate(${currentX}px, ${currentY}px)`;
-                }
-            });
+        // Implement drag logic
+    }
 
-            document.addEventListener('mouseup', () => {
-                isDragging = false;
-            });
-        });
+    makeWidgetResizable(element) {
+        // Implement resize logic
     }
 }
 
-// Initialize the widget system
-const widgetManager = new WidgetManager();
+// Initialize widget system
+const widgetSystem = new AVAWidgetSystem();

@@ -3,142 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AVA AI Assistant</title>
+    <title>AVA Interface</title>
     <link rel="stylesheet" href="main.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
-    <script src="js/weather-time.js" defer></script>
-    <script src="js/calendar.js" defer></script>
-    <script src="js/ai-interface.js" defer></script>
-    <script src="js/widget-system.js" defer></script>
-    <meta name="description" content="AVA Dashboard">
-    <link rel="manifest" href="manifest.json">
-    <meta name="msapplication-navbutton-color" content="#020c1b">
-    <meta name="apple-mobile-web-app-status-bar-style" content="#020c1b">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="images/icon-192x192.png">
 </head>
 <body>
-    <div class="matrix-bg"></div>
-    <div class="system-overlay"></div>
-    
-    <header>
-        <h1 class="cyber-text">AVA CORE</h1>
-        <div class="ai-status">
-            <div class="status-indicator"></div>
-            <span class="status-text">Initializing...</span>
-        </div>
-    </header>
+    <div id="ava-container">
+        <!-- Background Elements -->
+        <div class="background-layer"></div>
+        <div class="grid-overlay"></div>
+        <div class="scan-line"></div>
 
-    <main>
-        <div class="widget-dock left">
-            <button class="widget-trigger" data-widget-trigger="system">⚡</button>
-            <button class="widget-trigger" data-widget-trigger="monitoring">📊</button>
-            <button class="widget-trigger" data-widget-trigger="tasks">📝</button>
-        </div>
-
-        <div class="widget-container left">
-            <!-- System Status Widget -->
-            <div class="widget" data-widget="system">
-                <div class="widget-header">System Status</div>
-                <div class="widget-content">
-                    <div class="system-metrics">
-                        <div class="metric-item">
-                            <div class="metric-label">CPU Usage</div>
-                            <div class="metric-value" id="cpuUsage">0%</div>
-                            <div class="progress-bar">
-                                <div class="progress-fill cpu"></div>
-                            </div>
-                        </div>
-                        <div class="metric-item">
-                            <div class="metric-label">Memory</div>
-                            <div class="metric-value" id="memoryUsage">0%</div>
-                            <div class="progress-bar">
-                                <div class="progress-fill memory"></div>
-                            </div>
-                        </div>
-                        <div class="metric-item">
-                            <div class="metric-label">Network</div>
-                            <div class="metric-value" id="networkSpeed">0 Mb/s</div>
-                        </div>
-                    </div>
-                </div>
+        <!-- Main Interface -->
+        <header class="main-header">
+            <div class="ava-status">
+                <div class="status-indicator"></div>
+                <span class="status-text">AVA CORE v1.0</span>
             </div>
+            <nav class="main-nav">
+                <button class="nav-btn" data-view="terminal">Terminal</button>
+                <button class="nav-btn" data-view="dashboard">Dashboard</button>
+                <button class="nav-btn" data-view="analytics">Analytics</button>
+            </nav>
+        </header>
 
-            <!-- Monitoring Widget -->
-            <div class="widget" data-widget="monitoring">
-                <div class="widget-header">Active Processes</div>
-                <div class="widget-content">
-                    <div class="process-list" id="processList">
-                        <!-- Processes will be dynamically inserted here -->
-                    </div>
+        <!-- Widget Container -->
+        <div class="widget-container">
+            <div class="widget" id="system-monitor">
+                <div class="widget-header">
+                    <span>System Monitor</span>
+                    <div class="widget-controls"></div>
                 </div>
-            </div>
-
-            <!-- Tasks Widget -->
-            <div class="widget" data-widget="tasks">
-                <div class="widget-header">Active Tasks</div>
                 <div class="widget-content">
-                    <div class="task-list" id="taskList">
-                        <!-- Tasks will be dynamically inserted here -->
-                    </div>
-                    <button class="action-btn" onclick="createNewTask()">
-                        <span class="icon">+</span> New Task
-                    </button>
+                    <div class="metric" id="cpu-usage"></div>
+                    <div class="metric" id="memory-usage"></div>
+                    <div class="metric" id="network-status"></div>
                 </div>
             </div>
         </div>
 
-        <div class="main-terminal">
-            <div class="terminal">
+        <!-- Terminal Interface -->
+        <div class="terminal-container">
+            <div class="terminal-header">
+                <span>AVA Terminal</span>
+                <div class="terminal-controls"></div>
+            </div>
+            <div class="terminal-content">
                 <div class="terminal-output"></div>
-                <div class="input-line">
+                <div class="terminal-input-line">
                     <span class="prompt">ava://$</span>
-                    <input type="text" class="terminal-input" 
-                           placeholder="Enter command or query..."
-                           autofocus>
+                    <input type="text" class="terminal-input" autofocus title="Terminal command input" placeholder="Enter command...">
                 </div>
             </div>
         </div>
 
-        <div class="widget-dock right">
-            <button class="widget-trigger" data-widget-trigger="ai">🤖</button>
-            <button class="widget-trigger" data-widget-trigger="analytics">📈</button>
+        <!-- Voice Interface -->
+        <div class="voice-interface">
+            <button class="voice-trigger" title="Activate Voice Interface">
+                <div class="voice-indicator"></div>
+            </button>
         </div>
+    </div>
 
-        <div class="widget-container right">
-            <!-- AI Control Widget -->
-            <div class="widget" data-widget="ai">
-                <div class="widget-header">AI Control</div>
-                <div class="widget-content">
-                    <div class="ai-modes">
-                        <button class="mode-btn active" data-mode="assistant">Assistant</button>
-                        <button class="mode-btn" data-mode="analysis">Analysis</button>
-                        <button class="mode-btn" data-mode="system">System</button>
-                    </div>
-                    <div class="ai-status-details">
-                        <!-- AI status details will be dynamically updated -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- Analytics Widget -->
-            <div class="widget" data-widget="analytics">
-                <div class="widget-header">System Analytics</div>
-                <div class="widget-content">
-                    <div class="analytics-container">
-                        <!-- Analytics charts and data will be inserted here -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <script src="js/ai-core.js"></script>
+    <script src="js/widgets.js"></script>
+    <script src="js/animations.js"></script>
     <script src="js/terminal.js"></script>
-    <script src="js/widget-system.js"></script>
-    <script src="js/widget-types.js"></script>
-    <script src="js/widget-manager.js"></script>
+    <script src="js/ava-core.js"></script>
 </body>
 </html>

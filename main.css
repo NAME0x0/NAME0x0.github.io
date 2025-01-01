@@ -1,16 +1,20 @@
 :root {
     /* Simplified color palette */
-    --primary-bg: #020c1b;
-    --secondary-bg: #0a192f;
-    --accent: #64ffda;
+    --primary-bg: #0a0f18;
+    --secondary-bg: #141e2c;
+    --accent: #00fff2;
     --accent-glow: rgba(100, 255, 218, 0.15);
-    --text: #8892b0;
+    --text: #ffffff;
     --glass: rgba(10, 25, 47, 0.85);
+    --terminal-bg: rgba(10, 15, 24, 0.95);
+    --widget-bg: rgba(20, 30, 44, 0.8);
+    --hologram: rgba(0, 255, 242, 0.1);
     
     /* Unified animation timings */
     --transition-speed: 0.3s;
     --rotation-speed: 20s;
     --pulse-speed: 2s;
+    --animation-speed: 0.3s;
     
     /* Layout */
     --spacing: 20px;
@@ -19,6 +23,7 @@
     --footer-height: 100px;
     --widget-width: 350px;
     --max-width: 1800px;
+    --border-radius: 8px;
 
     /* Add new widget-specific variables */
     --widget-header-height: 40px;
@@ -32,7 +37,7 @@ body {
     padding: 0;
     background: var(--primary-bg);
     color: var(--text);
-    font-family: 'Courier New', monospace;
+    font-family: 'JetBrains Mono', monospace;
     overflow: hidden;
     display: grid;
     grid-template-areas:
@@ -1126,9 +1131,9 @@ body {
 
 /* Improved Widget Styles */
 .widget {
-    background: var(--glass);
-    border: 1px solid var(--accent-glow);
-    border-radius: var(--card-radius);
+    background: var(--widget-bg);
+    border: 1px solid var(--accent);
+    border-radius: var(--border-radius);
     margin-bottom: var(--spacing);
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
@@ -2324,3 +2329,89 @@ button {
 }
 
 /* ...existing code... */
+
+#ava-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Background Elements */
+.background-layer {
+    position: fixed;
+    inset: 0;
+    background: 
+        radial-gradient(circle at center, var(--secondary-bg) 0%, var(--primary-bg) 100%),
+        linear-gradient(45deg, transparent 0%, var(--hologram) 100%);
+    z-index: -2;
+}
+
+.grid-overlay {
+    position: fixed;
+    inset: 0;
+    background-image: 
+        linear-gradient(var(--hologram) 1px, transparent 1px),
+        linear-gradient(90deg, var(--hologram) 1px, transparent 1px);
+    background-size: 50px 50px;
+    opacity: 0.1;
+    z-index: -1;
+}
+
+/* Main Interface Styles */
+.main-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: var(--widget-bg);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--spacing);
+    z-index: 100;
+}
+
+/* Terminal Styles */
+.terminal-container {
+    position: fixed;
+    bottom: var(--spacing);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    max-width: 1000px;
+    height: 400px;
+    background: var(--terminal-bg);
+    border: 1px solid var(--accent);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+.terminal-content {
+    height: calc(100% - 40px);
+    padding: var(--spacing);
+    overflow-y: auto;
+}
+
+/* Widget Styles */
+.widget {
+    background: var(--widget-bg);
+    border: 1px solid var(--accent);
+    border-radius: var(--border-radius);
+    margin: var(--spacing);
+    overflow: hidden;
+    transition: all var(--animation-speed) ease;
+}
+
+.widget-header {
+    padding: 10px var(--spacing);
+    border-bottom: 1px solid var(--accent);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Add more specific styles as needed */
