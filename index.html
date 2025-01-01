@@ -10,6 +10,7 @@
     <script src="js/weather-time.js" defer></script>
     <script src="js/calendar.js" defer></script>
     <script src="js/ai-interface.js" defer></script>
+    <script src="js/widget-manager.js" defer></script>
     <meta name="description" content="AVA Dashboard">
     <link rel="manifest" href="manifest.json">
     <meta name="msapplication-navbutton-color" content="#020c1b">
@@ -47,7 +48,7 @@
 
     <!-- Left Widgets -->
     <div class="left-widgets">
-        <div class="widget time-weather-group">
+        <div class="widget time-weather-group primary-widget">
             <input type="checkbox" id="time-weather-toggle" checked>
             <label class="widget-header" for="time-weather-toggle">
                 <span class="header-title">Local Status</span>
@@ -75,7 +76,7 @@
             </div>
         </div>
 
-        <div class="widget calendar-widget">
+        <div class="widget calendar-widget" data-icon="📅">
             <input type="checkbox" id="calendar-toggle" checked>
             <label class="widget-header" for="calendar-toggle">Calendar Events</label>
             <div class="widget-content">
