@@ -37,6 +37,26 @@
 
     <!-- Left Widgets -->
     <div class="left-widgets">
+        <div class="time-widget collapsible">
+            <div class="collapsible-header">System Status</div>
+            <div class="digital-clock">00:00:00</div>
+            <div class="date-display">Monday, January 1</div>
+        </div>
+        
+        <div class="weather-widget collapsible">
+            <div class="collapsible-header">Weather</div>
+            <div class="weather-content">
+                <!-- Weather content structure -->
+            </div>
+        </div>
+
+        <div class="calendar-widget collapsible">
+            <div class="collapsible-header">Calendar</div>
+            <div class="calendar-content">
+                <!-- Calendar structure -->
+            </div>
+        </div>
+        
         <div class="card system-status">
             <div class="card-header">
                 <h3><span class="ai-icon pulse-icon">⚡</span> SYSTEM STATUS</h3>
@@ -124,6 +144,22 @@
             <button class="voice-trigger" title="Activate voice input">
                 <div class="voice-wave"></div>
             </button>
+        </div>
+    </div>
+
+    <!-- Keyboard Shortcut Overlay -->
+    <div class="shortcut-overlay">
+        <div class="shortcut-grid">
+            <div class="shortcut-category">
+                <h3>Navigation</h3>
+                <div class="shortcut-item">
+                    <kbd>?</kbd> Show/Hide Shortcuts
+                </div>
+                <div class="shortcut-item">
+                    <kbd>ESC</kbd> Close Overlay
+                </div>
+                <!-- Add more shortcuts -->
+            </div>
         </div>
     </div>
 
