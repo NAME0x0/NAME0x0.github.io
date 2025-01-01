@@ -47,91 +47,40 @@
     </div>
 
     <!-- Left Widgets -->
-    <div class="left-widgets">
-        <div class="widget time-weather-group primary-widget">
-            <input type="checkbox" id="time-weather-toggle" checked>
-            <label class="widget-header" for="time-weather-toggle">
-                <span class="header-title">Local Status</span>
-                <div class="location-display">Detecting location...</div>
-            </label>
-            <div class="widget-content">
-                <div class="time-display">
-                    <div class="digital-clock">--:--:--</div>
-                    <div class="date-display">Loading...</div>
-                    <div class="timezone">Detecting timezone...</div>
-                </div>
-                <div class="weather-display">
-                    <div class="weather-main">
-                        <div class="weather-temp">--°C</div>
-                        <div class="weather-icon">⏳</div>
-                    </div>
-                    <div class="weather-details">
-                        <div class="weather-desc">Loading weather data...</div>
-                        <div class="weather-stats">
-                            <span>Humidity: --</span>
-                            <span>Wind: --</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="widget-dock left">
+        <button class="widget-trigger" data-widget-trigger="weather" title="Weather & Time">
+            🌍
+        </button>
+        <button class="widget-trigger" data-widget-trigger="calendar" title="Calendar">
+            📅
+        </button>
+        <button class="widget-trigger" data-widget-trigger="system" title="System Status">
+            ⚡
+        </button>
+    </div>
 
-        <div class="widget calendar-widget" data-icon="📅">
-            <input type="checkbox" id="calendar-toggle" checked>
-            <label class="widget-header" for="calendar-toggle">Calendar Events</label>
-            <div class="widget-content">
-                <div class="calendar-content">
-                    <div class="calendar-event">
-                        <div class="event-time">09:00 AM</div>
-                        <div class="event-title">Team Meeting</div>
-                    </div>
-                    <div class="calendar-event">
-                        <div class="event-time">02:30 PM</div>
-                        <div class="event-title">Project Review</div>
-                    </div>
-                    <div class="calendar-event">
-                        <div class="event-time">05:00 PM</div>
-                        <div class="event-title">Daily Backup</div>
-                    </div>
-                </div>
-            </div>
+    <div class="widget-container left">
+        <div class="widget" data-widget="weather">
+            <!-- Weather widget content -->
         </div>
-        
-        <div class="card system-status">
-            <div class="card-header">
-                <h3><span class="ai-icon pulse-icon">⚡</span> SYSTEM STATUS</h3>
-                <div class="real-time-indicator"></div>
-            </div>
-            <div class="card-content">
-                <div class="system-monitor">
-                    <div class="monitor-item">
-                        <div class="label">CPU Load</div>
-                        <div class="dynamic-bar">
-                            <div class="bar-fill cpu-load" data-min="30" data-max="80"></div>
-                        </div>
-                    </div>
-                    <div class="monitor-item">
-                        <div class="label">Memory</div>
-                        <div class="dynamic-bar">
-                            <div class="bar-fill memory-load"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="widget" data-widget="calendar">
+            <!-- Calendar widget content -->
         </div>
-        <div class="card analytics">
-            <h3><span class="ai-icon">📊</span> ANALYTICS</h3>
-            <div class="card-content">
-                <div class="project-item active">
-                    <span class="status-dot"></span>
-                    Research Progress
-                    <div class="project-progress">85%</div>
-                </div>
-                <div class="project-item">
-                    <span class="status-dot"></span>
-                    Next Milestone: 2 days
-                </div>
-            </div>
+        <div class="widget" data-widget="system">
+            <!-- System widget content -->
+        </div>
+    </div>
+
+    <!-- Right Widgets -->
+    <div class="widget-dock right">
+        <button class="widget-trigger" data-widget-trigger="ai" title="AI Controls">
+            🤖
+        </button>
+    </div>
+
+    <div class="widget-container right">
+        <div class="widget" data-widget="ai">
+            <!-- AI controls content -->
         </div>
     </div>
 
@@ -169,50 +118,6 @@
             </div>
         </div>
     </main>
-
-    <!-- Right Widgets -->
-    <div class="right-widgets">
-        <div class="widget ai-controls">
-            <input type="checkbox" id="ai-controls-toggle" checked>
-            <label class="widget-header" for="ai-controls-toggle">
-                <span class="header-title">AI Controls</span>
-                <div class="ai-mode">Assistant Mode</div>
-            </label>
-            <div class="widget-content">
-                <div class="ai-modes">
-                    <button class="mode-btn active" data-mode="assistant">
-                        <span class="icon">🤖</span> Assistant
-                    </button>
-                    <button class="mode-btn" data-mode="analysis">
-                        <span class="icon">📊</span> Analysis
-                    </button>
-                    <button class="mode-btn" data-mode="system">
-                        <span class="icon">⚙️</span> System
-                    </button>
-                </div>
-                <div class="ai-status-details">
-                    <div class="status-item">
-                        <span class="label">Core Status:</span>
-                        <span class="value">Optimal</span>
-                    </div>
-                    <div class="status-item">
-                        <span class="label">Response Time:</span>
-                        <span class="value">23ms</span>
-                    </div>
-                    <div class="status-item">
-                        <span class="label">Active Tasks:</span>
-                        <span class="value">2</span>
-                    </div>
-                </div>
-                <div class="voice-interface">
-                    <button class="voice-btn" role="button" aria-label="Activate Voice Control">
-                        <span class="pulse"></span>
-                        Voice Interface
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Footer -->
     <div class="chat-interface" role="complementary">
@@ -256,6 +161,7 @@
     <script src="particles-config.js"></script>
     <script src="animations.js"></script>
     <script src="main.js"></script>
+    <script src="js/widget-system.js" defer></script>
     <script>
     document.addEventListener('keydown', (e) => {
         if (e.key === '?' && e.shiftKey) {
