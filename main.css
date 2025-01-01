@@ -20,6 +20,11 @@
     --hover-speed: 8s;
     --widget-margin: 20px;
     --header-height: 80px;
+    --bg-circle-size-1: 600px;
+    --bg-circle-size-2: 400px;
+    --bg-circle-size-3: 300px;
+    --bg-circle-size-4: 200px;
+    --bg-circle-size-5: 150px;
 }
 
 body {
@@ -49,7 +54,7 @@ body {
     width: 100%;
     height: 100%;
     background: linear-gradient(45deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
-    opacity: 0.8;
+    opacity: 0.5;
     z-index: -1;
     mix-blend-mode: overlay;
 }
@@ -828,3 +833,86 @@ body {
     right: auto;
     bottom: auto;
 }
+
+.background-circles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.bg-circle {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid var(--ava-primary);
+    opacity: 0.1;
+}
+
+.circle-1 {
+    width: var(--bg-circle-size-1);
+    height: var(--bg-circle-size-1);
+    left: -100px;
+    top: -100px;
+    animation: floatCircle 20s linear infinite;
+}
+
+.circle-2 {
+    width: var(--bg-circle-size-2);
+    height: var(--bg-circle-size-2);
+    right: -50px;
+    bottom: -50px;
+    animation: floatCircle 25s linear infinite reverse;
+}
+
+.circle-3 {
+    width: var(--bg-circle-size-3);
+    height: var(--bg-circle-size-3);
+    left: 30%;
+    top: 20%;
+    animation: floatCircle 30s linear infinite;
+}
+
+.circle-4 {
+    width: var(--bg-circle-size-4);
+    height: var(--bg-circle-size-4);
+    right: 25%;
+    top: 15%;
+    animation: floatCircle 22s linear infinite reverse;
+}
+
+.circle-5 {
+    width: var(--bg-circle-size-5);
+    height: var(--bg-circle-size-5);
+    left: 20%;
+    bottom: 20%;
+    animation: floatCircle 28s linear infinite;
+}
+
+@keyframes floatCircle {
+    0% {
+        transform: rotate(0deg) translate(50px) rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg) translate(50px) rotate(-360deg);
+    }
+}
+
+.bg-circle::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 1px dashed var(--ava-primary);
+    border-radius: 50%;
+    opacity: 0.3;
+    animation: rotate var(--rotation-speed) linear infinite;
+}
+
+.circle-1::before { animation-duration: 30s; }
+.circle-2::before { animation-duration: 25s; }
+.circle-3::before { animation-duration: 35s; }
+.circle-4::before { animation-duration: 28s; }
+.circle-5::before { animation-duration: 32s; }
