@@ -116,6 +116,45 @@ class WidgetSystem {
     }
 
     makeWidgetDraggable(widget) {
+        // Add resize handle
+        const resizeHandle = document.createElement('div');
+        resizeHandle.className = 'widget-resize-handle';
+        widget.appendChild(resizeHandle);
+
+        // Track resize state
+        let isResizing = false;
+        let startX, startY, startWidth, startHeight;
+
+        resizeHandle.addEventListener('mousedown', initResize);
+
+        function initResize(e) {
+            e.stopPropagation();
+            isResizing = true;
+            startX = e.clientX;
+            startY = e.clientY;
+            startWidth = widget.offsetWidth;
+            startHeight = widget.offsetHeight;
+
+            document.addEventListener('mousemove', resize);
+            document.addEventListener('mouseup', stopResize);
+        }
+
+        function resize(e) {
+            if (!isResizing) return;
+
+            const newWidth = startWidth + (e.clientX - startX);
+            const newHeight = startHeight + (e.clientY - startY);
+
+            widget.style.width = `${Math.max(300, newWidth)}px`;
+            widget.style.height = `${Math.max(200, newHeight)}px`;
+        }
+
+        function stopResize() {
+            isResizing = false;
+            document.removeEventListener('mousemove', resize);
+            document.removeEventListener('mouseup', stopResize);
+        }
+
         let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
         const header = widget.querySelector('.widget-header') || widget;
 

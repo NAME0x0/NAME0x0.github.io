@@ -2060,3 +2060,65 @@ button {
 }
 
 /* ...rest of existing styles... */
+
+.widget {
+    resize: both;
+    overflow: auto;
+    min-width: 300px;
+    min-height: 200px;
+}
+
+.widget-resize-handle {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 15px;
+    height: 15px;
+    cursor: nwse-resize;
+    background: linear-gradient(
+        135deg,
+        transparent 50%,
+        var(--accent) 50%
+    );
+    opacity: 0.5;
+    transition: opacity 0.3s;
+}
+
+.widget-resize-handle:hover {
+    opacity: 1;
+}
+
+.cli-input {
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--glass);
+    color: var(--accent);
+    padding: 10px 15px;
+    border: 1px solid var(--accent-glow);
+    border-radius: 5px;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.cli-suggestions {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    right: 0;
+    background: var(--glass);
+    border: 1px solid var(--accent-glow);
+    border-radius: 5px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.cli-suggestion {
+    padding: 8px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.cli-suggestion:hover {
+    background: var(--accent-glow);
+}
+
+/* ...existing code... */

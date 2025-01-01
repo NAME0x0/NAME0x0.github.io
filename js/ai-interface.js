@@ -3,7 +3,51 @@ class AIInterface {
         this.inputField = document.querySelector('.search-bar');
         this.responseArea = document.querySelector('#aiResponse');
         this.voiceButton = document.querySelector('.voice-btn');
+        this.contextMemory = [];
+        this.setupCLIInput();
+        this.initializeAIPersonality();
         this.initializeListeners();
+    }
+
+    setupCLIInput() {
+        this.inputField.classList.add('cli-input');
+        this.inputField.addEventListener('input', (e) => {
+            const input = e.target.value;
+            if (input.startsWith('/')) {
+                this.showCommandSuggestions(input);
+            }
+        });
+
+        // Command history navigation
+        let historyIndex = -1;
+        const history = [];
+
+        this.inputField.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowUp') {
+                if (historyIndex < history.length - 1) {
+                    historyIndex++;
+                    this.inputField.value = history[historyIndex];
+                }
+                e.preventDefault();
+            } else if (e.key === 'Tab') {
+                e.preventDefault();
+                this.autoCompleteCommand();
+            }
+        });
+    }
+
+    initializeAIPersonality() {
+        this.personality = {
+            name: 'AVA',
+            traits: ['helpful', 'efficient', 'precise'],
+            responses: {
+                greeting: [
+                    "At your service, Mr. Afsah.",
+                    "How may I assist you today?",
+                    "I'm analyzing your request..."
+                ]
+            }
+        };
     }
 
     initializeListeners() {
@@ -18,21 +62,45 @@ class AIInterface {
         });
     }
 
-    processInput(input) {
-        // Show processing state
-        this.showProcessing();
-        
-        // Simple command processing
-        if (input.toLowerCase().includes('weather')) {
-            this.respondTo('Fetching weather data...');
-        } else if (input.toLowerCase().includes('calendar')) {
-            this.respondTo('Checking your schedule...');
-        } else {
-            this.respondTo('Processing your request...');
+    async processInput(input) {
+        if (input.startsWith('/')) {
+            this.executeCommand(input.slice(1));
+            return;
         }
 
-        // Clear input
-        this.inputField.value = '';
+        // Natural language processing
+        const response = await this.analyzeAndRespond(input);
+        this.updateInterface(response);
+        this.contextMemory.push({ input, response, timestamp: Date.now() });
+    }
+
+    async analyzeAndRespond(input) {
+        // Simulate AI processing with visual feedback
+        this.showThinking();
+        
+        // Analyze intent and context
+        const intent = this.analyzeIntent(input);
+        const context = this.getRelevantContext(input);
+        
+        // Generate appropriate response
+        return this.generateResponse(intent, context);
+    }
+
+    showThinking() {
+        const thoughts = [
+            'Analyzing context...',
+            'Processing request...',
+            'Searching knowledge base...',
+            'Formulating response...'
+        ];
+        
+        let i = 0;
+        const interval = setInterval(() => {
+            this.updateStatus(thoughts[i]);
+            i = (i + 1) % thoughts.length;
+        }, 500);
+
+        return () => clearInterval(interval);
     }
 
     showProcessing() {
