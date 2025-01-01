@@ -10,7 +10,7 @@
     <script src="js/weather-time.js" defer></script>
     <script src="js/calendar.js" defer></script>
     <script src="js/ai-interface.js" defer></script>
-    <script src="js/widget-manager.js" defer></script>
+    <script src="js/widget-system.js" defer></script>
     <meta name="description" content="AVA Dashboard">
     <link rel="manifest" href="manifest.json">
     <meta name="msapplication-navbutton-color" content="#020c1b">
@@ -48,20 +48,25 @@
 
     <!-- Left Widgets -->
     <div class="widget-dock left">
-        <button class="widget-trigger" data-widget-trigger="weather" title="Weather & Time">
-            🌍
+        <button class="widget-trigger" data-widget-trigger="weather" title="Weather & Time" type="button">
+            <span class="widget-icon">🌍</span>
         </button>
-        <button class="widget-trigger" data-widget-trigger="calendar" title="Calendar">
-            📅
+        <button class="widget-trigger" data-widget-trigger="calendar" title="Calendar" type="button">
+            <span class="widget-icon">📅</span>
         </button>
-        <button class="widget-trigger" data-widget-trigger="system" title="System Status">
-            ⚡
+        <button class="widget-trigger" data-widget-trigger="system" title="System Status" type="button">
+            <span class="widget-icon">⚡</span>
         </button>
     </div>
 
     <div class="widget-container left">
         <div class="widget" data-widget="weather">
-            <!-- Weather widget content -->
+            <!-- Copy your weather widget content here -->
+            <div class="widget-content">
+                <div class="time-display">
+                    <!-- ... weather content ... -->
+                </div>
+            </div>
         </div>
         <div class="widget" data-widget="calendar">
             <!-- Calendar widget content -->

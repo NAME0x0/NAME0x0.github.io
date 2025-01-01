@@ -1694,3 +1694,58 @@ body {
     transform: translateX(0);
     height: auto;
 }
+
+/* Touch Device Optimizations */
+@media (hover: none) {
+    .widget-trigger {
+        width: 50px;
+        height: 50px;
+        margin: 10px;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .widget-container {
+        overflow-y: auto;
+        overscroll-behavior-y: contain;
+        position: relative;
+        height: 100%;
+        /* Prevent bounce effect on iOS */
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        touch-action: pan-y pinch-zoom;
+        scroll-behavior: smooth;
+    }
+
+    .widget-content {
+        touch-action: pan-y;
+    }
+}
+
+/* Active States for Mobile */
+.widget-trigger:active,
+.widget-trigger.active {
+    background: var(--accent);
+    color: var(--primary-bg);
+    transform: scale(0.95);
+}
+
+.widget-container.active {
+    transform: translateX(0) !important;
+}
+
+/* Ensure buttons are clickable */
+button {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+/* Fix z-index stacking */
+.widget-dock {
+    z-index: 1000;
+}
+
+.widget-container {
+    z-index: 999;
+}
