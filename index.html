@@ -37,23 +37,45 @@
 
     <!-- Left Widgets -->
     <div class="left-widgets">
-        <div class="time-widget collapsible">
-            <div class="collapsible-header">System Status</div>
-            <div class="digital-clock">00:00:00</div>
-            <div class="date-display">Monday, January 1</div>
+        <div class="widget time-widget">
+            <input type="checkbox" id="time-toggle" checked>
+            <label class="widget-header" for="time-toggle">System Time</label>
+            <div class="widget-content">
+                <div class="digital-clock">12:00:00</div>
+                <div class="date-display">Monday, January 1</div>
+            </div>
         </div>
         
-        <div class="weather-widget collapsible">
-            <div class="collapsible-header">Weather</div>
-            <div class="weather-content">
-                <!-- Weather content structure -->
+        <div class="widget weather-widget">
+            <input type="checkbox" id="weather-toggle" checked>
+            <label class="widget-header" for="weather-toggle">Weather Status</label>
+            <div class="widget-content">
+                <div class="weather-content">
+                    <div class="weather-temp">72°F</div>
+                    <div class="weather-desc">Clear Sky</div>
+                    <div class="weather-location">New York, NY</div>
+                </div>
             </div>
         </div>
 
-        <div class="calendar-widget collapsible">
-            <div class="collapsible-header">Calendar</div>
-            <div class="calendar-content">
-                <!-- Calendar structure -->
+        <div class="widget calendar-widget">
+            <input type="checkbox" id="calendar-toggle" checked>
+            <label class="widget-header" for="calendar-toggle">Calendar Events</label>
+            <div class="widget-content">
+                <div class="calendar-content">
+                    <div class="calendar-event">
+                        <div class="event-time">09:00 AM</div>
+                        <div class="event-title">Team Meeting</div>
+                    </div>
+                    <div class="calendar-event">
+                        <div class="event-time">02:30 PM</div>
+                        <div class="event-title">Project Review</div>
+                    </div>
+                    <div class="calendar-event">
+                        <div class="event-time">05:00 PM</div>
+                        <div class="event-title">Daily Backup</div>
+                    </div>
+                </div>
             </div>
         </div>
         

@@ -1015,6 +1015,133 @@ body {
     padding: var(--spacing);
 }
 
+/* Improved Widget Styles */
+.widget {
+    background: var(--glass);
+    border: 1px solid var(--accent-glow);
+    border-radius: var(--card-radius);
+    margin-bottom: var(--spacing);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+
+    overflow: hidden;
+}
+
+.widget-header {
+    padding: 15px;
+    background: rgba(10, 25, 47, 0.95);
+    border-bottom: 1px solid var(--accent-glow);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--accent);
+}
+
+.widget-content {
+    padding: 15px;
+}
+
+/* Time Widget */
+.time-widget .digital-clock {
+    font-size: 2.5em;
+    font-family: 'Courier New', monospace;
+    color: var(--accent);
+    text-align: center;
+    text-shadow: 0 0 10px var(--accent-glow);
+    margin: 10px 0;
+}
+
+.time-widget .date-display {
+    text-align: center;
+    color: var(--text);
+    font-size: 1.1em;
+    opacity: 0.8;
+}
+
+/* Weather Widget */
+.weather-widget .weather-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.weather-temp {
+    font-size: 2em;
+    color: var(--accent);
+}
+
+.weather-desc {
+    color: var(--text);
+}
+
+/* Calendar Widget */
+.calendar-widget .calendar-content {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.calendar-event {
+    padding: 8px;
+    border-left: 2px solid var(--accent);
+    margin: 5px 0;
+    background: rgba(100, 255, 218, 0.05);
+}
+
+.calendar-event:hover {
+    background: rgba(100, 255, 218, 0.1);
+}
+
+/* CSS-only Collapsible Implementation */
+.widget-header {
+    cursor: pointer;
+    position: relative;
+}
+
+.widget-header::after {
+    content: '▼';
+    margin-left: 10px;
+    transition: transform 0.3s ease;
+}
+
+.widget input[type="checkbox"] {
+    display: none;
+}
+
+.widget input[type="checkbox"] ~ .widget-content {
+    max-height: 0;
+    opacity: 0;
+    transition: all 0.3s ease-out;
+    overflow: hidden;
+}
+
+.widget input[type="checkbox"]:checked ~ .widget-content {
+    max-height: 500px;
+    opacity: 1;
+}
+
+.widget input[type="checkbox"]:checked ~ .widget-header::after {
+    transform: rotate(180deg);
+}
+
+/* Hover effects */
+.widget:hover {
+    box-shadow: 0 0 15px var(--accent-glow);
+}
+
+.widget-header:hover {
+    background: rgba(100, 255, 218, 0.1);
+}
+
+/* Remove old collapsible styles */
+.collapsible,
+.collapsible-header,
+.collapsible.collapsed {
+    /* Reset any previous styles */
+    all: initial;
+    display: none;
+}
+
 /* Collapsible Widget Styles */
 .collapsible {
     position: relative;
