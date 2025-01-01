@@ -1,32 +1,50 @@
-class AVAWidgetSystem {
+class WidgetSystem {
     constructor() {
         this.widgets = new Map();
         this.init();
     }
 
     init() {
-        this.registerCoreWidgets();
-        this.setupEventListeners();
+        // Register core widgets
+        this.registerWidget('quick-access', new QuickAccessWidget());
+        this.registerWidget('smart-search', new SmartSearchWidget());
+        this.registerWidget('tasks', new TaskManagementWidget());
+        this.registerWidget('system', new SystemMonitorWidget());
+        this.registerWidget('weather-time', new WeatherTimeWidget());
+        this.registerWidget('notes', new NotesWidget());
+
+        this.setupDragAndDrop();
+        this.loadLayout();
     }
 
-    registerCoreWidgets() {
-        // System Monitor Widget
-        this.registerWidget('system-monitor', {
-            update: this.updateSystemMetrics.bind(this),
-            interval: 1000
-        });
+    // ... rest of existing widget system code ...
+}
+
+// Widget Classes
+class QuickAccessWidget {
+    constructor() {
+        this.links = [];
+        this.recentItems = [];
     }
 
-    registerWidget(id, config) {
-        this.widgets.set(id, {
-            element: document.getElementById(id),
-            config: config,
-            data: {}
-        });
+    async init() {
+        await this.loadUserLinks();
+        this.render();
+    }
 
-        if (config.interval) {
-            setInterval(() => config.update(), config.interval);
-        }
+    // ... widget-specific methods ...
+}
+
+// ... other widget class implementations ...
+
+class SystemMonitorWidget {
+    constructor() {
+        this.interval = 1000;
+    }
+
+    async init() {
+        this.updateSystemMetrics();
+        setInterval(() => this.updateSystemMetrics(), this.interval);
     }
 
     updateSystemMetrics() {
@@ -45,33 +63,7 @@ class AVAWidgetSystem {
         document.getElementById('network-status').textContent = 
             `Network: ${metrics.network} Mb/s`;
     }
-
-    setupEventListeners() {
-        // Implement widget drag and resize functionality
-        this.widgets.forEach((widget, id) => {
-            if (widget.element) {
-                this.makeWidgetDraggable(widget.element);
-                this.makeWidgetResizable(widget.element);
-            }
-        });
-    }
-
-    makeWidgetDraggable(element) {
-        const header = element.querySelector('.widget-header');
-        let isDragging = false;
-        let currentX, currentY, initialX, initialY;
-
-        header.addEventListener('mousedown', startDragging);
-        document.addEventListener('mousemove', drag);
-        document.addEventListener('mouseup', stopDragging);
-
-        // Implement drag logic
-    }
-
-    makeWidgetResizable(element) {
-        // Implement resize logic
-    }
 }
 
 // Initialize widget system
-const widgetSystem = new AVAWidgetSystem();
+const widgetSystem = new WidgetSystem();

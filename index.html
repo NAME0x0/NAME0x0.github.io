@@ -3,70 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AVA Interface</title>
+    <title>AVA | Personal AI Dashboard</title>
     <link rel="stylesheet" href="main.css">
 </head>
 <body>
     <div id="ava-container">
         <!-- Background Elements -->
-        <div class="background-layer"></div>
+        <div class="matrix-bg"></div>
         <div class="grid-overlay"></div>
         <div class="scan-line"></div>
 
-        <!-- Main Interface -->
-        <header class="main-header">
-            <div class="ava-status">
-                <div class="status-indicator"></div>
-                <span class="status-text">AVA CORE v1.0</span>
+        <!-- AI Assistant Interface -->
+        <div class="ai-interface">
+            <div class="ai-core">
+                <div class="ai-visualization"></div>
+                <div class="ai-status">
+                    <div class="status-indicator active"></div>
+                    <span class="status-text">AVA Active - Ready to assist</span>
+                </div>
             </div>
-            <nav class="main-nav">
-                <button class="nav-btn" data-view="terminal">Terminal</button>
-                <button class="nav-btn" data-view="dashboard">Dashboard</button>
-                <button class="nav-btn" data-view="analytics">Analytics</button>
-            </nav>
-        </header>
+            <div class="ai-interaction">
+                <div class="chat-history"></div>
+                <div class="input-area">
+                    <input type="text" class="ai-input" placeholder="Ask me anything..." autofocus>
+                    <button class="voice-trigger" title="Voice Command">
+                        <div class="voice-indicator"></div>
+                    </button>
+                </div>
+            </div>
+        </div>
 
-        <!-- Widget Container -->
-        <div class="widget-container">
-            <div class="widget" id="system-monitor">
+        <!-- Dashboard Grid -->
+        <div class="dashboard-grid">
+            <!-- Quick Access -->
+            <div class="widget" data-widget="quick-access">
                 <div class="widget-header">
-                    <span>System Monitor</span>
+                    <span>Quick Access</span>
                     <div class="widget-controls"></div>
                 </div>
                 <div class="widget-content">
-                    <div class="metric" id="cpu-usage"></div>
-                    <div class="metric" id="memory-usage"></div>
-                    <div class="metric" id="network-status"></div>
+                    <div class="quick-links"></div>
+                    <div class="recent-items"></div>
                 </div>
+            </div>
+
+            <!-- Smart Search -->
+            <div class="widget" data-widget="smart-search">
+                <!-- Smart search widget content -->
+            </div>
+
+            <!-- Task Management -->
+            <div class="widget" data-widget="tasks">
+                <!-- Task management widget content -->
+            </div>
+
+            <!-- System Monitor -->
+            <div class="widget" data-widget="system">
+                <!-- System monitoring widget content -->
+            </div>
+
+            <!-- Weather & Time -->
+            <div class="widget" data-widget="weather-time"></div>
+                <!-- Weather and time widget content -->
+            </div>
+
+            <!-- Notes & Reminders -->
+            <div class="widget" data-widget="notes">
+                <!-- Notes widget content -->
             </div>
         </div>
 
-        <!-- Terminal Interface -->
-        <div class="terminal-container">
-            <div class="terminal-header">
-                <span>AVA Terminal</span>
-                <div class="terminal-controls"></div>
+        <!-- Command Center -->
+        <div class="command-center">
+            <div class="terminal-toggle" title="Toggle Terminal">
+                <span class="icon">⌘</span>
             </div>
-            <div class="terminal-content">
-                <div class="terminal-output"></div>
-                <div class="terminal-input-line">
-                    <span class="prompt">ava://$</span>
-                    <input type="text" class="terminal-input" autofocus title="Terminal command input" placeholder="Enter command...">
-                </div>
+            <div class="terminal-container collapsed">
+                <!-- Terminal content -->
             </div>
-        </div>
-
-        <!-- Voice Interface -->
-        <div class="voice-interface">
-            <button class="voice-trigger" title="Activate Voice Interface">
-                <div class="voice-indicator"></div>
-            </button>
         </div>
     </div>
 
+    <!-- Core Scripts -->
+    <script src="js/ava-core.js"></script>
     <script src="js/widgets.js"></script>
     <script src="js/animations.js"></script>
-    <script src="js/terminal.js"></script>
-    <script src="js/ava-core.js"></script>
 </body>
 </html>
