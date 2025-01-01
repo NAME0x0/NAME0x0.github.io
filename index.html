@@ -159,6 +159,36 @@
         </div>
     </main>
 
+    <!-- Add after center-content section -->
+    <div class="cyber-status-bar">
+        <div class="status-item">
+            <span class="status-icon">⚡</span>
+            <span class="status-label">System Power</span>
+            <span class="status-value">98%</span>
+        </div>
+        <div class="status-item">
+            <span class="status-icon">📡</span>
+            <span class="status-label">Network</span>
+            <span class="status-value">320 Mb/s</span>
+        </div>
+        <div class="status-item">
+            <span class="status-icon">🔒</span>
+            <span class="status-label">Security</span>
+            <span class="status-value">Active</span>
+        </div>
+    </div>
+
+    <div class="floating-actions">
+        <button class="action-btn cyber-btn" onclick="toggleTerminal()">
+            <span class="btn-glitch"></span>
+            <span class="btn-label">Terminal</span>
+        </button>
+        <button class="action-btn cyber-btn" onclick="toggleAIMode()">
+            <span class="btn-glitch"></span>
+            <span class="btn-label">AI Mode</span>
+        </button>
+    </div>
+
     <!-- Footer -->
     <div class="chat-interface" role="complementary">
         <div class="ai-response" id="aiResponse">

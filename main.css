@@ -1630,6 +1630,10 @@ body {
 }
 
 .widget-container.right {
+    transform: translateX(calc(-100% + 50px));
+}
+
+.widget-container.right {
     right: 0;
     transform: translateX(calc(100% - 50px));
 }
@@ -1687,6 +1691,11 @@ body {
     transform: translateX(-20px);
     transition: all 0.3s ease;
     height: 0;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    word-wrap: break-word;
+    min-height: 100px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .widget.active {
@@ -1781,6 +1790,10 @@ button {
     padding: 20px;
     z-index: 100;
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    resize: horizontal;
+    overflow: auto;
+    min-width: 300px;
+    max-width: 600px;
 }
 
 .widget {
@@ -1791,6 +1804,11 @@ button {
     border-radius: var(--card-radius);
     overflow: hidden;
     margin-bottom: var(--spacing);
+    display: grid;
+    grid-template-rows: auto 1fr;
+    word-wrap: break-word;
+    min-height: 100px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .widget.active {
@@ -1799,8 +1817,11 @@ button {
 
 .widget-content {
     padding: 20px;
-    opacity: 1;
-    transform: none;
+    overflow-y: auto;
+    height: auto;
+    min-height: 50px;
+    resize: vertical;
+    padding: 15px;
 }
 
 /* Ensure content is visible */
@@ -1863,6 +1884,7 @@ button {
 .terminal-line {
     margin: 4px 0;
     line-height: 1.4;
+    /* ...existing styles... */
 }
 
 .terminal-prompt {
@@ -1881,5 +1903,160 @@ button {
 }
 
 /* Add more terminal styles as needed */
+
+/* ...rest of existing styles... */
+
+.widget-resize-handle {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 15px;
+    height: 15px;
+    cursor: nwse-resize;
+    background: linear-gradient(
+        135deg,
+        transparent 50%,
+        var(--accent) 50%
+    );
+    opacity: 0.5;
+    transition: opacity 0.3s;
+}
+
+.widget-resize-handle:hover {
+    opacity: 1;
+}
+
+    .scan-effect {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            to bottom,
+            transparent 50%,
+            rgba(100, 255, 218, 0.02) 50%
+        );
+        background-size: 100% 4px;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+.cyber-glitch {
+    animation: glitch 2s infinite;
+    position: relative;
+}
+
+.cyber-glitch::before,
+.cyber-glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.cyber-glitch::before {
+    left: 2px;
+    text-shadow: -2px 0 #ff00c1;
+    clip: rect(44px, 450px, 56px, 0);
+    animation: glitch-anim 5s infinite linear alternate-reverse;
+}
+
+.cyber-glitch::after {
+    left: -2px;
+    text-shadow: -2px 0 #00fff9, 2px 2px #ff00c1;
+    animation: glitch-anim2 1s infinite linear alternate-reverse;
+}
+
+/* ...rest of existing styles... */
+
+.terminal-text {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    text-shadow: 0 0 5px var(--accent);
+    transform: translateY(0); /* Start visible */
+}
+
+.terminal-header {
+    background: linear-gradient(90deg, var(--glass) 0%, rgba(100, 255, 218, 0.1) 100%);
+    border-bottom: 1px solid var(--accent);
+    padding: 8px 15px;
+}
+
+.terminal {
+    background: rgba(2, 12, 27, 0.95);
+    padding: 15px;
+    height: calc(100% - 37px);
+    overflow-y: auto;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.terminal-input-line {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.terminal-prompt {
+    color: var(--accent);
+    margin-right: 10px;
+    text-shadow: 0 0 5px var(--accent);
+}
+
+.terminal-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--accent);
+    font-family: inherit;
+    font-size: inherit;
+    padding: 0;
+}
+
+.terminal-line {
+    position: relative;
+    padding-left: 15px;
+    margin: 5px 0;
+    opacity: 0;
+    animation: fadeIn 0.3s forwards;
+}
+
+.terminal-line::before {
+    content: '>';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Add to existing animations */
+@keyframes terminalScan {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 30px; }
+}
+
+.terminal::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent 0px,
+        rgba(100, 255, 218, 0.03) 1px,
+        transparent 2px
+    );
+    background-size: 100% 3px;
+    animation: terminalScan 0.5s linear infinite;
+    pointer-events: none;
+}
 
 /* ...rest of existing styles... */
