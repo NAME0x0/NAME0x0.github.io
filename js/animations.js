@@ -65,20 +65,17 @@ class AVAAnimationSystem {
 
 class AVAVisualization {
     constructor() {
-        this.scene = null;
-        this.camera = null;
-        this.renderer = null;
-        this.head = null;
         this.init();
+        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        this.analyser = this.audioContext.createAnalyser();
+        this.dataArray = new Uint8Array(128);
     }
 
     init() {
         this.setupScene();
-        this.createHead();
-        this.setupLighting();
+        this.createAICore();
+        this.setupAudioVisualizer();
         this.animate();
-        this.setupMatrixRain();
-        this.setupBackgroundEffects();
     }
 
     setupScene() {
@@ -117,29 +114,91 @@ class AVAVisualization {
         this.renderer.setSize(width, height);
     }
 
-    createHead() {
-        // Create abstract geometric head visualization
-        // This will create a low-poly head mesh that looks futuristic
+    createAICore() {
+        // Create organic, flowing AI core visualization
+        const geometry = new THREE.IcosahedronGeometry(1, 4);
+        const material = new THREE.ShaderMaterial({
+            uniforms: {
+                time: { value: 0 },
+                amplitude: { value: 1.0 }
+            },
+            vertexShader: `
+                uniform float time;
+                uniform float amplitude;
+                varying vec3 vNormal;
+                
+                void main() {
+                    vNormal = normal;
+                    vec3 newPosition = position + normal * sin(time * 2.0 + position.y) * amplitude * 0.1;
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+                }
+            `,
+            fragmentShader: `
+                uniform float time;
+                varying vec3 vNormal;
+                
+                void main() {
+                    float pulse = sin(time) * 0.5 + 0.5;
+                    vec3 color = vec3(0.0, 1.0, 0.95);
+                    gl_FragColor = vec4(color * pulse, 0.8);
+                }
+            `
+        });
+
+        this.aiCore = new THREE.Mesh(geometry, material);
+        this.scene.add(this.aiCore);
+        
+        // Add energy field effect
+        this.createEnergyField();
     }
 
-    setupMatrixRain() {
-        const canvas = document.querySelector('.matrix-rain');
-        const ctx = canvas.getContext('2d');
-        // Implement matrix rain effect
-    }
+    createEnergyField() {
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particleCount = 1000;
+        const positions = new Float32Array(particleCount * 3);
+        
+        for(let i = 0; i < particleCount * 3; i++) {
+            positions[i] = (Math.random() - 0.5) * 5;
+        }
+        
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        
+        const particlesMaterial = new THREE.PointsMaterial({
+            color: 0x00fff2,
+            size: 0.02,
+            transparent: true,
+            blending: THREE.AdditiveBlending
+        });
 
-    setupBackgroundEffects() {
-        this.setupGridAnimation();
-        this.setupGlowEffects();
+        this.energyField = new THREE.Points(particlesGeometry, particlesMaterial);
+        this.scene.add(this.energyField);
     }
 
     animate() {
         requestAnimationFrame(() => this.animate());
         
-        // Animate head movement
-        if (this.head) {
-            this.head.rotation.y += 0.005;
-            this.head.rotation.x = Math.sin(Date.now() * 0.001) * 0.1;
+        // Update audio data
+        this.analyser.getByteFrequencyData(this.dataArray);
+        
+        // Calculate audio reactivity
+        const amplitude = this.dataArray.reduce((acc, val) => acc + val, 0) / this.dataArray.length;
+        
+        // Animate AI core
+        if (this.aiCore) {
+            this.aiCore.material.uniforms.time.value += 0.01;
+            this.aiCore.material.uniforms.amplitude.value = amplitude / 128;
+            this.aiCore.rotation.y += 0.002;
+            this.aiCore.rotation.z = Math.sin(Date.now() * 0.001) * 0.1;
+        }
+
+        // Animate energy field
+        if (this.energyField) {
+            this.energyField.rotation.y += 0.001;
+            const positions = this.energyField.geometry.attributes.position.array;
+            for(let i = 0; i < positions.length; i += 3) {
+                positions[i + 1] += Math.sin(Date.now() * 0.001 + positions[i]) * 0.01;
+            }
+            this.energyField.geometry.attributes.position.needsUpdate = true;
         }
 
         this.renderer.render(this.scene, this.camera);
