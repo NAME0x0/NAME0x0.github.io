@@ -24,6 +24,10 @@
     --bg-circle-size-5: 200px;
     --ai-glow: rgba(0, 255, 242, 0.2);
     --hologram-depth: rgba(0, 255, 242, 0.05);
+    --bg: #0a0e17;
+    --accent: #64ffda;
+    --text: #ffffff;
+    --glass: rgba(10, 25, 47, 0.8);
 }
 
 /* Reset and Base Styles */
@@ -41,6 +45,11 @@ body {
     overflow: hidden;
     min-height: 100vh;
     opacity: 1;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
 }
 
 /* Background Effects */
@@ -277,6 +286,23 @@ body {
     font-size: 1.1em;
     width: 100%;
     outline: none;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    display: flex;
+    gap: 10px;
+}
+
+.command-input input {
+    flex: 1;
+    padding: 15px;
+    background: var(--glass);
+    border: 1px solid var(--accent);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: inherit;
 }
 
 .voice-trigger {
@@ -289,6 +315,15 @@ body {
 
 .voice-trigger:hover {
     transform: scale(1.1);
+}
+
+.voice-input {
+    background: transparent;
+    border: 1px solid var(--accent);
+    border-radius: 10px;
+    color: var(--accent);
+    padding: 0 20px;
+    cursor: pointer;
 }
 
 /* AI Presence */
@@ -305,6 +340,11 @@ body {
     position: relative;
     width: 300px;
     height: 300px;
+    grid-column: 2;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .ai-core::before {
@@ -648,4 +688,60 @@ body {
     border-radius: 50%;
     background: var(--accent-glow);
     animation: pulse var(--pulse-speed) infinite;
+}
+
+/* Container Layout */
+.container {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    height: 100vh;
+    padding: 20px;
+    gap: 20px;
+}
+
+/* Header Layout */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: var(--glass);
+    border-radius: 10px;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+
+/* Main Layout */
+main {
+    display: grid;
+    grid-template-columns: 300px 1fr 300px;
+    gap: 20px;
+    height: 100%;
+}
+
+/* AI Core Layout */
+#ai-face {
+    width: 300px;
+    height: 300px;
+}
+
+/* Widgets Layout */
+.widgets {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Widget Layout */
+.widget {
+    background: var(--glass);
+    border-radius: 10px;
+    padding: 20px;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+
+.widget h3 {
+    color: var(--accent);
+    margin-bottom: 15px;
 }

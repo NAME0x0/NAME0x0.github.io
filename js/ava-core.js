@@ -1,6 +1,37 @@
 class AVACore {
     constructor() {
-        this.init();
+        this.setupCommandInput();
+    }
+
+    setupCommandInput() {
+        const input = document.querySelector('.command-input input');
+        const voiceBtn = document.querySelector('.voice-input');
+
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                this.processCommand(input.value);
+                input.value = '';
+            }
+        });
+
+        voiceBtn.addEventListener('click', () => {
+            alert('Voice input coming soon!');
+        });
+    }
+
+    processCommand(command) {
+        // Simple command responses for now
+        const responses = {
+            'hello': 'Hello! How can I assist you?',
+            'time': new Date().toLocaleTimeString(),
+            'date': new Date().toLocaleDateString(),
+            'help': 'Available commands: hello, time, date, help'
+        };
+
+        const response = responses[command.toLowerCase()] || 
+            "I'm sorry, I don't understand that command yet.";
+            
+        alert(response);
     }
 
     init() {
@@ -45,5 +76,5 @@ class AVACore {
     // ... rest of the class implementation
 }
 
-// Initialize AVA immediately
+// Initialize AVA
 const ava = new AVACore();

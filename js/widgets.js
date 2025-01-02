@@ -99,5 +99,80 @@ class SystemMonitorWidget {
     }
 }
 
+class Widgets {
+    constructor() {
+        this.initializeTimeWidget();
+        this.initializeTasksWidget();
+        this.initializeSystemWidget();
+        this.initializeNotesWidget();
+    }
+
+    initializeTimeWidget() {
+        const updateTime = () => {
+            const now = new Date();
+            document.querySelector('#time-widget .time').textContent = 
+                now.toLocaleTimeString('en-US', { 
+                    hour12: false, 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+            document.querySelector('#time-widget .date').textContent = 
+                now.toLocaleDateString('en-US', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
+        };
+
+        updateTime();
+        setInterval(updateTime, 1000);
+    }
+
+    initializeTasksWidget() {
+        const addTaskBtn = document.querySelector('.add-task');
+        const tasksList = document.querySelector('.tasks-list');
+
+        addTaskBtn.addEventListener('click', () => {
+            const task = prompt('Enter new task:');
+            if (task) {
+                const taskElement = document.createElement('div');
+                taskElement.className = 'task';
+                taskElement.textContent = task;
+                tasksList.appendChild(taskElement);
+            }
+        });
+    }
+
+    initializeSystemWidget() {
+        setInterval(() => {
+            const metrics = document.querySelector('.metrics');
+            metrics.innerHTML = `
+                <div>CPU: ${Math.floor(Math.random() * 100)}%</div>
+                <div>Memory: ${Math.floor(Math.random() * 100)}%</div>
+                <div>Network: ${Math.floor(Math.random() * 100)} Mb/s</div>
+            `;
+        }, 2000);
+    }
+
+    initializeNotesWidget() {
+        const addNoteBtn = document.querySelector('.add-note');
+        const notesList = document.querySelector('.notes-list');
+
+        addNoteBtn.addEventListener('click', () => {
+            const note = prompt('Enter new note:');
+            if (note) {
+                const noteElement = document.createElement('div');
+                noteElement.className = 'note';
+                noteElement.textContent = note;
+                notesList.appendChild(noteElement);
+            }
+        });
+    }
+}
+
 // Initialize widget system
 const widgetSystem = new WidgetSystem();
+
+// Initialize widgets
+const widgets = new Widgets();

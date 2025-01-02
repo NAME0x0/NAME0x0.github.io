@@ -3,72 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AVA | Personal AI Assistant</title>
+    <title>AVA | AI Assistant</title>
     <link rel="stylesheet" href="main.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&display=swap">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <!-- AI Core Visual Interface -->
-    <div class="ai-core-interface">
-        <div class="ai-visual-container">
-            <canvas id="ai-head"></canvas>
-            <div class="ai-aura"></div>
-            <div class="interaction-rings"></div>
-        </div>
-        <div class="ai-status-container">
-            <div class="status-ring"></div>
-            <div class="ai-response-text">
-                <span class="response-prefix">>></span>
-                <span class="response-content">Welcome back. How may I assist you today?</span>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="logo">AVA Core</div>
+            <div class="status">System Online</div>
+        </header>
+
+        <!-- Main Content -->
+        <main>
+            <!-- AI Visualization -->
+            <div class="ai-core">
+                <canvas id="ai-face"></canvas>
+                <div class="ai-rings"></div>
             </div>
-        </div>
+
+            <!-- Widgets -->
+            <div class="widgets left">
+                <div class="widget" id="time-widget">
+                    <h3>Local Time</h3>
+                    <div class="time">--:--</div>
+                    <div class="date">Loading...</div>
+                </div>
+
+                <div class="widget" id="tasks-widget">
+                    <h3>Tasks</h3>
+                    <div class="tasks-list"></div>
+                    <button class="add-task">+ Add Task</button>
+                </div>
+            </div>
+
+            <div class="widgets right">
+                <div class="widget" id="system-widget">
+                    <h3>System Status</h3>
+                    <div class="metrics"></div>
+                </div>
+
+                <div class="widget" id="notes-widget">
+                    <h3>Quick Notes</h3>
+                    <div class="notes-list"></div>
+                    <button class="add-note">+ Add Note</button>
+                </div>
+            </div>
+
+            <!-- Command Input -->
+            <div class="command-input">
+                <input type="text" placeholder="Ask AVA...">
+                <button class="voice-input">
+                    <span class="mic-icon">🎤</span>
+                </button>
+            </div>
+        </main>
     </div>
 
-    <!-- Dashboard Overlay -->
-    <div class="dashboard-overlay">
-        <!-- Left Panel: System & Time -->
-        <section class="system-panel">
-            <div class="system-status">
-                <!-- System stats here -->
-            </div>
-            <div class="time-display">
-                <div class="time">00:00</div>
-                <div class="date">Loading...</div>
-            </div>
-        </section>
-
-        <!-- Right Panel: Tasks & Notes -->
-        <section class="utility-panel">
-            <div class="quick-tasks">
-                <!-- Task list here -->
-            </div>
-            <div class="notes">
-                <!-- Notes here -->
-            </div>
-        </section>
-
-        <!-- Command Interface -->
-        <div class="command-center">
-            <div class="input-field">
-                <span class="prompt">AVA ></span>
-                <input type="text" id="ai-input" placeholder="How can I help you?">
-            </div>
-            <button class="voice-command" title="Activate voice command">
-                <div class="voice-indicator"></div>
-            </button>
-        </div>
-    </div>
-
-    <!-- Background Elements -->
-    <div class="visual-effects">
-        <div class="matrix-rain"></div>
-        <div class="scan-lines"></div>
-        <div class="grid-overlay"></div>
-    </div>
-
-    <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="js/animations.js"></script>
     <script src="js/widgets.js"></script>
     <script src="js/ava-core.js"></script>
