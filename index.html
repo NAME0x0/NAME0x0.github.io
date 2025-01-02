@@ -8,31 +8,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="loading">
-    <!-- Loading Screen -->
-    <div class="loading-screen">
-        <div class="loading-content">
-            <div class="loading-spinner"></div>
-            <div class="loading-text">Initializing AVA Core...</div>
-        </div>
-    </div>
-
-    <!-- Error Screen -->
-    <div class="error-screen hidden">
-        <div class="error-content">
-            <h2>System Error</h2>
-            <p class="error-message"></p>
-            <button onclick="location.reload()">Retry</button>
-        </div>
-    </div>
-
-    <!-- Background Effects -->
-    <div class="background-effects">
-        <div class="matrix-rain"></div>
-        <div class="grid-overlay"></div>
-        <div class="glow-effects"></div>
-    </div>
-
+<body>
     <!-- Main Container -->
     <div class="ava-interface">
         <!-- Header -->
@@ -143,20 +119,10 @@
         </div>
     </div>
 
-    <!-- Resource Loading Check -->
-    <script>
-        window.addEventListener('load', function() {
-            // Check if all resources loaded
-            if (document.readyState === 'complete') {
-                document.body.classList.remove('loading');
-            }
-        });
-    </script>
-
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="js/ava-core.js"></script>
-    <script src="js/widgets.js"></script>
     <script src="js/animations.js"></script>
+    <script src="js/widgets.js"></script>
+    <script src="js/ava-core.js"></script>
 </body>
 </html>

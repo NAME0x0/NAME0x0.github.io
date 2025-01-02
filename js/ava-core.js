@@ -1,35 +1,36 @@
 class AVACore {
     constructor() {
-        this.initialized = false;
-        this.initializationAttempts = 0;
-        this.maxAttempts = 3;
         this.init();
     }
 
-    async init() {
+    init() {
         try {
-            // Remove loading state if present
-            document.body.classList.remove('loading');
-            
-            // Initialize components
-            await this.initializeComponents();
-            
-            // Mark as initialized
-            this.initialized = true;
-            
-            // Show success indicator
+            this.initializeVisualization();
+            this.initializeWidgets();
             this.updateStatus('AVA Core Online', 'success');
         } catch (error) {
             console.error('Initialization error:', error);
-            
-            if (this.initializationAttempts < this.maxAttempts) {
-                this.initializationAttempts++;
-                this.updateStatus('Retrying initialization...', 'warning');
-                setTimeout(() => this.init(), 1000);
-            } else {
-                this.updateStatus('System initialization failed', 'error');
-                this.showErrorMessage();
-            }
+            this.updateStatus('System Error', 'error');
+        }
+    }
+
+    async initializeComponents() {
+        // Basic component initialization
+        return new Promise(resolve => {
+            // Simulate component initialization
+            setTimeout(resolve, 1000);
+        });
+    }
+
+    handleInitError(error) {
+        if (this.initializationAttempts < this.maxAttempts) {
+            this.initializationAttempts++;
+            this.updateStatus('Retrying initialization...', 'warning');
+            setTimeout(() => this.init(), 1000);
+        } else {
+            this.updateStatus('System initialization failed', 'error');
+            this.showErrorMessage(error);
+            document.querySelector('.error-screen').classList.remove('hidden');
         }
     }
 
@@ -41,5 +42,8 @@ class AVACore {
         }
     }
 
-    // ...rest of existing methods...
+    // ... rest of the class implementation
 }
+
+// Initialize AVA immediately
+const ava = new AVACore();

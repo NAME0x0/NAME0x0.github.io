@@ -38,6 +38,7 @@ body {
     line-height: 1.6;
     overflow: hidden;
     min-height: 100vh;
+    opacity: 1;
 }
 
 /* Background Effects */
@@ -354,30 +355,6 @@ body {
 ::-webkit-scrollbar-thumb {
     background: var(--accent);
     border-radius: 5px;
-}
-
-/* Loading Screen */
-.loading-screen {
-    position: fixed;
-    inset: 0;
-    background: var(--primary-bg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-}
-
-.loading-screen.hidden {
-    display: none;
-}
-
-.loading-spinner {
-    width: 50px;
-    height: 50px;
-    border: 3px solid var(--glass);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
 }
 
 /* Responsive Design */
