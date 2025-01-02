@@ -82,14 +82,39 @@ class AVAVisualization {
     }
 
     setupScene() {
-        // Initialize Three.js scene
         this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        
+        // Update camera settings
+        const aspect = window.innerWidth / window.innerHeight;
+        this.camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 1000);
+        this.camera.position.z = 5;
+
+        // Initialize renderer with correct size
+        const canvas = document.getElementById('ava-visualization');
         this.renderer = new THREE.WebGLRenderer({
-            canvas: document.getElementById('ava-visualization'),
-            alpha: true
+            canvas,
+            alpha: true,
+            antialias: true
         });
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        
+        // Set size based on container
+        const container = canvas.parentElement;
+        this.renderer.setSize(container.clientWidth, container.clientHeight);
+
+        // Add window resize handler
+        window.addEventListener('resize', () => this.handleResize());
+    }
+
+    handleResize() {
+        if (!this.renderer || !this.camera) return;
+        
+        const container = this.renderer.domElement.parentElement;
+        const width = container.clientWidth;
+        const height = container.clientHeight;
+        
+        this.camera.aspect = width / height;
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(width, height);
     }
 
     createHead() {
