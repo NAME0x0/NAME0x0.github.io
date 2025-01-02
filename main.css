@@ -1,59 +1,37 @@
 :root {
-    /* Simplified color palette */
+    /* Core theme colors */
     --primary-bg: #0a0f18;
     --secondary-bg: #141e2c;
-    --accent: #00fff2;
-    --accent-glow: rgba(100, 255, 218, 0.15);
-    --text: #ffffff;
-    --glass: rgba(10, 25, 47, 0.85);
-    --terminal-bg: rgba(10, 15, 24, 0.95);
-    --widget-bg: rgba(20, 30, 44, 0.8);
-    --hologram: rgba(0, 255, 242, 0.1);
+    --accent-primary: #00fff2;
+    --accent-secondary: #ff0055;
+    --text-primary: #ffffff;
+    --text-secondary: #8892b0;
     
-    /* Unified animation timings */
-    --transition-speed: 0.3s;
-    --rotation-speed: 20s;
-    --pulse-speed: 2s;
-    --animation-speed: 0.3s;
+    /* Specialized colors */
+    --hologram-blue: rgba(0, 255, 242, 0.1);
+    --hologram-pink: rgba(255, 0, 85, 0.1);
+    --glass: rgba(10, 25, 47, 0.85);
+    --glass-darker: rgba(7, 15, 29, 0.95);
+    
+    /* Effects */
+    --glow-primary: 0 0 20px var(--accent-primary);
+    --glow-secondary: 0 0 20px var(--accent-secondary);
     
     /* Layout */
-    --spacing: 20px;
-    --card-radius: 10px;
-    --header-height: 120px;
-    --footer-height: 100px;
-    --widget-width: 350px;
-    --max-width: 1800px;
-    --border-radius: 8px;
-
-    /* Add new widget-specific variables */
-    --widget-header-height: 40px;
-    --widget-min-width: 300px;
-    --widget-min-height: 200px;
-    --widget-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --header-height: 60px;
+    --sidebar-width: 350px;
+    --widget-spacing: 20px;
+    --border-radius: 12px;
 }
 
 body {
     margin: 0;
     padding: 0;
+    font-family: 'Space Grotesk', sans-serif;
     background: var(--primary-bg);
-    color: var(--text);
-    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-primary);
     overflow: hidden;
-    display: grid;
-    grid-template-areas:
-        "header header header"
-        "left-widgets center right-widgets"
-        "footer footer footer";
-    grid-template-columns: var(--widget-width) 1fr var(--widget-width);
-    grid-template-rows: var(--header-height) 1fr var(--footer-height);
-    height: 100vh;
-    gap: var(--spacing);
-    padding: var(--spacing);
-    box-sizing: border-box;
-    max-width: var(--max-width);
-    margin: 0 auto;
-    overflow-y: auto;
-    overflow-x: hidden;
+    line-height: 1.6;
 }
 
 .matrix-bg {
@@ -2351,8 +2329,8 @@ button {
     position: fixed;
     inset: 0;
     background-image: 
-        linear-gradient(var(--hologram) 1px, transparent 1px),
-        linear-gradient(90deg, var(--hologram) 1px, transparent 1px);
+        linear-gradient(var(--hologram-blue) 1px, transparent 1px),
+        linear-gradient(90deg, var(--hologram-blue) 1px, transparent 1px);
     background-size: 50px 50px;
     opacity: 0.1;
     z-index: -1;
@@ -2414,4 +2392,4 @@ button {
     align-items: center;
 }
 
-/* Add more specific styles as needed */
+/* Add more specific styles as needed... */

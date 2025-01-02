@@ -3,114 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AVA | Personal AI Dashboard</title>
+    <title>AVA | Personal AI Assistant</title>
     <link rel="stylesheet" href="main.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/three-dots@0.3.2/dist/three-dots.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&display=swap">
 </head>
 <body>
-    <!-- Preloader for smooth initialization -->
-    <div id="preloader" class="preloader">
-        <div class="loader">
-            <div class="cyber-spinner"></div>
-            <div class="loading-text">Initializing AVA Core</div>
+    <!-- AI Presence Container -->
+    <div class="ai-presence">
+        <div class="ai-head">
+            <!-- 3D head visualization will be rendered here -->
+            <canvas id="ava-visualization"></canvas>
+            <div class="ai-aura"></div>
+        </div>
+        <div class="ai-status-ring">
+            <div class="ring-segment"></div>
+            <div class="ring-segment"></div>
+            <div class="ring-segment"></div>
         </div>
     </div>
 
-    <div id="ava-container" class="hidden">
-        <!-- Enhanced Background Elements -->
-        <div class="matrix-rain"></div>
-        <div class="grid-overlay"></div>
-        <div class="scan-line"></div>
-        <div class="noise-overlay"></div>
-        
-        <!-- Holographic Interface -->
-        <div class="holo-interface">
-            <!-- Central AI Core Visualization -->
-            <div class="ai-core">
-                <div class="core-visualization">
-                    <canvas id="core-canvas"></canvas>
-                    <div class="core-stats">
-                        <div class="stat-ring cpu"></div>
-                        <div class="stat-ring memory"></div>
-                        <div class="stat-ring network"></div>
-                    </div>
+    <!-- Main Dashboard -->
+    <div class="dashboard-container">
+        <!-- Left Sidebar - Essential Info -->
+        <aside class="sidebar left-sidebar">
+            <div class="widget time-weather">
+                <div class="time-display">
+                    <div class="current-time">00:00</div>
+                    <div class="date">Loading...</div>
                 </div>
-                <div class="ai-status">
-                    <div class="status-indicator pulse"></div>
-                    <div class="status-details">
-                        <span class="status-text">AVA Core Online</span>
-                        <span class="version">v1.0.0</span>
+                <div class="weather-display">
+                    <div class="temperature">--°C</div>
+                    <div class="weather-desc">Dubai, UAE</div>
+                    <div class="weather-details">
+                        <span class="humidity">Humidity: --%</span>
+                        <span class="wind">Wind: -- km/h</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Main Dashboard -->
-            <div class="dashboard">
-                <!-- Quick Actions Bar -->
-                <nav class="quick-actions">
-                    <button class="action-btn" data-action="search">
-                        <i class="icon-search"></i>
-                        <span>Global Search</span>
-                    </button>
-                    <!-- ... other quick actions ... -->
-                </nav>
-
-                <!-- Widget Grid -->
-                <div class="widget-grid">
-                    <!-- Widget containers will be dynamically populated -->
+            <div class="widget quick-tasks">
+                <h3>Quick Tasks</h3>
+                <div class="task-list">
+                    <!-- Tasks will be populated here -->
                 </div>
+                <button class="add-task-btn">+ Add Task</button>
             </div>
+        </aside>
 
-            <!-- Enhanced Command Interface -->
-            <div class="command-interface">
-                <div class="command-bar">
-                    <span class="prompt">ava://$</span>
-                    <input type="text" class="command-input" 
-                           placeholder="Enter command or ask anything..."
-                           autocomplete="off"
-                           spellcheck="false">
-                    <button class="voice-trigger" title="Activate voice command">
+        <!-- Central Area - AI Interaction -->
+        <main class="main-content">
+            <div class="ai-interaction-area">
+                <div class="ai-response-display"></div>
+                <div class="user-input-area">
+                    <input type="text" class="command-input" placeholder="Ask AVA anything...">
+                    <button class="voice-input-btn" title="Toggle voice input">
                         <div class="voice-indicator"></div>
                     </button>
                 </div>
-                <div class="suggestions-panel hidden">
-                    <!-- Dynamic command suggestions -->
+            </div>
+        </main>
+
+        <!-- Right Sidebar - Notes & Controls -->
+        <aside class="sidebar right-sidebar">
+            <div class="widget notes">
+                <h3>Quick Notes</h3>
+                <div class="notes-list">
+                    <!-- Notes will be populated here -->
+                </div>
+                <button class="add-note-btn">+ New Note</button>
+            </div>
+
+            <div class="widget system-status">
+                <h3>System Status</h3>
+                <div class="status-metrics">
+                    <div class="metric cpu">
+                        <label>CPU</label>
+                        <div class="metric-bar"></div>
+                    </div>
+                    <div class="metric memory">
+                        <label>Memory</label>
+                        <div class="metric-bar"></div>
+                    </div>
+                    <div class="metric network">
+                        <label>Network</label>
+                        <div class="metric-bar"></div>
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Context Menu -->
-        <div class="context-menu hidden">
-            <!-- Dynamic context menu items -->
-        </div>
-
-        <!-- Toast Notifications -->
-        <div class="toast-container">
-            <!-- Dynamic notifications -->
-        </div>
-
-        <!-- Keyboard Shortcuts Guide -->
-        <div class="shortcuts-overlay hidden">
-            <!-- Keyboard shortcuts help -->
-        </div>
+        </aside>
     </div>
 
-    <!-- Error Boundary -->
-    <div id="error-boundary" class="hidden">
-        <div class="error-content">
-            <h2>System Error Detected</h2>
-            <p class="error-message"></p>
-            <button class="restart-btn">Restart AVA</button>
-        </div>
-    </div>
+    <!-- Background Effects -->
+    <div class="matrix-rain"></div>
+    <div class="grid-overlay"></div>
+    <div class="glow-effects"></div>
 
-    <!-- Core Scripts -->
-    <script src="js/lib/three.min.js"></script>
-    <script src="js/lib/particles.min.js"></script>
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="js/ava-core.js"></script>
     <script src="js/widgets.js"></script>
     <script src="js/animations.js"></script>
-    <script src="js/error-boundary.js"></script>
 </body>
 </html>

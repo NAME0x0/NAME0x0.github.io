@@ -3,45 +3,58 @@ import { WIDGET_TYPES, WidgetFactory } from './widget-types.js';
 class WidgetSystem {
     constructor() {
         this.widgets = new Map();
-        this.grid = null;
-        this.errorBoundary = new ErrorBoundary();
         this.init();
     }
 
-    async init() {
+    init() {
+        this.initializeTimeWeather();
+        this.initializeTasks();
+        this.initializeNotes();
+        this.initializeSystemMonitor();
+        this.setupEventListeners();
+    }
+
+    async initializeTimeWeather() {
+        // Update time every second
+        setInterval(() => this.updateTime(), 1000);
+        
+        // Update weather every 30 minutes
+        this.updateWeather();
+        setInterval(() => this.updateWeather(), 1800000);
+    }
+
+    async updateWeather() {
+        // Dubai coordinates
+        const lat = 25.2048;
+        const lon = 55.2708;
         try {
-            await this.setupGrid();
-            await this.loadSavedLayout();
-            this.registerEventListeners();
-            this.startPerformanceMonitoring();
+            const weather = await this.fetchWeatherData(lat, lon);
+            this.updateWeatherDisplay(weather);
         } catch (error) {
-            this.errorBoundary.handleError(error);
+            console.error('Weather update failed:', error);
         }
     }
 
-    async setupGrid() {
-        this.grid = new GridLayout({
-            container: '.widget-grid',
-            columns: 12,
-            rowHeight: 60,
-            gap: 10,
-            animate: true
+    updateTime() {
+        const now = new Date();
+        const timeDisplay = document.querySelector('.current-time');
+        const dateDisplay = document.querySelector('.date');
+        
+        timeDisplay.textContent = now.toLocaleTimeString('en-US', { 
+            hour12: false, 
+            hour: '2-digit', 
+            minute: '2-digit' 
+        });
+        
+        dateDisplay.textContent = now.toLocaleDateString('en-US', { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
         });
     }
 
-    createWidget(type, config = {}) {
-        try {
-            const widget = WidgetFactory.create(type, config);
-            this.widgets.set(widget.id, widget);
-            this.grid.addWidget(widget);
-            return widget;
-        } catch (error) {
-            this.errorBoundary.handleError(error);
-            return null;
-        }
-    }
-
-    // ... rest of the widget system implementation ...
+    // ... rest of widget implementation ...
 }
 
 // Widget Classes
@@ -89,12 +102,5 @@ class SystemMonitorWidget {
     }
 }
 
-// Initialize with error handling
-try {
-    const widgetSystem = new WidgetSystem();
-    window.widgetSystem = widgetSystem; // Global access for debugging
-} catch (error) {
-    console.error('Failed to initialize widget system:', error);
-    // Show user-friendly error message
-    document.getElementById('error-boundary').classList.remove('hidden');
-}
+// Initialize widget system
+const widgetSystem = new WidgetSystem();
