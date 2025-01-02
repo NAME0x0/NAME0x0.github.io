@@ -22,6 +22,8 @@
     --bg-circle-size-3: 400px;
     --bg-circle-size-4: 300px;
     --bg-circle-size-5: 200px;
+    --ai-glow: rgba(0, 255, 242, 0.2);
+    --hologram-depth: rgba(0, 255, 242, 0.05);
 }
 
 /* Reset and Base Styles */
@@ -362,6 +364,52 @@ body {
 
 .ring-layer:nth-child(3) {
     animation-duration: calc(var(--rotation-speed) * 0.75);
+}
+
+/* AI Core Interface */
+.ai-core-interface {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    height: 400px;
+    z-index: 10;
+}
+
+.ai-visual-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+#ai-head {
+    width: 100%;
+    height: 100%;
+}
+
+.ai-aura {
+    position: absolute;
+    inset: -50px;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle,
+        var(--ai-glow) 0%,
+        transparent 70%
+    );
+    filter: blur(20px);
+    opacity: 0.5;
+    animation: pulse 4s ease-in-out infinite;
+}
+
+/* Dashboard Overlay */
+.dashboard-overlay {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    grid-template-columns: 300px 1fr 300px;
+    padding: 20px;
+    pointer-events: none;
 }
 
 /* Animation Effects */

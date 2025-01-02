@@ -9,114 +9,62 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <!-- Main Container -->
-    <div class="ava-interface">
-        <!-- Header -->
-        <header class="main-header">
-            <div class="logo">
-                <i class="fas fa-brain"></i>
-                <span>AVA CORE</span>
-            </div>
-            <div class="system-status">
-                <div class="status-indicator active"></div>
-                <span>Systems Online</span>
-            </div>
-        </header>
-
-        <!-- Dashboard Layout -->
-        <div class="dashboard-layout">
-            <!-- Left Panel -->
-            <aside class="side-panel left-panel">
-                <!-- Time & Weather -->
-                <div class="widget" id="datetime-widget">
-                    <div class="widget-header">
-                        <i class="fas fa-clock"></i>
-                        <span>Local Time</span>
-                    </div>
-                    <div class="widget-content">
-                        <div class="time">12:00</div>
-                        <div class="date">Monday, January 1</div>
-                        <div class="weather">
-                            <div class="temp">32°C</div>
-                            <div class="location">Dubai, UAE</div>
-                            <div class="weather-details">
-                                <span><i class="fas fa-tint"></i> 65%</span>
-                                <span><i class="fas fa-wind"></i> 12km/h</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tasks Widget -->
-                <div class="widget" id="tasks-widget">
-                    <div class="widget-header">
-                        <h3>Tasks</h3>
-                    </div>
-                    <div class="widget-content">
-                        <div class="task-list"></div>
-                        <button class="add-task-btn">+ Add Task</button>
-                    </div>
-                </div>
-            </aside>
-
-            <!-- Central Area -->
-            <main class="main-area">
-                <!-- AI Visualization -->
-                <div class="ai-presence">
-                    <div class="ai-core">
-                        <canvas id="ava-visualization"></canvas>
-                        <div class="ai-rings"></div>
-                    </div>
-                    <div class="ai-status">
-                        <div class="status-text">Ready for interaction</div>
-                    </div>
-                </div>
-
-                <!-- Command Interface -->
-                <div class="command-interface">
-                    <div class="command-wrapper">
-                        <i class="fas fa-terminal"></i>
-                        <input type="text" class="command-input" 
-                               placeholder="Ask me anything..."
-                               autofocus>
-                        <button class="voice-trigger" title="Activate voice command">
-                            <i class="fas fa-microphone" aria-hidden="true"></i>
-                        </button>
-                    </div>
-                </div>
-            </main>
-
-            <!-- Right Panel -->
-            <aside class="side-panel right-panel">
-                <!-- System Metrics -->
-                <div class="widget" id="system-metrics">
-                    <h3>System Status</h3>
-                    <div class="status-metrics">
-                        <div class="metric cpu">
-                            <label>CPU</label>
-                            <div class="metric-bar"></div>
-                        </div>
-                        <div class="metric memory">
-                            <label>Memory</label>
-                            <div class="metric-bar"></div>
-                        </div>
-                        <div class="metric network">
-                            <label>Network</label>
-                            <div class="metric-bar"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Quick Notes -->
-                <div class="widget" id="notes-widget">
-                    <h3>Quick Notes</h3>
-                    <div class="notes-list">
-                        <!-- Notes will be populated here -->
-                    </div>
-                    <button class="add-note-btn">+ New Note</button>
-                </div>
-            </aside>
+    <!-- AI Core Visual Interface -->
+    <div class="ai-core-interface">
+        <div class="ai-visual-container">
+            <canvas id="ai-head"></canvas>
+            <div class="ai-aura"></div>
+            <div class="interaction-rings"></div>
         </div>
+        <div class="ai-status-container">
+            <div class="status-ring"></div>
+            <div class="ai-response-text">
+                <span class="response-prefix">>></span>
+                <span class="response-content">Welcome back. How may I assist you today?</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Overlay -->
+    <div class="dashboard-overlay">
+        <!-- Left Panel: System & Time -->
+        <section class="system-panel">
+            <div class="system-status">
+                <!-- System stats here -->
+            </div>
+            <div class="time-display">
+                <div class="time">00:00</div>
+                <div class="date">Loading...</div>
+            </div>
+        </section>
+
+        <!-- Right Panel: Tasks & Notes -->
+        <section class="utility-panel">
+            <div class="quick-tasks">
+                <!-- Task list here -->
+            </div>
+            <div class="notes">
+                <!-- Notes here -->
+            </div>
+        </section>
+
+        <!-- Command Interface -->
+        <div class="command-center">
+            <div class="input-field">
+                <span class="prompt">AVA ></span>
+                <input type="text" id="ai-input" placeholder="How can I help you?">
+            </div>
+            <button class="voice-command" title="Activate voice command">
+                <div class="voice-indicator"></div>
+            </button>
+        </div>
+    </div>
+
+    <!-- Background Elements -->
+    <div class="visual-effects">
+        <div class="matrix-rain"></div>
+        <div class="scan-lines"></div>
+        <div class="grid-overlay"></div>
     </div>
 
     <!-- Scripts -->

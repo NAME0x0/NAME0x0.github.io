@@ -205,6 +205,61 @@ class AVAVisualization {
     }
 }
 
+class AIVisualization {
+    constructor() {
+        this.scene = new THREE.Scene();
+        this.setupCamera();
+        this.setupRenderer();
+        this.createHead();
+        this.animate();
+    }
+
+    setupCamera() {
+        const canvas = document.getElementById('ai-head');
+        const width = canvas.clientWidth;
+        const height = canvas.clientHeight;
+        this.camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+        this.camera.position.z = 5;
+    }
+
+    createHead() {
+        // Create abstract head geometry
+        const geometry = new THREE.SphereGeometry(1, 32, 32);
+        const material = new THREE.ShaderMaterial({
+            uniforms: {
+                time: { value: 0 },
+                intensity: { value: 1.0 }
+            },
+            vertexShader: `
+                varying vec3 vNormal;
+                uniform float time;
+                void main() {
+                    vNormal = normal;
+                    vec3 pos = position;
+                    pos += normal * sin(time + position.y) * 0.1;
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+                }
+            `,
+            fragmentShader: `
+                varying vec3 vNormal;
+                uniform float intensity;
+                void main() {
+                    vec3 light = normalize(vec3(1.0, 1.0, 1.0));
+                    float dProd = dot(vNormal, light) * 0.5 + 0.5;
+                    vec3 baseColor = vec3(0.0, 1.0, 0.95);
+                    gl_FragColor = vec4(baseColor * dProd * intensity, 0.9);
+                }
+            `,
+            transparent: true
+        });
+
+        this.head = new THREE.Mesh(geometry, material);
+        this.scene.add(this.head);
+    }
+
+    // ... rest of implementation
+}
+
 // Initialize animation system
 const animationSystem = new AVAAnimationSystem();
 
