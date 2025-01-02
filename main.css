@@ -19,18 +19,28 @@
     
     /* Layout */
     --header-height: 60px;
+    --footer-height: 80px;
     --sidebar-width: 350px;
     --widget-spacing: 20px;
     --border-radius: 12px;
+    --ai-head-size: 200px;
+}
+
+/* Reset and base styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
+    min-height: 100vh;
     margin: 0;
     padding: 0;
+    overflow: hidden;
     font-family: 'Space Grotesk', sans-serif;
     background: var(--primary-bg);
     color: var(--text-primary);
-    overflow: hidden;
     line-height: 1.6;
 }
 
@@ -2393,3 +2403,153 @@ button {
 }
 
 /* Add more specific styles as needed... */
+
+/* Fixed layout container */
+.dashboard-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: grid;
+    grid-template-columns: var(--sidebar-width) 1fr var(--sidebar-width);
+    grid-template-rows: 1fr;
+    gap: var(--widget-spacing);
+    padding: var(--widget-spacing);
+    overflow: hidden;
+}
+
+/* AI Presence styling */
+.ai-presence {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: var(--ai-head-size);
+    height: var(--ai-head-size);
+    z-index: 10;
+    pointer-events: none;
+}
+
+/* Sidebar styling */
+.sidebar {
+    background: var(--glass);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border-radius: var(--border-radius);
+    padding: var(--widget-spacing);
+    overflow-y: auto;
+    border: 1px solid var(--accent-primary);
+    height: calc(100vh - 2 * var(--widget-spacing));
+}
+
+/* Main content area */
+.main-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-bottom: var(--widget-spacing);
+    height: 100%;
+}
+
+/* User input area */
+.user-input-area {
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background: var(--glass);
+    border: 1px solid var(--accent-primary);
+    border-radius: var(--border-radius);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+
+.command-input {
+    width: 100%;
+    padding: 15px;
+    background: var(--glass-darker);
+    border: 1px solid var(--accent-primary);
+    border-radius: var(--border-radius);
+    color: var(--accent-primary);
+    font-family: inherit;
+    font-size: 1.1em;
+}
+
+/* Widget styling */
+.widget {
+    background: var(--glass);
+    border: 1px solid var(--accent-primary);
+    border-radius: var(--border-radius);
+    margin-bottom: var(--widget-spacing);
+    overflow: hidden;
+}
+
+.widget-header {
+    padding: 15px;
+    border-bottom: 1px solid var(--accent-primary);
+    background: var(--glass-darker);
+}
+
+/* Ensure backgrounds are visible */
+.matrix-rain,
+.grid-overlay,
+.glow-effects {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+}
+
+.grid-overlay {
+    background-image: 
+        linear-gradient(var(--hologram-blue) 1px, transparent 1px),
+        linear-gradient(90deg, var(--hologram-blue) 1px, transparent 1px);
+    background-size: 50px 50px;
+    opacity: 0.1;
+    z-index: -1;
+}
+
+/* Time and Weather widget specific styles */
+.time-weather {
+    text-align: center;
+    padding: 20px;
+}
+
+.current-time {
+    font-size: 2.5em;
+    color: var(--accent-primary);
+    text-shadow: 0 0 10px var(--accent-primary);
+    margin-bottom: 10px;
+}
+
+.weather-display {
+    margin-top: 20px;
+}
+
+/* Voice input button */
+.voice-input-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: var(--accent-primary);
+    cursor: pointer;
+}
+
+/* Add responsive styles */
+@media (max-width: 1200px) {
+    .dashboard-container {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr auto;
+    }
+
+    .sidebar {
+        height: auto;
+        max-height: 50vh;
+    }
+}

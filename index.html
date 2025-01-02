@@ -8,23 +8,14 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&display=swap">
 </head>
 <body>
-    <!-- AI Presence Container -->
-    <div class="ai-presence">
-        <div class="ai-head">
-            <!-- 3D head visualization will be rendered here -->
-            <canvas id="ava-visualization"></canvas>
-            <div class="ai-aura"></div>
-        </div>
-        <div class="ai-status-ring">
-            <div class="ring-segment"></div>
-            <div class="ring-segment"></div>
-            <div class="ring-segment"></div>
-        </div>
-    </div>
+    <!-- Background Elements -->
+    <div class="matrix-rain"></div>
+    <div class="grid-overlay"></div>
+    <div class="glow-effects"></div>
 
     <!-- Main Dashboard -->
     <div class="dashboard-container">
-        <!-- Left Sidebar - Essential Info -->
+        <!-- Left Sidebar -->
         <aside class="sidebar left-sidebar">
             <div class="widget time-weather">
                 <div class="time-display">
@@ -40,30 +31,37 @@
                     </div>
                 </div>
             </div>
-
-            <div class="widget quick-tasks">
-                <h3>Quick Tasks</h3>
-                <div class="task-list">
-                    <!-- Tasks will be populated here -->
+            
+            <div class="widget tasks">
+                <div class="widget-header">
+                    <h3>Tasks</h3>
                 </div>
-                <button class="add-task-btn">+ Add Task</button>
+                <div class="widget-content">
+                    <div class="task-list"></div>
+                    <button class="add-task-btn">+ Add Task</button>
+                </div>
             </div>
         </aside>
 
-        <!-- Central Area - AI Interaction -->
+        <!-- Central Content -->
         <main class="main-content">
-            <div class="ai-interaction-area">
-                <div class="ai-response-display"></div>
-                <div class="user-input-area">
-                    <input type="text" class="command-input" placeholder="Ask AVA anything...">
-                    <button class="voice-input-btn" title="Toggle voice input">
-                        <div class="voice-indicator"></div>
-                    </button>
-                </div>
+            <div class="ai-presence">
+                <canvas id="ava-visualization"></canvas>
+                <div class="ai-aura"></div>
+                <div class="ai-status-ring"></div>
+            </div>
+
+            <div class="user-input-area">
+                <input type="text" class="command-input" 
+                       placeholder="Ask AVA anything..." 
+                       autocomplete="off">
+                <button class="voice-input-btn" title="Activate voice input">
+                    <div class="voice-indicator"></div>
+                </button>
             </div>
         </main>
 
-        <!-- Right Sidebar - Notes & Controls -->
+        <!-- Right Sidebar -->
         <aside class="sidebar right-sidebar">
             <div class="widget notes">
                 <h3>Quick Notes</h3>
@@ -92,11 +90,6 @@
             </div>
         </aside>
     </div>
-
-    <!-- Background Effects -->
-    <div class="matrix-rain"></div>
-    <div class="grid-overlay"></div>
-    <div class="glow-effects"></div>
 
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
