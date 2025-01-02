@@ -7,23 +7,39 @@ class WidgetSystem {
     }
 
     init() {
-        this.initializeTimeWeather();
-        this.initializeTasks();
+        this.initializeDateTime();
+        this.initializeWeather();
+        this.initializeSystemMetrics();
         this.initializeNotes();
-        this.initializeSystemMonitor();
         this.setupEventListeners();
     }
 
-    async initializeTimeWeather() {
-        // Update time every second
-        setInterval(() => this.updateTime(), 1000);
-        
-        // Update weather every 30 minutes
-        this.updateWeather();
-        setInterval(() => this.updateWeather(), 1800000);
+    initializeDateTime() {
+        const updateDateTime = () => {
+            const now = new Date();
+            const timeElement = document.querySelector('#datetime-widget .time');
+            const dateElement = document.querySelector('#datetime-widget .date');
+
+            timeElement.textContent = now.toLocaleTimeString('en-US', {
+                hour12: false,
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            dateElement.textContent = now.toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        };
+
+        // Update immediately and then every second
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
     }
 
-    async updateWeather() {
+    async initializeWeather() {
         // Dubai coordinates
         const lat = 25.2048;
         const lon = 55.2708;
@@ -35,26 +51,7 @@ class WidgetSystem {
         }
     }
 
-    updateTime() {
-        const now = new Date();
-        const timeDisplay = document.querySelector('.current-time');
-        const dateDisplay = document.querySelector('.date');
-        
-        timeDisplay.textContent = now.toLocaleTimeString('en-US', { 
-            hour12: false, 
-            hour: '2-digit', 
-            minute: '2-digit' 
-        });
-        
-        dateDisplay.textContent = now.toLocaleDateString('en-US', { 
-            weekday: 'long', 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric' 
-        });
-    }
-
-    // ... rest of widget implementation ...
+    // ... rest of the implementation
 }
 
 // Widget Classes

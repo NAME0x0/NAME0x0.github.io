@@ -6,6 +6,7 @@
     <title>AVA | Personal AI Assistant</title>
     <link rel="stylesheet" href="main.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body class="loading">
     <!-- Loading Screen -->
@@ -25,87 +26,121 @@
         </div>
     </div>
 
-    <!-- Background Elements -->
-    <div class="matrix-rain"></div>
-    <div class="grid-overlay"></div>
-    <div class="glow-effects"></div>
+    <!-- Background Effects -->
+    <div class="background-effects">
+        <div class="matrix-rain"></div>
+        <div class="grid-overlay"></div>
+        <div class="glow-effects"></div>
+    </div>
 
-    <!-- Main Dashboard -->
-    <div class="dashboard-container">
-        <!-- Left Sidebar -->
-        <aside class="sidebar left-sidebar">
-            <div class="widget time-weather">
-                <div class="time-display">
-                    <div class="current-time">00:00</div>
-                    <div class="date">Loading...</div>
-                </div>
-                <div class="weather-display">
-                    <div class="temperature">--°C</div>
-                    <div class="weather-desc">Dubai, UAE</div>
-                    <div class="weather-details">
-                        <span class="humidity">Humidity: --%</span>
-                        <span class="wind">Wind: -- km/h</span>
+    <!-- Main Container -->
+    <div class="ava-interface">
+        <!-- Header -->
+        <header class="main-header">
+            <div class="logo">
+                <i class="fas fa-brain"></i>
+                <span>AVA CORE</span>
+            </div>
+            <div class="system-status">
+                <div class="status-indicator active"></div>
+                <span>Systems Online</span>
+            </div>
+        </header>
+
+        <!-- Dashboard Layout -->
+        <div class="dashboard-layout">
+            <!-- Left Panel -->
+            <aside class="side-panel left-panel">
+                <!-- Time & Weather -->
+                <div class="widget" id="datetime-widget">
+                    <div class="widget-header">
+                        <i class="fas fa-clock"></i>
+                        <span>Local Time</span>
+                    </div>
+                    <div class="widget-content">
+                        <div class="time">12:00</div>
+                        <div class="date">Monday, January 1</div>
+                        <div class="weather">
+                            <div class="temp">32°C</div>
+                            <div class="location">Dubai, UAE</div>
+                            <div class="weather-details">
+                                <span><i class="fas fa-tint"></i> 65%</span>
+                                <span><i class="fas fa-wind"></i> 12km/h</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="widget tasks">
-                <div class="widget-header">
-                    <h3>Tasks</h3>
-                </div>
-                <div class="widget-content">
-                    <div class="task-list"></div>
-                    <button class="add-task-btn">+ Add Task</button>
-                </div>
-            </div>
-        </aside>
 
-        <!-- Central Content -->
-        <main class="main-content">
-            <div class="ai-presence">
-                <canvas id="ava-visualization"></canvas>
-                <div class="ai-aura"></div>
-                <div class="ai-status-ring"></div>
-            </div>
-
-            <div class="user-input-area">
-                <input type="text" class="command-input" 
-                       placeholder="Ask AVA anything..." 
-                       autocomplete="off">
-                <button class="voice-input-btn" title="Activate voice input">
-                    <div class="voice-indicator"></div>
-                </button>
-            </div>
-        </main>
-
-        <!-- Right Sidebar -->
-        <aside class="sidebar right-sidebar">
-            <div class="widget notes">
-                <h3>Quick Notes</h3>
-                <div class="notes-list">
-                    <!-- Notes will be populated here -->
-                </div>
-                <button class="add-note-btn">+ New Note</button>
-            </div>
-
-            <div class="widget system-status">
-                <h3>System Status</h3>
-                <div class="status-metrics">
-                    <div class="metric cpu">
-                        <label>CPU</label>
-                        <div class="metric-bar"></div>
+                <!-- Tasks Widget -->
+                <div class="widget" id="tasks-widget">
+                    <div class="widget-header">
+                        <h3>Tasks</h3>
                     </div>
-                    <div class="metric memory">
-                        <label>Memory</label>
-                        <div class="metric-bar"></div>
-                    </div>
-                    <div class="metric network">
-                        <label>Network</label>
-                        <div class="metric-bar"></div>
+                    <div class="widget-content">
+                        <div class="task-list"></div>
+                        <button class="add-task-btn">+ Add Task</button>
                     </div>
                 </div>
-            </div>
-        </aside>
+            </aside>
+
+            <!-- Central Area -->
+            <main class="main-area">
+                <!-- AI Visualization -->
+                <div class="ai-presence">
+                    <div class="ai-core">
+                        <canvas id="ava-visualization"></canvas>
+                        <div class="ai-rings"></div>
+                    </div>
+                    <div class="ai-status">
+                        <div class="status-text">Ready for interaction</div>
+                    </div>
+                </div>
+
+                <!-- Command Interface -->
+                <div class="command-interface">
+                    <div class="command-wrapper">
+                        <i class="fas fa-terminal"></i>
+                        <input type="text" class="command-input" 
+                               placeholder="Ask me anything..."
+                               autofocus>
+                        <button class="voice-trigger" title="Activate voice command">
+                            <i class="fas fa-microphone" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Right Panel -->
+            <aside class="side-panel right-panel">
+                <!-- System Metrics -->
+                <div class="widget" id="system-metrics">
+                    <h3>System Status</h3>
+                    <div class="status-metrics">
+                        <div class="metric cpu">
+                            <label>CPU</label>
+                            <div class="metric-bar"></div>
+                        </div>
+                        <div class="metric memory">
+                            <label>Memory</label>
+                            <div class="metric-bar"></div>
+                        </div>
+                        <div class="metric network">
+                            <label>Network</label>
+                            <div class="metric-bar"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Notes -->
+                <div class="widget" id="notes-widget">
+                    <h3>Quick Notes</h3>
+                    <div class="notes-list">
+                        <!-- Notes will be populated here -->
+                    </div>
+                    <button class="add-note-btn">+ New Note</button>
+                </div>
+            </aside>
+        </div>
     </div>
 
     <!-- Resource Loading Check -->
