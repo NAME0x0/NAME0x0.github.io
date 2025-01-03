@@ -8,57 +8,60 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&display=swap">
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <header>
-            <div class="logo">AVA Core</div>
-            <div class="status">System Online</div>
+    <div class="background-effects">
+        <div class="matrix-rain"></div>
+        <div class="grid-overlay"></div>
+        <div class="glow-effects"></div>
+    </div>
+
+    <div class="ava-interface">
+        <header class="main-header">
+            <div class="logo">
+                <span class="status-indicator active"></span>
+                AVA Interface v1.0
+            </div>
+            <div class="system-status">System Status: Online</div>
         </header>
 
-        <!-- Main Content -->
-        <main>
-            <!-- AI Visualization -->
-            <div class="ai-core">
-                <canvas id="ai-face"></canvas>
-                <div class="ai-rings"></div>
-            </div>
-
-            <!-- Widgets -->
-            <div class="widgets left">
-                <div class="widget" id="time-widget">
-                    <h3>Local Time</h3>
-                    <div class="time">--:--</div>
-                    <div class="date">Loading...</div>
+        <div class="dashboard-layout">
+            <aside class="side-panel left-panel">
+                <div class="widget" id="datetime-widget">
+                    <div class="widget-header">
+                        <span class="widget-icon">⏰</span>
+                        Temporal Data
+                    </div>
+                    <div class="widget-content">
+                        <div class="time">00:00</div>
+                        <div class="date">Loading...</div>
+                        <div class="weather">Loading weather data...</div>
+                    </div>
                 </div>
+                <!-- More left panel widgets -->
+            </aside>
 
-                <div class="widget" id="tasks-widget">
-                    <h3>Tasks</h3>
-                    <div class="tasks-list"></div>
-                    <button class="add-task">+ Add Task</button>
+            <main class="ai-presence">
+                <div class="ai-core-interface">
+                    <div class="ai-visual-container">
+                        <canvas id="ai-head"></canvas>
+                        <div class="ai-aura"></div>
+                        <div class="hologram-effect"></div>
+                    </div>
                 </div>
-            </div>
-
-            <div class="widgets right">
-                <div class="widget" id="system-widget">
-                    <h3>System Status</h3>
-                    <div class="metrics"></div>
+                <div class="command-interface">
+                    <div class="command-wrapper">
+                        <input type="text" placeholder="Communicate with AVA..." />
+                        <button class="voice-trigger">🎤</button>
+                    </div>
                 </div>
+            </main>
 
-                <div class="widget" id="notes-widget">
-                    <h3>Quick Notes</h3>
-                    <div class="notes-list"></div>
-                    <button class="add-note">+ Add Note</button>
+            <aside class="side-panel right-panel">
+                <div class="widget" id="system-metrics">
+                    <!-- System metrics widget content -->
                 </div>
-            </div>
-
-            <!-- Command Input -->
-            <div class="command-input">
-                <input type="text" placeholder="Ask AVA...">
-                <button class="voice-input">
-                    <span class="mic-icon">🎤</span>
-                </button>
-            </div>
-        </main>
+                <!-- More right panel widgets -->
+            </aside>
+        </div>
     </div>
 
     <script src="js/animations.js"></script>

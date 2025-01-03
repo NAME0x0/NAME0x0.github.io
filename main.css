@@ -3,6 +3,8 @@
     --primary-bg: #0a0e17;
     --secondary-bg: #141e2c;
     --accent: #00fff2;
+    --accent-secondary: #ff00ff;
+    --accent-tertiary: #9000ff;
     --accent-glow: rgba(0, 255, 242, 0.15);
     --text: #ffffff;
     --text-secondary: #8892b0;
@@ -65,7 +67,8 @@ body {
     position: absolute;
     inset: 0;
     background: 
-        linear-gradient(to right, transparent 45%, var(--accent-glow) 50%, transparent 55%);
+        linear-gradient(to right, transparent 45%, var(--accent-glow) 50%, transparent 55%),
+        linear-gradient(to bottom, transparent 45%, var(--accent-secondary) 50%, transparent 55%);
     opacity: 0.1;
     animation: scanner 8s ease-in-out infinite;
     pointer-events: none;
@@ -408,13 +411,10 @@ body {
 
 /* AI Core Interface */
 .ai-core-interface {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    position: relative;
     width: 400px;
     height: 400px;
-    z-index: 10;
+    margin: 0 auto;
 }
 
 .ai-visual-container {
@@ -434,7 +434,8 @@ body {
     border-radius: 50%;
     background: radial-gradient(
         circle,
-        var(--ai-glow) 0%,
+        var(--accent-glow) 0%,
+        rgba(144, 0, 255, 0.2) 50%,
         transparent 70%
     );
     filter: blur(20px);
