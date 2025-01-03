@@ -746,3 +746,134 @@ main {
     color: var(--accent);
     margin-bottom: 15px;
 }
+
+/* AI Head Container Styles */
+.ai-container {
+    position: relative;
+    width: 400px;
+    height: 400px;
+    margin: 0 auto;
+    perspective: 1000px;
+}
+
+#ava-head {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+}
+
+.ai-effects {
+    position: absolute;
+    inset: -50px;
+    pointer-events: none;
+}
+
+.data-stream {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at center,
+        transparent 30%,
+        var(--accent-glow) 70%,
+        transparent 100%
+    );
+    opacity: 0.3;
+    animation: pulse var(--pulse-speed) infinite;
+}
+
+.holo-grid {
+    position: absolute;
+    inset: 0;
+    border: 1px solid var(--accent);
+    border-radius: 50%;
+    opacity: 0.2;
+    animation: rotate var(--rotation-speed) linear infinite;
+}
+
+/* Command Center Styles */
+.command-center {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    z-index: 100;
+}
+
+.command-input {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--glass);
+    border: 1px solid var(--accent);
+    border-radius: 10px;
+    padding: 15px;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+
+.prompt {
+    color: var(--accent);
+    font-weight: bold;
+}
+
+#cmd-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 1.1em;
+    outline: none;
+}
+
+.voice-btn {
+    background: transparent;
+    border: 1px solid var(--accent);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.voice-icon {
+    position: absolute;
+    inset: 25%;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.8;
+    transition: transform 0.3s ease;
+}
+
+.voice-btn:hover .voice-icon {
+    transform: scale(1.2);
+}
+
+/* Response Area Styles */
+.response-area {
+    margin-top: 20px;
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.response {
+    background: var(--glass);
+    border-left: 2px solid var(--accent);
+    margin: 10px 0;
+    padding: 10px;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

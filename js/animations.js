@@ -205,201 +205,100 @@ class AVAVisualization {
     }
 }
 
-class AIVisualization {
+class AIHead {
     constructor() {
         this.scene = new THREE.Scene();
-        this.setupCamera();
-        this.setupRenderer();
-        this.createHead();
+        this.initializeHead();
+    }
+
+    initializeHead() {
+        const canvas = document.getElementById('ava-head');
+        if (!canvas) {
+            console.error('AI head canvas not found');
+            return;
+        }
+
+        // Setup renderer
+        this.renderer = new THREE.WebGLRenderer({
+            canvas,
+            alpha: true,
+            antialias: true
+        });
+        this.renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+
+        // Setup camera
+        this.camera = new THREE.PerspectiveCamera(45, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+        this.camera.position.z = 5;
+
+        // Create head mesh
+        this.createHeadMesh();
+        
+        // Start animation loop
         this.animate();
     }
 
-    setupCamera() {
-        const canvas = document.getElementById('ai-head');
-        const width = canvas.clientWidth;
-        const height = canvas.clientHeight;
-        this.camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
-        this.camera.position.z = 5;
-    }
-
-    createHead() {
-        const headGeometry = new THREE.Group();
-        
-        // Create main head form
-        const faceGeometry = new THREE.SphereGeometry(1, 64, 64);
-        const faceMaterial = new THREE.ShaderMaterial({
+    createHeadMesh() {
+        // Create Gideon-like head geometry
+        const geometry = new THREE.SphereGeometry(1, 64, 64);
+        const material = new THREE.ShaderMaterial({
             uniforms: {
                 time: { value: 0 },
-                intensity: { value: 1.0 },
-                primaryColor: { value: new THREE.Color(0x00fff2) },
-                secondaryColor: { value: new THREE.Color(0xff00ff) },
-                pulseSpeed: { value: 2.0 }
+                color1: { value: new THREE.Color(0x00fff2) },
+                color2: { value: new THREE.Color(0xff00ff) }
             },
             vertexShader: `
                 varying vec3 vNormal;
-                varying vec3 vPosition;
+                varying vec2 vUv;
                 uniform float time;
                 
                 void main() {
                     vNormal = normal;
-                    vPosition = position;
-                    
-                    // Create Gideon-like face morphing
+                    vUv = uv;
                     vec3 pos = position;
-                    float morphFactor = sin(time * 0.5 + position.y * 2.0) * 0.05;
-                    pos += normal * morphFactor;
+                    
+                    // Add wave animation
+                    pos += normal * sin(pos.y * 10.0 + time) * 0.05;
                     
                     gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
                 }
             `,
             fragmentShader: `
                 varying vec3 vNormal;
-                varying vec3 vPosition;
+                varying vec2 vUv;
                 uniform float time;
-                uniform float intensity;
-                uniform vec3 primaryColor;
-                uniform vec3 secondaryColor;
-                uniform float pulseSpeed;
+                uniform vec3 color1;
+                uniform vec3 color2;
                 
                 void main() {
-                    // Create Gideon's face glow effect
-                    float edgeGlow = pow(1.0 - abs(dot(vNormal, vec3(0.0, 0.0, 1.0))), 5.0);
-                    float scanLine = step(0.98, fract((vPosition.y + time) * 30.0)) * 0.5;
-                    float dataPulse = sin(time * pulseSpeed + vPosition.y * 10.0) * 0.5 + 0.5;
+                    // Create holographic effect
+                    float scan = step(0.98, fract(vUv.y * 50.0 + time));
                     
-                    // Holographic color mixing
-                    vec3 baseColor = mix(primaryColor, secondaryColor, dataPulse);
-                    vec3 glowColor = primaryColor * edgeGlow * 2.0;
+                    // Edge glow
+                    float fresnel = pow(1.0 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 3.0);
                     
-                    // Final color composition
-                    vec3 finalColor = baseColor + glowColor + vec3(scanLine);
-                    float opacity = 0.7 + edgeGlow * 0.3;
+                    // Color mix
+                    vec3 color = mix(color1, color2, sin(time + vUv.y * 5.0) * 0.5 + 0.5);
                     
-                    gl_FragColor = vec4(finalColor * intensity, opacity);
+                    // Final color
+                    gl_FragColor = vec4(color + vec3(scan) + vec3(fresnel), 0.8);
                 }
             `,
             transparent: true,
             side: THREE.DoubleSide
         });
 
-        const face = new THREE.Mesh(faceGeometry, faceMaterial);
-        headGeometry.add(face);
-
-        // Add holographic data streams
-        this.createDataStreams(headGeometry);
-        
-        // Add energy field
-        this.createEnergyField(headGeometry);
-
-        this.head = headGeometry;
+        this.head = new THREE.Mesh(geometry, material);
         this.scene.add(this.head);
-    }
-
-    createDataStreams(parent) {
-        const streamGeometry = new THREE.BufferGeometry();
-        const streamCount = 50;
-        const positions = new Float32Array(streamCount * 3);
-        
-        for(let i = 0; i < streamCount * 3; i += 3) {
-            const angle = (i / streamCount) * Math.PI * 2;
-            const radius = 1.2;
-            positions[i] = Math.cos(angle) * radius;
-            positions[i + 1] = Math.sin(angle) * radius;
-            positions[i + 2] = 0;
-        }
-        
-        streamGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        
-        const streamMaterial = new THREE.ShaderMaterial({
-            uniforms: {
-                time: { value: 0 },
-                color: { value: new THREE.Color(0x00fff2) }
-            },
-            vertexShader: `
-                uniform float time;
-                
-                void main() {
-                    vec3 pos = position;
-                    float wave = sin(time * 2.0 + position.y * 5.0) * 0.1;
-                    pos.z += wave;
-                    gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
-                    gl_PointSize = 2.0;
-                }
-            `,
-            fragmentShader: `
-                uniform vec3 color;
-                
-                void main() {
-                    gl_FragColor = vec4(color, 0.6);
-                }
-            `,
-            transparent: true,
-            blending: THREE.AdditiveBlending
-        });
-
-        const streams = new THREE.Points(streamGeometry, streamMaterial);
-        parent.add(streams);
-    }
-
-    createHolographicGrid() {
-        const gridGeometry = new THREE.SphereGeometry(1.2, 32, 32);
-        const gridMaterial = new THREE.ShaderMaterial({
-            uniforms: {
-                time: { value: 0 }
-            },
-            vertexShader: `
-                varying vec3 vPosition;
-                uniform float time;
-                
-                void main() {
-                    vPosition = position;
-                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-                }
-            `,
-            fragmentShader: `
-                varying vec3 vPosition;
-                uniform float time;
-                
-                void main() {
-                    vec2 grid = abs(fract(vPosition.xy * 10.0 + time * 0.2) - 0.5);
-                    float lines = step(0.48, max(grid.x, grid.y));
-                    gl_FragColor = vec4(vec3(0.0, 1.0, 0.95), lines * 0.3);
-                }
-            `,
-            transparent: true,
-            side: THREE.DoubleSide
-        });
-
-        this.holographicGrid = new THREE.Mesh(gridGeometry, gridMaterial);
-        this.scene.add(this.holographicGrid);
     }
 
     animate() {
         requestAnimationFrame(() => this.animate());
         
-        const time = performance.now() * 0.001;
+        if (this.head && this.head.material.uniforms) {
+            this.head.material.uniforms.time.value = performance.now() * 0.001;
+            this.head.rotation.y = Math.sin(performance.now() * 0.001) * 0.1;
+        }
         
-        // Animate head and effects
-        if (this.head) {
-            this.head.rotation.y = Math.sin(time * 0.5) * 0.1;
-            this.head.children.forEach(child => {
-                if (child.material.uniforms) {
-                    child.material.uniforms.time.value = time;
-                }
-            });
-        }
-
-        // Update grid animations
-        if (this.holographicGrid && this.holographicGrid.material.uniforms) {
-            this.holographicGrid.material.uniforms.time.value = time;
-            this.holographicGrid.rotation.y = time * 0.1;
-        }
-
-        // Update energy field
-        if (this.energyField) {
-            // ...existing energy field animation...
-        }
-
         this.renderer.render(this.scene, this.camera);
     }
 }
@@ -409,3 +308,6 @@ const animationSystem = new AVAAnimationSystem();
 
 // Initialize visualization
 const avaVisualization = new AVAVisualization();
+
+// Initialize AI head
+const aiHead = new AIHead();

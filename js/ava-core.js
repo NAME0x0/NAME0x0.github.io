@@ -6,6 +6,8 @@ class AVACore {
             activeSubsystems: new Set(),
             responses: new Map()
         };
+        this.commandHistory = [];
+        this.historyIndex = -1;
         this.init();
     }
 
@@ -82,11 +84,42 @@ class AVACore {
         });
     }
 
+    setupCommandInterface() {
+        const input = document.getElementById('command-input');
+        const responseArea = document.querySelector('.response-area');
+
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && input.value.trim()) {
+                this.processCommand(input.value.trim());
+                this.commandHistory.push(input.value);
+                this.historyIndex = this.commandHistory.length;
+                input.value = '';
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (this.historyIndex > 0) {
+                    this.historyIndex--;
+                    input.value = this.commandHistory[this.historyIndex];
+                }
+            } else if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (this.historyIndex < this.commandHistory.length - 1) {
+                    this.historyIndex++;
+                    input.value = this.commandHistory[this.historyIndex];
+                } else {
+                    this.historyIndex = this.commandHistory.length;
+                    input.value = '';
+                }
+            }
+        });
+
+        // Autofocus input when clicking anywhere
+        document.addEventListener('click', () => input.focus());
+    }
+
     processCommand(command) {
-        // Add JARVIS-like response behavior
         const response = this.generateResponse(command);
         this.displayResponse(response);
-        this.animateInterface();
+        this.triggerVisualization();
     }
 
     generateResponse(command) {
@@ -104,21 +137,33 @@ class AVACore {
     }
 
     displayResponse(response) {
-        // Add visual feedback
+        const responseArea = document.querySelector('.response-area');
         const responseElement = document.createElement('div');
-        responseElement.className = 'ava-response';
-        responseElement.textContent = response;
+        responseElement.className = 'response';
         
-        // Add holographic effect to response
-        responseElement.style.animation = 'hologram-in 0.5s ease-out';
+        const timestamp = document.createElement('span');
+        timestamp.className = 'timestamp';
+        timestamp.textContent = new Date().toLocaleTimeString();
         
-        document.querySelector('.command-interface').appendChild(responseElement);
+        const content = document.createElement('span');
+        content.className = 'content';
+        content.textContent = response;
         
-        // Clean up old responses
+        responseElement.appendChild(timestamp);
+        responseElement.appendChild(content);
+        responseArea.appendChild(responseElement);
+        responseArea.scrollTop = responseArea.scrollHeight;
+
+        // Trigger hologram effect
+        responseElement.style.animation = 'hologram-in 0.3s ease-out';
+    }
+
+    triggerVisualization() {
+        // Trigger AI head reaction
+        document.querySelector('.ai-core').classList.add('processing');
         setTimeout(() => {
-            responseElement.style.animation = 'hologram-out 0.5s ease-in';
-            setTimeout(() => responseElement.remove(), 500);
-        }, 5000);
+            document.querySelector('.ai-core').classList.remove('processing');
+        }, 1000);
     }
 
     animateInterface() {

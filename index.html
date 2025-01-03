@@ -6,6 +6,8 @@
     <title>AVA | AI Assistant</title>
     <link rel="stylesheet" href="main.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&display=swap">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="background-effects">
@@ -17,51 +19,74 @@
     <div class="ava-interface">
         <header class="main-header">
             <div class="logo">
-                <span class="status-indicator active"></span>
-                AVA Interface v1.0
+                <div class="status-ring"></div>
+                <span>AVA CORE</span>
             </div>
-            <div class="system-status">System Status: Online</div>
+            <div class="system-metrics">
+                <div class="metric">CPU: <span id="cpu-usage">0%</span></div>
+                <div class="metric">MEM: <span id="mem-usage">0%</span></div>
+                <div class="metric">NET: <span id="net-status">ACTIVE</span></div>
+            </div>
         </header>
 
-        <div class="dashboard-layout">
-            <aside class="side-panel left-panel">
-                <div class="widget" id="datetime-widget">
-                    <div class="widget-header">
-                        <span class="widget-icon">⏰</span>
-                        Temporal Data
+        <main class="dashboard">
+            <section class="left-panel">
+                <div class="widget system-widget">
+                    <h3>System Status</h3>
+                    <div class="metrics-container">
+                        <div class="metric" data-type="cpu">
+                            <label>CPU Usage</label>
+                            <div class="metric-bar"><div class="metric-fill"></div></div>
+                            <span class="metric-value">0%</span>
+                        </div>
+                        <!-- Add more metrics here -->
                     </div>
+                </div>
+                <div class="widget" id="tasks-widget">
+                    <h3>Active Processes</h3>
                     <div class="widget-content">
-                        <div class="time">00:00</div>
-                        <div class="date">Loading...</div>
-                        <div class="weather">Loading weather data...</div>
+                        <div class="tasks-list"></div>
                     </div>
                 </div>
-                <!-- More left panel widgets -->
-            </aside>
+            </section>
 
-            <main class="ai-presence">
-                <div class="ai-core-interface">
-                    <div class="ai-visual-container">
-                        <canvas id="ai-head"></canvas>
-                        <div class="ai-aura"></div>
-                        <div class="hologram-effect"></div>
+            <section class="center-panel">
+                <div class="ai-presence">
+                    <div class="ai-container">
+                        <canvas id="ava-head"></canvas>
+                        <div class="ai-effects">
+                            <div class="data-stream"></div>
+                            <div class="holo-grid"></div>
+                        </div>
                     </div>
                 </div>
-                <div class="command-interface">
-                    <div class="command-wrapper">
-                        <input type="text" placeholder="Communicate with AVA..." />
-                        <button class="voice-trigger">🎤</button>
+                <div class="command-center">
+                    <div class="command-input">
+                        <span class="prompt">>></span>
+                        <input type="text" id="cmd-input" placeholder="Enter command..." autofocus>
+                        <button class="voice-btn" title="Activate voice command">
+                            <span class="voice-icon"></span>
+                        </button>
                     </div>
+                    <div class="response-area"></div>
                 </div>
-            </main>
+            </section>
 
-            <aside class="side-panel right-panel">
-                <div class="widget" id="system-metrics">
-                    <!-- System metrics widget content -->
+            <section class="right-panel">
+                <div class="widget" id="analytics-widget">
+                    <h3>System Analytics</h3>
+                    <div class="widget-content">
+                        <canvas id="analytics-chart"></canvas>
+                    </div>
                 </div>
-                <!-- More right panel widgets -->
-            </aside>
-        </div>
+                <div class="widget" id="notifications-widget">
+                    <h3>Notifications</h3>
+                    <div class="widget-content">
+                        <div class="notifications-list"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
     </div>
 
     <script src="js/animations.js"></script>

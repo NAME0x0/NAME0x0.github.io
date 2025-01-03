@@ -2,56 +2,60 @@ import { WIDGET_TYPES, WidgetFactory } from './widget-types.js';
 
 class WidgetSystem {
     constructor() {
-        this.widgets = new Map();
-        this.init();
+        this.initializeWidgets();
+        this.updateCycle();
     }
 
-    init() {
-        this.initializeDateTime();
-        this.initializeWeather();
-        this.initializeSystemMetrics();
-        this.initializeNotes();
-        this.setupEventListeners();
+    initializeWidgets() {
+        this.initializeSystemStatus();
+        this.initializeActiveTasks();
+        this.initializeAnalytics();
+        this.initializeNotifications();
     }
 
-    initializeDateTime() {
-        const updateDateTime = () => {
-            const now = new Date();
-            const timeElement = document.querySelector('#datetime-widget .time');
-            const dateElement = document.querySelector('#datetime-widget .date');
-
-            timeElement.textContent = now.toLocaleTimeString('en-US', {
-                hour12: false,
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-
-            dateElement.textContent = now.toLocaleDateString('en-US', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-        };
-
-        // Update immediately and then every second
-        updateDateTime();
-        setInterval(updateDateTime, 1000);
+    initializeSystemStatus() {
+        const statusList = document.querySelector('.status-list');
+        const metrics = ['CPU', 'Memory', 'Network', 'Storage'];
+        
+        metrics.forEach(metric => {
+            const metricEl = document.createElement('div');
+            metricEl.className = 'metric-item';
+            metricEl.innerHTML = `
+                <span class="metric-name">${metric}</span>
+                <div class="metric-bar">
+                    <div class="metric-fill" style="width: 0%"></div>
+                </div>
+                <span class="metric-value">0%</span>
+            `;
+            statusList.appendChild(metricEl);
+        });
     }
 
-    async initializeWeather() {
-        // Dubai coordinates
-        const lat = 25.2048;
-        const lon = 55.2708;
-        try {
-            const weather = await this.fetchWeatherData(lat, lon);
-            this.updateWeatherDisplay(weather);
-        } catch (error) {
-            console.error('Weather update failed:', error);
-        }
+    updateCycle() {
+        setInterval(() => {
+            this.updateMetrics();
+            this.updateTasks();
+            this.updateAnalytics();
+            this.checkNotifications();
+        }, 1000);
     }
 
-    // ... rest of the implementation
+    updateMetrics() {
+        // Simulate real-time metrics
+        document.querySelectorAll('.metric-item').forEach(metric => {
+            const fill = metric.querySelector('.metric-fill');
+            const value = metric.querySelector('.metric-value');
+            const newValue = Math.floor(Math.random() * 100);
+            
+            fill.style.width = `${newValue}%`;
+            value.textContent = `${newValue}%`;
+            
+            // Add warning class if high usage
+            fill.className = `metric-fill ${newValue > 80 ? 'warning' : ''}`;
+        });
+    }
+
+    // ...implement other widget methods...
 }
 
 // Widget Classes
@@ -171,8 +175,129 @@ class Widgets {
     }
 }
 
+class DashboardWidgets {
+    constructor() {
+        this.charts = {};
+        this.initializeWidgets();
+        this.startUpdateCycle();
+    }
+
+    initializeWidgets() {
+        this.setupSystemMetrics();
+        this.setupAnalyticsChart();
+        this.setupNotifications();
+        this.setupTaskManager();
+    }
+
+    setupSystemMetrics() {
+        const metrics = ['CPU', 'Memory', 'Network', 'Storage'];
+        const container = document.querySelector('.metrics-container');
+        
+        metrics.forEach(metric => {
+            const metricEl = this.createMetricElement(metric);
+            container.appendChild(metricEl);
+        });
+    }
+
+    setupAnalyticsChart() {
+        const ctx = document.getElementById('analytics-chart').getContext('2d');
+        this.charts.analytics = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: Array(20).fill(''),
+                datasets: [{
+                    label: 'System Load',
+                    data: Array(20).fill(0),
+                    borderColor: '#00fff2',
+                    backgroundColor: 'rgba(0, 255, 242, 0.1)',
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: {
+                    duration: 0
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        grid: {
+                            color: 'rgba(0, 255, 242, 0.1)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            color: 'rgba(0, 255, 242, 0.1)'
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    startUpdateCycle() {
+        setInterval(() => {
+            this.updateMetrics();
+            this.updateAnalytics();
+            this.checkNotifications();
+        }, 1000);
+    }
+
+    updateMetrics() {
+        document.querySelectorAll('.metric').forEach(metric => {
+            const fill = metric.querySelector('.metric-fill');
+            const value = metric.querySelector('.metric-value');
+            const newValue = this.generateMetricValue(metric.dataset.type);
+            
+            fill.style.width = `${newValue}%`;
+            value.textContent = `${newValue}%`;
+            fill.classList.toggle('warning', newValue > 80);
+        });
+    }
+
+    updateAnalytics() {
+        const chart = this.charts.analytics;
+        const newValue = Math.random() * 100;
+        
+        chart.data.datasets[0].data.push(newValue);
+        chart.data.datasets[0].data.shift();
+        chart.update('quiet');
+    }
+
+    generateMetricValue(type) {
+        // Simulate more realistic system metrics
+        switch(type) {
+            case 'cpu':
+                return Math.sin(Date.now() / 10000) * 30 + 50;
+            case 'memory':
+                return Math.sin(Date.now() / 15000) * 20 + 60;
+            default:
+                return Math.random() * 100;
+        }
+    }
+
+    createMetricElement(name) {
+        const div = document.createElement('div');
+        div.className = 'metric';
+        div.dataset.type = name.toLowerCase();
+        div.innerHTML = `
+            <label>${name}</label>
+            <div class="metric-bar">
+                <div class="metric-fill"></div>
+            </div>
+            <span class="metric-value">0%</span>
+        `;
+        return div;
+    }
+}
+
 // Initialize widget system
 const widgetSystem = new WidgetSystem();
 
 // Initialize widgets
 const widgets = new Widgets();
+
+// Initialize dashboard widgets
+const dashboardWidgets = new DashboardWidgets();
