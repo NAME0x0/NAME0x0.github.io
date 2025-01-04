@@ -234,3 +234,30 @@ class AVAInterface {
 
 // Initialize AVA Interface
 const ava = new AVAInterface();
+
+const API_KEY = "cac473d6bf5957b6879513079dd69ae2";
+
+// Copy exact functionality from AVA/index_JS.js
+function getWeatherDetails1() {
+    if("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(async function(position){
+            let lat = position.coords.latitude;
+            let lon = position.coords.longitude;
+            
+            const api_url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`;
+            
+            let response = await fetch(api_url);
+            let data = await response.json();
+            manipulateWeatherData(data);
+        });
+    }
+}
+
+// ...rest of exact functionality from AVA/index_JS.js...
+
+function AVAStartingReply() {
+    Speak("please wait...system initializing...backing up configurations...gathering audio and video files...");
+    Speak("system initialized...");
+    Speak("i am online and ready... say push enable to talk... or simply click arc reactor...");
+    startListening();
+}

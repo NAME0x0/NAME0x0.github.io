@@ -3,78 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AVA Interface</title>
+    <title>AVA</title>
+    <link rel="stylesheet" href="https://codepen.io/FlyingEmu/pen/cjBzr.css">
     <link rel="stylesheet" href="main.css">
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 </head>
-<body>
-    <div class="interface-container">
-        <!-- Left Panel -->
-        <section class="side-panel left">
-            <div class="datetime-module">
-                <div class="date-display semi-arc">
-                    <div class="inner-ring rotating"></div>
-                    <div class="date-value"></div>
+<body onload="AVAStartingReply()">
+    <div class="scroll">
+        <div id="leftmenu">
+            <div id="date_time">
+                <div id="date" class="semi_arc e4">
+                    <div class="semi_arc_2 e4_1">
+                        <div class="counterspin4"></div>
+                    </div>
+                    <div style="font-size: 40px; margin-top: 25px" id="dateValue"></div>
+                    <div style="font-size: 25px" id="monthValue"></div>
                 </div>
-                <div class="time-display arc">
-                    <div class="time-value"></div>
+
+                <div id="time" class="arc e1">
+                    <div style="font-size: 23px; margin-left: -10px; margin-top: 23px" id="timeValue"></div>
+                    <div style="font-size: 17px; margin-top: 10px" id="weekDayValue"></div>
                 </div>
             </div>
 
-            <div class="system-metrics">
-                <h2 class="panel-title">System Status</h2>
-                <div class="metrics-grid"></div>
-            </div>
-        </section>
+            <!-- Performance Section -->
+            <p class="title">Performance</p>
+            <div class="hline title_underline"></div>
+            <span class="menuitem entypo-gauge" style="font-size: 30px; margin-left: 10px">
+                <p id="cpu" class="caption" style="font-size: 20px">CPU Usage: 19%</p>
+            </span>
+            <!-- ...rest of left menu content... -->
+        </div>
 
-        <!-- Center Display -->
-        <main class="main-display">
-            <div class="arc-reactor">
-                <div class="reactor-core">
-                    <div class="core-inner"></div>
-                    <div class="core-outer"></div>
-                    <div class="core-spokes"></div>
+        <!-- Arc Reactor -->
+        <button id="microphoneButton" title="Activate Voice Control">
+            <div id="arc_container">
+                <div class="arc_reactor">
+                    <div class="case_container">
+                        <div class="e7">
+                            <div class="semi_arc_3 e5_1">
+                                <div class="semi_arc_3 e5_2">
+                                    <div class="semi_arc_3 e5_3">
+                                        <div class="semi_arc_3 e5_4" id="mainCircle"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="core2"></div>
+                        </div>
+                        <ul class="marks"></ul>
+                    </div>
                 </div>
             </div>
+        </button>
 
-            <div class="command-interface">
-                <div class="cmd-input">
-                    <span class="prompt">></span>
-                    <input type="text" id="cmd-input" placeholder="Enter command...">
-                    <button class="voice-trigger" title="Activate voice command">
-                        <span class="voice-icon"></span>
-                    </button>
-                </div>
-                <div class="response-display"></div>
-            </div>
-        </main>
+        <!-- Right Menu -->
+        <div id="rightmenu">
+            <!-- ...existing right menu content... -->
+        </div>
 
-        <!-- Right Panel -->
-        <section class="side-panel right">
-            <div class="analytics-module">
-                <h2 class="panel-title">Analytics</h2>
-                <canvas id="system-analytics"></canvas>
-            </div>
-            
-            <div class="environment-module">
-                <div class="temp-display semi-arc">
-                    <div class="temp-value"></div>
-                </div>
-                <div class="humid-display arc">
-                    <div class="humid-value"></div>
-                </div>
-            </div>
-        </section>
-    </div>
-
-    <!-- Particle Effects -->
-    <div class="particle-container">
-        <canvas id="matrix-rain"></canvas>
-        <div class="scan-lines"></div>
-        <div class="grid-overlay"></div>
+        <!-- Particles -->
+        <canvas id="particle1" width="20" height="500"></canvas>
+        <div id="particle2">▶<br/>▶<br/>▶</div>
+        <div id="particle3" class="vline"></div>
+        <div id="particle4" class="vline"></div>
     </div>
 
     <script src="js/animations.js"></script>

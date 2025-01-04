@@ -351,31 +351,140 @@ class ARCReactor {
 
 class ParticleSystem {
     constructor() {
-        this.canvas = document.getElementById('matrix-rain');
-        this.ctx = this.canvas.getContext('2d');
-        this.initialize();
-    }
-
-    initialize() {
-        this.resizeCanvas();
-        window.addEventListener('resize', () => this.resizeCanvas());
+        this.particles = [];
+        this.dataStreams = [];
+        this.setupCanvases();
         this.createParticles();
         this.animate();
     }
 
-    resizeCanvas() {
-        this.canvas.width = window.innerWidth;
-        this.canvas.height = window.innerHeight;
+    setupCanvases() {
+        ['particle1', 'particle1_1', 'particle1_2'].forEach(id => {
+            const canvas = document.getElementById(id);
+            const ctx = canvas.getContext('2d');
+            this.setupParticleCanvas(canvas, ctx);
+        });
     }
 
-    createParticles() {
-        // Matrix rain effect implementation
-        // ...existing particle creation code...
+    setupParticleCanvas(canvas, ctx) {
+        // Create cyberpunk-style data streams
+        for(let i = 0; i < 20; i++) {
+            this.dataStreams.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                length: 50 + Math.random() * 100,
+                speed: 1 + Math.random() * 3,
+                width: 1 + Math.random() * 2,
+                opacity: 0.1 + Math.random() * 0.4
+            });
+        }
     }
 
     animate() {
-        // Matrix animation loop
-        // ...existing animation code...
+        ['particle1', 'particle1_1', 'particle1_2'].forEach(id => {
+            const canvas = document.getElementById(id);
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Animate data streams
+            this.dataStreams.forEach(stream => {
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(2, 254, 255, ${stream.opacity})`;
+                ctx.lineWidth = stream.width;
+                ctx.moveTo(stream.x, stream.y);
+                ctx.lineTo(stream.x, stream.y + stream.length);
+                ctx.stroke();
+                
+                stream.y += stream.speed;
+                if(stream.y > canvas.height) {
+                    stream.y = -stream.length;
+                    stream.x = Math.random() * canvas.width;
+                }
+            });
+        });
+        
+        requestAnimationFrame(() => this.animate());
+    }
+}
+
+class ParticleAnimations {
+    constructor() {
+        this.setupParticles();
+    }
+
+    setupParticles() {
+        // Setup particle1 (left side vertical line)
+        const canvas1 = document.getElementById('particle1');
+        const ctx1 = canvas1.getContext('2d');
+        
+        ctx1.beginPath();
+        ctx1.moveTo(0, 0);
+        ctx1.lineTo(0, 70);
+        ctx1.lineTo(10, 85);
+        ctx1.lineTo(10, 135);
+        ctx1.lineTo(0, 150);
+        ctx1.lineTo(0, 480);
+        ctx1.lineTo(5, 490);
+        ctx1.lineTo(20, 490);
+        ctx1.lineTo(20, 250);
+        ctx1.lineTo(10, 235);
+        ctx1.lineTo(10, 185);
+        ctx1.lineTo(20, 170);
+        ctx1.lineTo(20, 40);
+        ctx1.closePath();
+
+        ctx1.fillStyle = "rgba(2,254,255,0.3)";
+        ctx1.fill();
+    }
+
+    animateParticles() {
+        // Add particle animation code
+        document.querySelectorAll('.vline').forEach(line => {
+            line.style.animation = 'moveVertical 3s infinite';
+        });
+    }
+}
+
+class HolographicEffects {
+    constructor() {
+        this.setupHolographicElements();
+        this.animate();
+    }
+
+    setupHolographicElements() {
+        // Add scanning line effect
+        const scanLine = document.createElement('div');
+        scanLine.className = 'scan-line-effect';
+        document.body.appendChild(scanLine);
+
+        // Add glitch effect
+        const glitchOverlay = document.createElement('div');
+        glitchOverlay.className = 'glitch-overlay';
+        document.body.appendChild(glitchOverlay);
+
+        this.createHolographicRings();
+    }
+
+    createHolographicRings() {
+        const reactor = document.querySelector('.arc_reactor');
+        for(let i = 0; i < 3; i++) {
+            const ring = document.createElement('div');
+            ring.className = `holo-ring ring-${i}`;
+            reactor.appendChild(ring);
+        }
+    }
+
+    animate() {
+        // Add random glitch effects
+        setInterval(() => {
+            const glitch = document.querySelector('.glitch-overlay');
+            if(Math.random() > 0.95) {
+                glitch.style.opacity = '0.1';
+                setTimeout(() => {
+                    glitch.style.opacity = '0';
+                }, 50);
+            }
+        }, 100);
     }
 }
 
@@ -392,6 +501,8 @@ const aiHead = new AIHead();
 document.addEventListener('DOMContentLoaded', () => {
     const arcReactor = new ARCReactor();
     const particles = new ParticleSystem();
+    const particleAnimations = new ParticleAnimations();
+    particleAnimations.animateParticles();
     
     // Fade in elements sequentially
     const elements = [
@@ -407,4 +518,17 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector(selector).classList.add('active');
         }, index * 500);
     });
+
+    const holographicEffects = new HolographicEffects();
+    
+    // Add dynamic weather transitions
+    const weatherModule = document.querySelector('.temp-display');
+    if(weatherModule) {
+        weatherModule.addEventListener('mouseover', () => {
+            weatherModule.classList.add('weather-hover');
+        });
+        weatherModule.addEventListener('mouseout', () => {
+            weatherModule.classList.remove('weather-hover');
+        });
+    }
 });
