@@ -5,14 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AVA</title>
     <link rel="stylesheet" href="https://codepen.io/FlyingEmu/pen/cjBzr.css">
-    <link rel="stylesheet" href="main.css">
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/enhanced-effects.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 </head>
 <body onload="AVAStartingReply()">
     <div class="scroll">
+        <!-- Left Menu -->
         <div id="leftmenu">
             <div id="date_time">
                 <div id="date" class="semi_arc e4">
@@ -35,7 +34,23 @@
             <span class="menuitem entypo-gauge" style="font-size: 30px; margin-left: 10px">
                 <p id="cpu" class="caption" style="font-size: 20px">CPU Usage: 19%</p>
             </span>
-            <!-- ...rest of left menu content... -->
+            <br>
+            <span class="menuitem entypo-chart-area" style="font-size: 30px; margin-left: 10px">
+                <p id="ram" class="caption" style="font-size: 20px"></p>
+            </span>
+            <br>
+            <span class="menuitem entypo-chart-pie" style="font-size: 30px; margin-left: 10px">
+                <p id="proc" class="caption" style="font-size: 20px">Processes: 73</p>
+            </span>
+
+            <!-- Social Section - Exact copy from AVA -->
+            <p class="title">Social</p>
+            <div class="hline title_underline"></div>
+            <div class="app_icon entypo-facebook-squared"></div>
+            <div class="app_icon entypo-twitter"></div>
+            <div class="app_icon entypo-gplus"></div>
+            <div class="app_icon entypo-skype"></div>
+            <!-- ... rest of social icons ... -->
         </div>
 
         <!-- Arc Reactor -->
@@ -53,7 +68,9 @@
                             </div>
                             <div class="core2"></div>
                         </div>
-                        <ul class="marks"></ul>
+                        <ul class="marks">
+                            <!-- Will be populated by JavaScript -->
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -61,18 +78,23 @@
 
         <!-- Right Menu -->
         <div id="rightmenu">
-            <!-- ...existing right menu content... -->
+            <p class="title" style="text-align: left; margin-left: 10px">Notes</p>
+            <div id="particle10" class="hline"></div>
+            <div id="particle11" class="hline"></div>
+            <div id="particle12" class="vline"></div>
+            <!-- ... rest of right menu content ... -->
         </div>
 
         <!-- Particles -->
         <canvas id="particle1" width="20" height="500"></canvas>
-        <div id="particle2">▶<br/>▶<br/>▶</div>
+        <canvas id="particle1_1" width="40" height="510"></canvas>
+        <canvas id="particle1_2" width="40" height="510"></canvas>
+        <div id="particle2">▶<br>▶<br>▶</div>
         <div id="particle3" class="vline"></div>
         <div id="particle4" class="vline"></div>
     </div>
 
-    <script src="js/animations.js"></script>
-    <script src="js/widgets.js"></script>
-    <script src="js/ava-core.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/enhanced-effects.js"></script>
 </body>
 </html>

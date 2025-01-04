@@ -488,6 +488,68 @@ class HolographicEffects {
     }
 }
 
+class InterfaceAnimations {
+    constructor() {
+        this.setupAnimations();
+        this.initializeElements();
+    }
+
+    setupAnimations() {
+        // Sequential element fade-ins
+        const elements = [
+            { selector: '#date_time', delay: 2000 },
+            { selector: '.title', delay: 3000 },
+            { selector: '#cpu', delay: 4000 },
+            { selector: '#ram', delay: 4500 },
+            { selector: '#proc', delay: 5000 },
+            { selector: '.caption', delay: 6000 },
+            { selector: '#note_input', delay: 7000 },
+            { selector: '#temperature', delay: 8000 },
+            { selector: '#mainCircle', delay: 8000 },
+            { selector: '#time1', delay: 9000 }
+        ];
+
+        elements.forEach(({selector, delay}) => {
+            const element = document.querySelector(selector);
+            if (element) {
+                element.style.opacity = '0';
+                setTimeout(() => {
+                    element.style.opacity = '1';
+                    element.style.transition = 'opacity 1s ease-in';
+                }, delay);
+            }
+        });
+    }
+
+    initializeElements() {
+        // Initialize hover effects
+        document.querySelectorAll('.widget').forEach(widget => {
+            this.addHoverEffect(widget);
+        });
+
+        // Add scanning line effect
+        this.createScanLine();
+    }
+
+    addHoverEffect(element) {
+        element.addEventListener('mouseenter', () => {
+            element.style.transform = 'scale(1.02)';
+            element.style.boxShadow = '0 0 20px var(--accent-glow)';
+        });
+
+        element.addEventListener('mouseleave', () => {
+            element.style.transform = 'scale(1)';
+            element.style.boxShadow = 'none';
+        });
+    }
+
+    createScanLine() {
+        const scanLine = document.createElement('div');
+        scanLine.className = 'scan-line';
+        document.body.appendChild(scanLine);
+    }
+}
+
 // Initialize animation system
 const animationSystem = new AVAAnimationSystem();
 
@@ -531,4 +593,7 @@ document.addEventListener('DOMContentLoaded', () => {
             weatherModule.classList.remove('weather-hover');
         });
     }
+
+    // Initialize Interface Animations
+    new InterfaceAnimations();
 });
