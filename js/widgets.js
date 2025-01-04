@@ -293,6 +293,80 @@ class DashboardWidgets {
     }
 }
 
+class SystemMetrics {
+    constructor() {
+        this.metrics = {
+            cpu: 0,
+            memory: 0,
+            network: 0,
+            temperature: 0
+        };
+        this.setupMetrics();
+        this.startUpdates();
+    }
+
+    setupMetrics() {
+        const grid = document.querySelector('.metrics-grid');
+        const metrics = [
+            { id: 'cpu', label: 'CPU Usage', icon: '⚡' },
+            { id: 'memory', label: 'Memory', icon: '📊' },
+            { id: 'network', label: 'Network', icon: '📡' },
+            { id: 'temp', label: 'Temperature', icon: '🌡️' }
+        ];
+
+        metrics.forEach(metric => {
+            grid.appendChild(this.createMetricElement(metric));
+        });
+    }
+
+    createMetricElement({ id, label, icon }) {
+        const div = document.createElement('div');
+        div.className = 'metric';
+        div.innerHTML = `
+            <div class="metric-header">
+                <span class="metric-icon">${icon}</span>
+                <span class="metric-label">${label}</span>
+            </div>
+            <div class="metric-value" id="${id}-value">0%</div>
+            <div class="metric-bar">
+                <div class="metric-fill" id="${id}-fill"></div>
+            </div>
+        `;
+        return div;
+    }
+
+    startUpdates() {
+        setInterval(() => {
+            this.updateMetrics();
+        }, 1000);
+    }
+
+    updateMetrics() {
+        // Simulate realistic system metrics
+        this.metrics.cpu = Math.sin(Date.now() / 10000) * 30 + 50;
+        this.metrics.memory = Math.sin(Date.now() / 15000) * 20 + 60;
+        this.metrics.network = Math.sin(Date.now() / 20000) * 40 + 50;
+        this.metrics.temperature = Math.sin(Date.now() / 25000) * 15 + 40;
+
+        // Update UI
+        Object.entries(this.metrics).forEach(([key, value]) => {
+            const valueEl = document.getElementById(`${key}-value`);
+            const fillEl = document.getElementById(`${key}-fill`);
+            if (valueEl && fillEl) {
+                valueEl.textContent = `${value.toFixed(1)}%`;
+                fillEl.style.width = `${value}%`;
+                fillEl.style.background = this.getStatusColor(value);
+            }
+        });
+    }
+
+    getStatusColor(value) {
+        if (value > 80) return 'var(--error)';
+        if (value > 60) return 'var(--warning)';
+        return 'var(--accent)';
+    }
+}
+
 // Initialize widget system
 const widgetSystem = new WidgetSystem();
 
@@ -301,3 +375,8 @@ const widgets = new Widgets();
 
 // Initialize dashboard widgets
 const dashboardWidgets = new DashboardWidgets();
+
+// Initialize widgets when document is ready
+document.addEventListener('DOMContentLoaded', () => {
+    const systemMetrics = new SystemMetrics();
+});

@@ -303,6 +303,82 @@ class AIHead {
     }
 }
 
+class ARCReactor {
+    constructor() {
+        this.initializeReactor();
+        this.setupSpokes();
+        this.startAnimations();
+    }
+
+    initializeReactor() {
+        const reactor = document.querySelector('.reactor-core');
+        for (let i = 0; i < 60; i++) {
+            const spoke = document.createElement('div');
+            spoke.className = 'reactor-spoke';
+            spoke.style.transform = `rotate(${i * 6}deg)`;
+            reactor.appendChild(spoke);
+        }
+    }
+
+    setupSpokes() {
+        // Create 60 marks for the reactor ring
+        const marks = Array(60).fill(0).map((_, i) => {
+            return `<li style="transform: rotate(${i * 6}deg) translateY(125px);"></li>`;
+        }).join('');
+        
+        document.querySelector('.core-spokes').innerHTML = marks;
+    }
+
+    startAnimations() {
+        this.pulseCore();
+        this.rotateRings();
+    }
+
+    pulseCore() {
+        const core = document.querySelector('.core-inner');
+        setInterval(() => {
+            core.style.boxShadow = '0 0 60px 25px rgba(0, 255, 242, 0.5)';
+            setTimeout(() => {
+                core.style.boxShadow = '0 0 40px 15px rgba(0, 255, 242, 0.3)';
+            }, 100);
+        }, 2000);
+    }
+
+    rotateRings() {
+        // Ring rotation animations are handled in CSS
+    }
+}
+
+class ParticleSystem {
+    constructor() {
+        this.canvas = document.getElementById('matrix-rain');
+        this.ctx = this.canvas.getContext('2d');
+        this.initialize();
+    }
+
+    initialize() {
+        this.resizeCanvas();
+        window.addEventListener('resize', () => this.resizeCanvas());
+        this.createParticles();
+        this.animate();
+    }
+
+    resizeCanvas() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+    }
+
+    createParticles() {
+        // Matrix rain effect implementation
+        // ...existing particle creation code...
+    }
+
+    animate() {
+        // Matrix animation loop
+        // ...existing animation code...
+    }
+}
+
 // Initialize animation system
 const animationSystem = new AVAAnimationSystem();
 
@@ -311,3 +387,24 @@ const avaVisualization = new AVAVisualization();
 
 // Initialize AI head
 const aiHead = new AIHead();
+
+// Initialize systems
+document.addEventListener('DOMContentLoaded', () => {
+    const arcReactor = new ARCReactor();
+    const particles = new ParticleSystem();
+    
+    // Fade in elements sequentially
+    const elements = [
+        '.datetime-module',
+        '.system-metrics',
+        '.reactor-core',
+        '.command-interface',
+        '.analytics-module'
+    ];
+
+    elements.forEach((selector, index) => {
+        setTimeout(() => {
+            document.querySelector(selector).classList.add('active');
+        }, index * 500);
+    });
+});

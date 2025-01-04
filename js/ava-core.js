@@ -177,5 +177,60 @@ class AVACore {
     // ... rest of the implementation
 }
 
-// Initialize AVA
-const ava = new AVACore();
+class AVAInterface {
+    constructor() {
+        this.initializeInterface();
+        this.setupEventListeners();
+        this.bootSequence();
+    }
+
+    async bootSequence() {
+        const steps = [
+            { text: 'Initializing core systems', duration: 1000 },
+            { text: 'Loading neural networks', duration: 800 },
+            { text: 'Calibrating quantum processors', duration: 1200 },
+            { text: 'Establishing secure connections', duration: 600 },
+            { text: 'AVA is now online', duration: 1000 }
+        ];
+
+        for (const step of steps) {
+            await this.displayBootStep(step);
+        }
+
+        this.activateInterface();
+    }
+
+    async displayBootStep(step) {
+        const response = document.createElement('div');
+        response.className = 'boot-message';
+        response.textContent = step.text;
+        document.querySelector('.response-display').appendChild(response);
+        
+        await new Promise(resolve => setTimeout(resolve, step.duration));
+    }
+
+    setupEventListeners() {
+        const input = document.getElementById('cmd-input');
+        const voiceBtn = document.querySelector('.voice-trigger');
+
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                this.processCommand(input.value);
+                input.value = '';
+            }
+        });
+
+        voiceBtn.addEventListener('click', () => this.activateVoiceInput());
+    }
+
+    processCommand(command) {
+        // Command processing logic
+        const response = this.generateResponse(command);
+        this.displayResponse(response);
+    }
+
+    // ... rest of implementation ...
+}
+
+// Initialize AVA Interface
+const ava = new AVAInterface();
