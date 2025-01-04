@@ -76,13 +76,28 @@
             </div>
         </button>
 
-        <!-- Right Menu -->
+        <!-- Right Menu with Weather -->
         <div id="rightmenu">
-            <p class="title" style="text-align: left; margin-left: 10px">Notes</p>
-            <div id="particle10" class="hline"></div>
-            <div id="particle11" class="hline"></div>
-            <div id="particle12" class="vline"></div>
-            <!-- ... rest of right menu content ... -->
+            <div id="temperature">
+                <div id="date_time">
+                    <div id="date" class="semi_arc e4">
+                        <div class="semi_arc_2 e4_1">
+                            <div class="counterspin4"></div>
+                        </div>
+                        <div style="font-size: 34px; margin-top: 25px" id="tempValue"></div>
+                        <div style="font-size: 30px"><sup>0</sup>c</div>
+                        <div style="font-size: 25px">Temp.</div>
+                    </div>
+
+                    <div id="time" class="arc e1">
+                        <div style="font-size: 23px; margin-right: 8px; margin-top: 23px" id="humidityValue"></div>
+                        <div style="font-size: 17px; margin-top: 10px">Humidity</div>
+                    </div>
+                </div>
+            </div>
+            <div id="time1" class="arc e1">
+                <div id="weatherImage"></div>
+            </div>
         </div>
 
         <!-- Particles -->
