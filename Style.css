@@ -429,14 +429,14 @@ body {
 #leftmenu {
   position: fixed;
   float: left;
-  margin-left: 30px; /* Reduced from 50px */
-  width: 180px; /* Reduced from 210px */
+  margin-left: 50px;
+  width: 210px;
 }
 
 #date_time {
-  margin-left: 20px; /* Reduced from 30px */
-  width: 180px; /* Reduced from 200px */
-  height: 180px; /* Reduced from 200px */
+  margin-left: 30px;
+  width: 200px;
+  height: 200px;
 }
 
 #time {
@@ -446,8 +446,8 @@ body {
   line-height: 0;
 }
 #time1 {
-  top: 350px; /* Reduced from 450px */
-  left: 900px; /* Reduced from 1150px */
+  top: 450px;
+  left: 1150px;
   margin-right: 10px;
   position: fixed;
   background: rgba(0, 0, 0, 0.8);
@@ -473,8 +473,8 @@ body {
 }
 
 .menu {
-  width: 180px; /* Reduced from 200px */
-  height: 180px; /* Reduced from 200px */
+  width: 200px;
+  height: 200px;
   margin: 0;
   padding: 5px;
 }
@@ -523,7 +523,7 @@ body {
 #rightmenu {
   float: right;
   margin-right: 20px;
-  width: 250px; /* Reduced from 300px */
+  width: 300px;
 }
 
 #note_input {
@@ -533,7 +533,7 @@ body {
   background: transparent;
   resize: none;
   transition: 0.3s;
-  width: calc(100% - 10px); /* Adjusted from calc(100% - 15px) */
+  width: calc(100% - 15px);
 }
 
 #note_input:hover {
@@ -567,19 +567,23 @@ ul {
 
 .arc_reactor {
   position: relative;
-  top: 45%; /* Adjusted from 50% */
+  top: 50%;
   margin-top: -125px;
   margin-left: auto;
   margin-right: auto;
-  width: 200px; /* Reduced from 250px */
-  height: 200px; /* Reduced from 250px */
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  box-shadow: 0px 0px 50px 15px rgba(2, 255, 255, 0.3), inset 0px 0px 50px 15px rgba(2, 255, 255, 0.3);
 }
 
 .case_container {
-  width: 170px; /* Reduced from 210px */
-  height: 170px; /* Reduced from 210px */
-  margin-left: 15px; /* Reduced from 20px */
-  margin-top: 15px; /* Reduced from 20px */
+  width: 210px;
+  height: 210px;
+  border-radius: 50%;
+  position: absolute;
+  margin-left: 20px;
+  margin-top: 20px;
 }
 
 .core2 {
@@ -890,28 +894,28 @@ ul {
 
 #particle1 {
   position: fixed;
-  margin-left: 200px; /* Reduced from 260px */
-  margin-top: 310px; /* Reduced from 410px */
+  margin-left: 260px;
+  margin-top: 410px;
 }
 
 #particle1_1 {
   position: fixed;
-  margin-left: 195px; /* Reduced from 255px */
-  margin-top: 380px; /* Reduced from 480px */
+  margin-left: 255px;
+  margin-top: 480px;
 }
 
 #particle1_2 {
   position: fixed;
-  margin-left: 215px; /* Reduced from 275px */
-  margin-top: 480px; /* Reduced from 580px */
+  margin-left: 275px;
+  margin-top: 580px;
 }
 
 #particle1_3 {
   position: fixed;
   color: rgba(2, 255, 255, 0.3);
-  font-size: 70px; /* Reduced from 90px */
-  margin-left: 150px; /* Reduced from 190px */
-  margin-top: 530px; /* Reduced from 730px */
+  font-size: 90px;
+  margin-left: 190px;
+  margin-top: 730px;
   transform: rotate(90deg);
   z-index: -1;
 }
@@ -976,7 +980,7 @@ ul {
 
 /* Right Menu Particles */
 #particle10 {
-  width: 280px; /* Reduced from 330px */
+  width: 330px;
   float: right;
   border-color: rgba(2, 255, 255, 0.5);
 }
@@ -984,7 +988,7 @@ ul {
 #particle11 {
   margin-right: 30px;
   margin-top: 3px;
-  width: 280px; /* Reduced from 330px */
+  width: 330px;
   float: right;
   border-color: rgba(2, 255, 255, 0.5);
 }
