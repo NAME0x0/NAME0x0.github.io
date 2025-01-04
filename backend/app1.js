@@ -141,7 +141,7 @@ const Utils = {
  */
 async function fetchCommands() {
     try {
-        const response = await fetch("/mic/Process.json");
+        const response = await fetch("Process.json"); // Update path to be relative
         if (!response.ok) throw new Error('Failed to fetch commands');
         Commands = await response.json();
     } catch (error) {
