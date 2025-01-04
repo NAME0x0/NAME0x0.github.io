@@ -48,7 +48,6 @@
     "start timer": "startTimer(); Speak('Timer started.');",
     "stop timer": "stopTimer(); Speak('Timer stopped.');",
     "set alarm": "setAlarm(); Speak('When would you like the alarm?');",
-    "welcome my friends": "welcomeToFriends();",
     "no ava": "Speak('You are welcome. AVA at your service, sir.')",
     "stay tuned": "Speak('Thank you. I hope I was helpful.')",
     "show me the list": "friendList(); Speak('Certainly, sir. Opening the list.')",
