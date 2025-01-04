@@ -1,5 +1,7 @@
+/* Font imports */
 @import url(http://weloveiconfonts.com/api/?family=entypo);
 
+/* Base Styles */
 [class*="entypo-"]:before {
     font-family: "entypo", sans-serif;
     transition: 0.3s;
@@ -20,7 +22,35 @@ body {
     overflow: hidden;
 }
 
-/* Arc Reactor Styles */
+/* Left Menu */
+#leftmenu {
+    position: fixed;
+    float: left;
+    margin-left: 50px;
+    width: 210px;
+}
+
+#date_time {
+    margin-left: 30px;
+    width: 200px;
+    height: 200px;
+}
+
+/* Right Menu */
+#rightmenu {
+    float: right;
+    margin-right: 50px;
+    width: 300px;
+}
+
+/* Arc Reactor */
+#arc_container {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
 .arc_reactor {
     position: relative;
     top: 50%;
@@ -46,6 +76,55 @@ body {
 
 /* Copied directly from AVA/Style.css */
 /* ... rest of the styles from AVA's Style.css ... */
+
+/* Note Input */
+#note_input {
+    color: rgba(2, 255, 255, 0.6);
+    padding: 5px;
+    border-style: none;
+    background: transparent;
+    resize: none;
+    transition: 0.3s;
+    width: calc(100% - 15px);
+    margin-top: 20px;
+}
+
+#note_input:hover {
+    color: #02feff;
+}
+
+/* Exact Layout Positioning */
+.title {
+    font-size: 30px;
+    text-align: center;
+    margin: 0;
+    margin-top: 10px;
+}
+
+.title_underline {
+    border-color: rgba(2, 255, 255, 0.5);
+}
+
+/* Particle Positioning */
+#particle1 {
+    position: fixed;
+    margin-left: 260px;
+    margin-top: 410px;
+}
+
+#particle1_1 {
+    position: fixed;
+    margin-left: 255px;
+    margin-top: 480px;
+}
+
+#particle1_2 {
+    position: fixed;
+    margin-left: 275px;
+    margin-top: 580px;
+}
+
+/* ...rest of exact styling from AVA... */
 
 /* Animations */
 @keyframes flicker2 {

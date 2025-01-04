@@ -6,12 +6,11 @@
     <title>AVA</title>
     <link rel="stylesheet" href="https://codepen.io/FlyingEmu/pen/cjBzr.css">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="css/enhanced-effects.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 </head>
 <body onload="AVAStartingReply()">
     <div class="scroll">
-        <!-- Left Menu -->
+        <!-- Left Panel with exact metrics -->
         <div id="leftmenu">
             <div id="date_time">
                 <div id="date" class="semi_arc e4">
@@ -28,9 +27,9 @@
                 </div>
             </div>
 
-            <!-- Performance Section -->
             <p class="title">Performance</p>
             <div class="hline title_underline"></div>
+
             <span class="menuitem entypo-gauge" style="font-size: 30px; margin-left: 10px">
                 <p id="cpu" class="caption" style="font-size: 20px">CPU Usage: 19%</p>
             </span>
@@ -43,17 +42,16 @@
                 <p id="proc" class="caption" style="font-size: 20px">Processes: 73</p>
             </span>
 
-            <!-- Social Section - Exact copy from AVA -->
             <p class="title">Social</p>
             <div class="hline title_underline"></div>
+
             <div class="app_icon entypo-facebook-squared"></div>
             <div class="app_icon entypo-twitter"></div>
             <div class="app_icon entypo-gplus"></div>
             <div class="app_icon entypo-skype"></div>
-            <!-- ... rest of social icons ... -->
         </div>
 
-        <!-- Arc Reactor -->
+        <!-- Center Arc Reactor -->
         <button id="microphoneButton" title="Activate Voice Control">
             <div id="arc_container">
                 <div class="arc_reactor">
@@ -68,16 +66,20 @@
                             </div>
                             <div class="core2"></div>
                         </div>
-                        <ul class="marks">
-                            <!-- Will be populated by JavaScript -->
-                        </ul>
+                        <ul class="marks"></ul>
                     </div>
                 </div>
             </div>
         </button>
 
-        <!-- Right Menu with Weather -->
+        <!-- Right Panel with Notes and Weather -->
         <div id="rightmenu">
+            <p class="title" style="text-align: left; margin-left: 10px">Notes</p>
+            <div id="particle10" class="hline"></div>
+            <div id="particle11" class="hline"></div>
+            <div id="particle12" class="vline"></div>
+            <textarea id="note_input" rows="12" cols="44" title="Notes input area">For the maximum viewing experience...</textarea>
+            
             <div id="temperature">
                 <div id="date_time">
                     <div id="date" class="semi_arc e4">
@@ -100,7 +102,7 @@
             </div>
         </div>
 
-        <!-- Particles -->
+        <!-- Particle Effects -->
         <canvas id="particle1" width="20" height="500"></canvas>
         <canvas id="particle1_1" width="40" height="510"></canvas>
         <canvas id="particle1_2" width="40" height="510"></canvas>
@@ -110,6 +112,5 @@
     </div>
 
     <script src="js/main.js"></script>
-    <script src="js/enhanced-effects.js"></script>
 </body>
 </html>
