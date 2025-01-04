@@ -127,3 +127,26 @@ function AVAStartingReply()
         Speak("i am online and ready... say push enable to talk... or simply click arc reactor...");
         startListening();
       }
+
+document.addEventListener('DOMContentLoaded', function() {
+    const commandInput = document.getElementById('commandInput');
+    const micIcon = document.getElementById('micIcon');
+
+    // Handle text input
+    commandInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            const text = this.value.toLowerCase();
+            ProcessCommand(text);
+            this.value = ''; // Clear input after processing
+        }
+    });
+
+    // Handle mic icon click
+    micIcon.addEventListener('click', function() {
+        startListening();
+        commandInput.placeholder = 'Listening...';
+        setTimeout(() => {
+            commandInput.placeholder = "Type a command or say 'push enable' to use voice...";
+        }, 5000);
+    });
+});

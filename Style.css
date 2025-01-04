@@ -999,3 +999,53 @@ ul {
   margin-top: -40px;
   border-color: rgba(2, 255, 255, 0.5);
 }
+
+/* Search Box Styles */
+.search-container {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  z-index: 1000;
+}
+
+.search-box {
+  width: 100%;
+  height: 45px;
+  background: rgba(2, 254, 255, 0.1);
+  border: 2px solid #02feff;
+  border-radius: 25px;
+  padding: 0 50px 0 20px;
+  font-size: 16px;
+  color: #02feff;
+  transition: all 0.3s ease;
+}
+
+.search-box:focus {
+  background: rgba(2, 254, 255, 0.2);
+  box-shadow: 0 0 15px rgba(2, 254, 255, 0.3);
+  outline: none;
+}
+
+.search-box::placeholder {
+  color: rgba(2, 254, 255, 0.5);
+}
+
+.mic-icon {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  fill: #02feff;
+  opacity: 0.6;
+  transition: all 0.3s ease;
+}
+
+.mic-icon:hover {
+  opacity: 1;
+  transform: translateY(-50%) scale(1.1);
+}
