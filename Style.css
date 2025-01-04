@@ -446,8 +446,8 @@ body {
   line-height: 0;
 }
 #time1 {
-  top: 350px; /* Adjusted from 450px */
-  left: 900px; /* Adjusted from 1150px */
+  top: 450px;
+  left: 1150px;
   margin-right: 10px;
   position: fixed;
   background: rgba(0, 0, 0, 0.8);
@@ -524,8 +524,6 @@ body {
   float: right;
   margin-right: 20px;
   width: 300px;
-  max-height: 100vh; /* Ensure it doesn't overflow viewport height */
-  overflow-y: auto; /* Add scrolling if needed */
 }
 
 #note_input {
@@ -565,9 +563,6 @@ ul {
   width: 100%;
   height: 100%;
   z-index: -1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .arc_reactor {
