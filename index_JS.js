@@ -2,6 +2,35 @@ const API_KEY="cac473d6bf5957b6879513079dd69ae2";
 
 let Commands = {};
 
+const ErrorHandler = {
+    errors: [],
+    maxErrors: 50,
+    
+    handle(error, context = {}) {
+        const errorInfo = {
+            timestamp: new Date(),
+            error: error.message,
+            context,
+            stack: error.stack
+        };
+        
+        this.errors.unshift(errorInfo);
+        if (this.errors.length > this.maxErrors) {
+            this.errors.pop();
+        }
+        
+        console.error('AVA Error:', errorInfo);
+        return this.getRecoveryAction(error);
+    },
+    
+    getRecoveryAction(error) {
+        if (error.name === 'NetworkError') {
+            return 'network';
+        }
+        return 'default';
+    }
+};
+
 const speechRecognition=window.webkitSpeechRecognition //Google Chrome 
 ||
 window.SpeechRecognition;  //Firefox
@@ -97,51 +126,118 @@ function handleResults(data)
     ProcessCommand(text);
 }
 
-async function loadCommands() {
-    try {
-        const response = await fetch('./backend/Process.json');
-        Commands = await response.json();
-    } catch (error) {
-        console.error('Error loading commands:', error);
+async function loadCommands(retries = 3) {
+    while (retries > 0) {
+        try {
+            const response = await fetch('./backend/Process.json');
+            if (!response.ok) throw new Error('Failed to fetch commands');
+            Commands = await response.json();
+            return;
+        } catch (error) {
+            retries--;
+            if (retries === 0) {
+                ErrorHandler.handle(error, { context: 'loading commands' });
+                Speak('I had trouble loading my command list.');
+            }
+            await new Promise(resolve => setTimeout(resolve, 1000));
+        }
     }
 }
 
-function ProcessCommand(UserText) {
+async function ProcessCommand(UserText) {
     if (!UserText) return;
     
     UserText = UserText.toLowerCase().trim();
     
-    // Check for "push enable" command first
-    if (UserText.includes("push enable")) {
-        return;
+    // Visual feedback
+    const searchBox = document.getElementById('commandInput');
+    if (searchBox) {
+        searchBox.classList.add('processing');
     }
     
-    // Check if the command exists in Process.json
-    for (const [command, action] of Object.entries(Commands)) {
-        if (UserText === command || UserText.includes(command)) {
-            try {
-                eval(action);
-                return;
-            } catch (error) {
-                console.error('Error executing command:', error);
-                Speak('Sorry, I encountered an error executing that command.');
+    try {
+        // Check for "push enable" command first
+        if (UserText.includes("push enable")) {
+            return;
+        }
+        
+        // Check if commands are loaded
+        if (!Commands || Object.keys(Commands).length === 0) {
+            await loadCommands();
+        }
+        
+        // Cross-browser speech synthesis
+        const browserSpeech = window.speechSynthesis || window.webkitSpeechSynthesis || window.mozSpeechSynthesis;
+        
+        // Process command
+        for (const [command, action] of Object.entries(Commands)) {
+            if (UserText === command || UserText.includes(command)) {
+                try {
+                    await eval(action);
+                    return;
+                } catch (error) {
+                    const recovery = ErrorHandler.handle(error, { command, action });
+                    handleRecovery(recovery);
+                }
             }
         }
+        
+        // No command matched
+        Speak('I did not understand that command. Try something else.');
+        
+    } catch (error) {
+        ErrorHandler.handle(error, { userText: UserText });
+        Speak('Sorry, I encountered an error. Please try again.');
+    } finally {
+        // Remove visual feedback
+        if (searchBox) {
+            searchBox.classList.remove('processing');
+        }
     }
-    
-    // If no command matched
-    Speak('I did not understand that command. Try something else.');
 }
 
-function Speak(TEXT)
-{
-    const utter = new SpeechSynthesisUtterance();
+function handleRecovery(recoveryType) {
+    switch(recoveryType) {
+        case 'network':
+            Speak('I\'m having trouble connecting to the network. Please check your connection.');
+            break;
+        default:
+            Speak('I encountered an error. Please try again.');
+    }
+}
 
-    utter.text = TEXT;
-    utter.voice = window.speechSynthesis.getVoices()[1];
-    window.speechSynthesis.speak(utter);
-    window.speechSynthesis.getVoices().forEach(i=>{
-        console.log(i);
+function Speak(TEXT) {
+    return new Promise((resolve, reject) => {
+        try {
+            const utter = new SpeechSynthesisUtterance();
+            utter.text = TEXT;
+            
+            // Get available voices
+            const voices = window.speechSynthesis.getVoices();
+            
+            // Try to find an English voice
+            const englishVoice = voices.find(voice => 
+                voice.lang.includes('en') && voice.localService
+            ) || voices[1] || voices[0];
+            
+            if (englishVoice) {
+                utter.voice = englishVoice;
+            }
+            
+            utter.onend = () => resolve();
+            utter.onerror = (error) => {
+                console.error('Speech synthesis error:', error);
+                reject(error);
+            };
+            
+            window.speechSynthesis.speak(utter);
+            
+        } catch (error) {
+            console.error('Speech synthesis not supported:', error);
+            // Fallback to console
+            console.log('AVA says:', TEXT);
+            resolve();
+        }
     });
 }
 
