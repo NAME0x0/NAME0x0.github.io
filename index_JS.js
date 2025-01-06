@@ -1,5 +1,7 @@
 const API_KEY="cac473d6bf5957b6879513079dd69ae2";
 
+let Commands = {};
+
 const speechRecognition=window.webkitSpeechRecognition //Google Chrome 
 ||
 window.SpeechRecognition;  //Firefox
@@ -94,19 +96,42 @@ function handleResults(data)
 
     ProcessCommand(text);
 }
-function ProcessCommand(UserText)
-{
-        if(UserText.includes("push enable"))
-        {
-            // UserText=UserText.slice(16);
-            // Speak('Searching initiated...'+UserText);
-            // searchOnGoogle(UserText);
-        }
-        else
-        {
 
+async function loadCommands() {
+    try {
+        const response = await fetch('./backend/Process.json');
+        Commands = await response.json();
+    } catch (error) {
+        console.error('Error loading commands:', error);
+    }
+}
+
+function ProcessCommand(UserText) {
+    if (!UserText) return;
+    
+    UserText = UserText.toLowerCase().trim();
+    
+    // Check for "push enable" command first
+    if (UserText.includes("push enable")) {
+        return;
+    }
+    
+    // Check if the command exists in Process.json
+    for (const [command, action] of Object.entries(Commands)) {
+        if (UserText === command || UserText.includes(command)) {
+            try {
+                eval(action);
+                return;
+            } catch (error) {
+                console.error('Error executing command:', error);
+                Speak('Sorry, I encountered an error executing that command.');
+            }
         }
     }
+    
+    // If no command matched
+    Speak('I did not understand that command. Try something else.');
+}
 
 function Speak(TEXT)
 {
@@ -129,6 +154,8 @@ function AVAStartingReply()
       }
 
 document.addEventListener('DOMContentLoaded', function() {
+    loadCommands();
+    
     const commandInput = document.getElementById('commandInput');
     const micIcon = document.getElementById('micIcon');
 
