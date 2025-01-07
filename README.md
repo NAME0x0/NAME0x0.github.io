@@ -1,26 +1,36 @@
 # AVA - Advanced Virtual Assistant Interface
 
-A futuristic AI dashboard inspired by JARVIS and Gideon, featuring a holographic interface and real-time system monitoring.
+A futuristic AI dashboard inspired by JARVIS and Gideon, featuring a holographic interface, voice commands, and text-based interactions.
 
 ![AVA Interface Preview](preview.png)
 
 ## Features
 
-- 🤖 Gideon-inspired AI head visualization
-- 💻 Real-time system monitoring
-- 🎨 Cyberpunk aesthetic with holographic effects
-- 🔊 Voice command capabilities
-- 📊 Live analytics and metrics
-- ⌨️ Command-line interface
-- 🌐 Matrix-style background effects
+- 🎯 Interactive Arc Reactor Interface
+- 🗣️ Dual Input Methods:
+  - Voice Commands with "push enable" trigger
+  - Text-based Command Input
+- 🌡️ Real-time System Monitoring:
+  - Battery Status
+  - Weather Information
+  - Date and Time
+- 💫 Cyberpunk-inspired Animations
+- 🎨 Holographic UI Elements
+- 🔊 Voice Feedback System
+- 📝 Note-taking Capability
+- 🌐 Quick Web Access Commands
+- ⚡ Real-time Command Processing
+- 🔄 Cross-browser Compatibility
+- 🛡️ Error Recovery System
 
 ## Technology Stack
 
-- Three.js for 3D visualization
-- Chart.js for analytics
-- Web Audio API for sound effects
-- Web Speech API for voice commands
-- CSS3 for advanced animations
+- Vanilla JavaScript for Core Functionality
+- Web Speech API for Voice Recognition
+- SpeechSynthesis for Voice Output
+- OpenWeatherMap API for Weather Data
+- Modern CSS3 Animations
+- Browser Battery and Geolocation APIs
 
 ## Setup
 
@@ -30,11 +40,11 @@ git clone https://github.com/NAME0x0/NAME0x0.github.io.git
 cd NAME0x0.github.io
 ```
 
-2. Install dependencies:
-- Ensure you have Three.js and Chart.js CDN links in your index.html
-- No additional installation required
+2. API Configuration:
+- Get an API key from [OpenWeatherMap](https://openweathermap.org/api)
+- Update the API_KEY in `index_JS.js`
 
-3. Run locally:
+3. Serve the project:
 ```bash
 # Using Python's built-in server
 python -m http.server 8000
@@ -43,40 +53,53 @@ python -m http.server 8000
 npx http-server
 ```
 
-4. Open in browser:
+4. Access in browser:
 - Navigate to `http://localhost:8000`
+- Allow microphone access for voice commands
 
-## Development
+## Usage
 
-The project is structured into three main components:
+### Voice Commands
+- Say "push enable" to activate voice recognition
+- Click the Arc Reactor or microphone icon to start listening
+- Use commands like "open google", "what is the time", "weather"
 
-- `animations.js`: Handles all 3D visualizations and effects
-- `ava-core.js`: Core AI functionality and command processing
-- `widgets.js`: Dashboard widgets and system monitoring
+### Text Commands
+- Type commands in the bottom search bar
+- Press Enter to execute
+- Same commands as voice input are supported
+
+### Common Commands
+- "system status" - Get system information
+- "weather" - Check weather conditions
+- "open [website]" - Open popular websites
+- "battery" - Check battery status
+- "help" - List available commands
 
 ## Browser Support
 
-- Chrome (recommended)
+- Chrome (Recommended)
 - Firefox
-- Safari
 - Edge
+- Safari (Limited voice features)
 
-Requires WebGL support and modern JavaScript features.
+All modern browsers with Web Speech API support
 
 ## Contributing
 
 1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+2. Create feature branch (`git checkout -b feature/improvement`)
+3. Commit changes (`git commit -am 'Add new feature'`)
+4. Push branch (`git push origin feature/improvement`)
+5. Create Pull Request
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 
-- Inspired by JARVIS from Iron Man
-- Gideon from The Flash
-- Modern cyberpunk aesthetics
+- Iron Man's JARVIS interface for design inspiration
+- The Flash's Gideon AI for interaction patterns
+- Cyberpunk aesthetic for visual elements
+- OpenWeatherMap for weather data
