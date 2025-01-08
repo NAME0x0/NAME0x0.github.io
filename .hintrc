@@ -5,7 +5,11 @@
   "browserslist": [
     "defaults",
     "not ie 11",
-    "not ios_saf <= 15.8"
+    "not ios_saf <= 15.8",
+    "not chrome <= 109",
+    "not ios_saf <= 18",
+    "not safari <= 18",
+    "not samsung <= 25"
   ],
   "hints": {
     "no-inline-styles": "off"
