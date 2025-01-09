@@ -454,6 +454,10 @@ body {
   top: 30px;
   z-index: 1;
   background: black;
+  margin-left: 30px;
+  width: 200px;
+  height: 100px; /* Reduced from 200px */
+  margin-bottom: 60px; /* Add space before Performance text */
 }
 
 #date_time {
@@ -469,18 +473,35 @@ body {
   line-height: 0;
 }
 #time1 {
-  top: 450px;
-  left: 1150px;
+  top: 350px; /* Changed from 450px */
+  left: 850px; /* Changed from 1150px */
   margin-right: 10px;
   position: fixed;
   background: rgba(0, 0, 0, 0.8);
   line-height: 0;
+  z-index: 1; /* Added to ensure visibility */
+}
+
+#weatherImage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+#weatherImage img {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
 }
 
 #date {
   position: fixed;
   margin-top: 20px;
   background: rgba(0, 0, 0, 0.8);
+  height: 140px; /* Reduce height from default */
+  padding-bottom: 0; /* Remove bottom padding */
 }
 
 .title {
@@ -1029,8 +1050,9 @@ ul {
   bottom: 30px;
   left: 50%;
   transform: translateX(-50%);
-  width: 600px;
+  width: 500px; /* Reduced from 600px */
   z-index: 1000;
+  margin-right: 320px; /* Add margin to prevent overlap with right widgets */
 }
 
 .search-box {
@@ -1039,7 +1061,7 @@ ul {
   background: rgba(2, 254, 255, 0.1);
   border: 2px solid #02feff;
   border-radius: 25px;
-  padding: 0 50px 0 20px;
+  padding: 0 45px 0 20px; /* Reduced right padding from 50px to 45px */
   font-size: 16px;
   color: #02feff;
   transition: all 0.3s ease;
