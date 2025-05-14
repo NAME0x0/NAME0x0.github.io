@@ -1,0 +1,825 @@
+/* Root Variables for centralized color management */
+:root {
+  --deep-space: #000000; /* Changed to absolute black */
+  --deep-blue: #0A0F1E; /* Kept for other elements if needed */
+  --electric-blue: #4A90E2;
+  --bright-cyan: #00e5ff;
+  --neon-blue: #25b0ff;
+  --holographic-glow: rgba(137, 207, 240, 0.4);
+  /* Lowered opacity for more translucency against black background */
+  --panel-bg: rgba(20, 30, 70, 0.25); 
+  --panel-glass-edge: rgba(137, 207, 240, 0.2);
+  --panel-blur: 16px; /* Increased blur for more depth */
+  --panel-shadow-intensity: 0.35; /* Base intensity for glows */
+  
+  /* 3D Space Variables */
+  --perspective: 1200px;
+  --panel-z-distance: 20px;
+  --hover-z-lift: 40px;
+}
+
+body {
+  background-color: var(--deep-space); /* Now absolute black */
+  /* Removed animated gradient, will be handled by #backgroundCanvas */
+  color: #E0E0E0;
+  font-family: 'Fira Code', monospace;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  overflow-y: hidden;   /* Prevent vertical scroll */
+  overflow-x: hidden; /* Keep horizontal scroll hidden */
+  text-shadow: 0 0 1px rgba(173, 216, 230, 0.3), 0 0 3px rgba(173, 216, 230, 0.1);
+  position: relative; /* To ensure z-indexing context for children */
+  perspective: var(--perspective); /* 3D perspective for more depth */
+}
+
+#backgroundCanvas {
+  position: fixed; /* Cover the entire viewport */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; /* Position it behind all other content */
+  display: block; /* Ensure it behaves as a block element */
+}
+
+/* Refined subtle scanline effect */
+body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(10, 15, 30, 0.0),
+    rgba(10, 15, 30, 0.0) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+  pointer-events: none;
+  z-index: 0; /* Above backgroundCanvas but below main content container */
+  opacity: 0.15; /* Further reduced opacity */
+  animation: subtle-scan 8s linear infinite; /* Slow-moving scan effect */
+}
+
+@keyframes subtle-scan {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 100px; }
+}
+
+/* Preloader styles - JARVIS theme */
+#loader {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2000;
+  background-color: var(--deep-space); /* Changed to var(--deep-space) for consistency */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-family: 'Fira Code', monospace;
+  color: #89CFF0; /* Brighter, clearer blue */
+  text-shadow: 0 0 2px #89CFF0, 0 0 5px rgba(137, 207, 240, 0.5);
+}
+
+.loader-text-container {
+  text-align: left;
+}
+
+.loader-line {
+  margin: 6px 0; /* Slightly more spacing */
+  font-size: 1.1em;
+  white-space: pre;
+  opacity: 0; /* Will be faded in by JS */
+}
+
+.loader-progress-bar-container {
+  color: #4A90E2; /* A medium blue for progress elements */
+}
+.loader-progress-bar {
+  background-color: #89CFF0 !important; /* Ensure this overrides anime.js if it sets inline style */
+}
+.loader-dots::after {
+  content: '...';
+  display: inline-block;
+  animation: loader-dots-blink 1s infinite step-start;
+}
+@keyframes loader-dots-blink {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+}
+.loader-status.ok {
+  color: #76FF03; /* A vibrant, clean green for "OK" */
+  font-weight: bold;
+}
+.loader-status.pending {
+  color: #FFA500; /* A calm orange for "PENDING" */
+}
+
+/* NEW DASHBOARD LAYOUT */
+#dashboard-main {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: auto;
+  gap: 15px; 
+  padding: 15px; 
+  width: 100%;
+  max-width: 1600px; 
+  margin: 0 auto;
+  box-sizing: border-box;
+  opacity: 0; /* Initial state for animateDashboardIn */
+  transform: translateY(20px) scale(0.98) translateZ(0); /* Added translateZ for 3D */
+  position: relative; /* For pseudo-element background */
+  z-index: 1; /* Ensure it's above the body scanlines/bg canvas */
+  transform-style: preserve-3d; /* Preserve 3D for child elements */
+}
+
+/* Enhanced animated grid lines */
+#dashboard-main::before {
+  content: '';
+  position: absolute;
+  top: -20px; 
+  left: -20px;
+  right: -20px;
+  bottom: -20px;
+  background-image: 
+    linear-gradient(rgba(50, 180, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(50, 180, 255, 0.05) 1px, transparent 1px);
+  background-size: 30px 30px;
+  animation: animated-grid 20s linear infinite;
+  z-index: -1;
+  opacity: 0.7;
+  transform: translateZ(-10px); /* Push back in 3D space */
+}
+
+@keyframes animated-grid {
+  0% { background-position: 0 0; }
+  100% { background-position: 300px 300px; }
+}
+
+/* Advanced Glassmorphism Panel Styling */
+.dashboard-panel {
+  background-color: var(--panel-bg);
+  border: none;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 
+    0 0 35px rgba(100, 180, 220, calc(var(--panel-shadow-intensity) * 0.8)),
+    0 2px 10px rgba(0,0,0,0.2),
+    inset 0 0 15px rgba(20, 30, 70, 0.5),
+    inset 0 0 1px 1px rgba(200, 220, 255, 0.15),
+    0 0 0 1.5px var(--panel-glass-edge);
+  color: #E8F0FF; 
+  overflow: visible; 
+  opacity: 0; /* Initial state */
+  backdrop-filter: blur(var(--panel-blur));
+  -webkit-backdrop-filter: blur(var(--panel-blur));
+  position: relative;
+  transform-style: preserve-3d;
+  transition: 
+    transform 0.4s cubic-bezier(0.15, 0.9, 0.3, 1.1),
+    box-shadow 0.4s cubic-bezier(0.15, 0.9, 0.3, 1.1),
+    background-color 0.4s ease-out,
+    opacity 0.4s ease-out;
+  animation: panel-idle-pulse 8s infinite ease-in-out;
+  transform: translateZ(var(--panel-z-distance));
+}
+
+/* Dynamic light refraction edge effect - enhance for more prominent glass feel */
+.dashboard-panel::before {
+  content: '';
+  position: absolute;
+  top: -1px; left: -1px; right: -1px; bottom: -1px;
+  background: 
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.12) 0%,
+      rgba(255, 255, 255, 0.04) 25%,
+      rgba(255, 255, 255, 0.0) 50%
+    ),
+    linear-gradient(
+      325deg,
+      rgba(100, 200, 255, 0.08) 0%,
+      rgba(100, 200, 255, 0.02) 25%,
+      rgba(100, 200, 255, 0.0) 50%
+    );
+  border-radius: 13px;
+  pointer-events: none;
+  opacity: 0.8;
+  z-index: 1;
+  transition: opacity 0.4s ease;
+}
+
+.dashboard-panel:hover::before {
+  opacity: 1;
+}
+
+/* Enhanced holographic edge on hover - make it more defined */
+.dashboard-panel::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 14px;
+  pointer-events: none;
+  opacity: 0;
+  z-index: -1;
+  background: linear-gradient(
+    60deg, 
+    rgba(70, 200, 255, 0.15),
+    rgba(70, 200, 255, 0.05) 20%,
+    rgba(190, 230, 255, 0.12) 40%,
+    rgba(70, 200, 255, 0.05) 60%,
+    rgba(70, 200, 255, 0.15)
+  );
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  box-shadow: 0 0 25px rgba(100, 180, 220, 0.35);
+  filter: blur(1.5px);
+}
+
+/* Enhanced idle pulse animation - adjust for new glass settings */
+@keyframes panel-idle-pulse {
+  0%, 100% {
+    box-shadow: 
+      0 0 35px rgba(100, 180, 220, calc(var(--panel-shadow-intensity) * 0.75)), /* Slightly adjusted base */
+      0 2px 10px rgba(0,0,0,0.2), 
+      inset 0 0 15px rgba(20, 30, 70, 0.5),
+      inset 0 0 1px 1px rgba(200, 220, 255, 0.15),
+      0 0 0 1.5px rgba(120, 200, 255, 0.4); /* Slightly adjusted base edge */
+  }
+  50% {
+    box-shadow: 
+      0 0 38px rgba(120, 200, 255, calc(var(--panel-shadow-intensity) * 0.85)), /* Less drastic change */
+      0 3px 12px rgba(0,0,0,0.25), 
+      inset 0 0 18px rgba(25, 35, 75, 0.6), /* Less drastic change */
+      inset 0 0 1px 1px rgba(220, 235, 255, 0.2), 
+      0 0 0 1.5px rgba(140, 220, 255, 0.5); /* Less drastic change */
+  }
+}
+
+/* Enhanced hover effects with 3D transformation - adjust for new glass */
+.dashboard-panel:hover {
+  transform: scale(1.03) translateY(-5px) translateZ(calc(var(--hover-z-lift) * 1.2));
+  background-color: rgba(25, 40, 80, 0.55);
+  box-shadow: 
+    0 0 45px rgba(130, 210, 255, calc(var(--panel-shadow-intensity) * 1.2)),
+    0 4px 15px rgba(0,0,0,0.3),
+    inset 0 0 20px rgba(30, 45, 85, 0.7),
+    inset 0 0 1px 1px rgba(220, 235, 255, 0.25),
+    0 0 0 2px rgba(140, 220, 255, 0.6);
+  z-index: 15;
+  animation-play-state: paused;
+}
+
+.dashboard-panel:hover::after {
+  opacity: 1;
+  transform: scale(1.02);
+}
+
+/* Override overflow for panels that need internal scroll, like terminal */
+#panel-terminal { /* Keep this selector specific for the terminal panel itself */
+  overflow: hidden; 
+}
+
+/* Remove generic ::before from .dashboard-panel, we'll use specific ones or more complex setup if needed */
+/* .dashboard-panel::before { ... } */
+
+/* Advanced Corner Accents & Edge Highlights */
+/* REMOVING these as clip-path is removed. We can add different accents later if needed.
+.dashboard-panel::before, .dashboard-panel::after {
+    content: '';
+    position: absolute;
+    width: 20px; /* Size of the corner accent lines */
+/*    height: 20px;
+    opacity: 0.8;
+    pointer-events: none;
+    z-index: 2; /* Above panel bg, below content */
+/*}
+
+/* Top-left corner accent */
+/* .dashboard-panel::before {
+    top: -2px; 
+    left: -2px;
+    border-top: 2px solid rgba(173, 216, 230, 0.7);
+    border-left: 2px solid rgba(173, 216, 230, 0.7);
+    clip-path: polygon(0% 0%, 100% 0%, 100% 20%, 20% 20%, 20% 100%, 0% 100%); /* L-shape */
+/*}
+
+/* Bottom-right corner accent - adapted for the clipped shape */
+/* .dashboard-panel::after {
+    bottom: -2px; 
+    right: -2px;
+    border-bottom: 2px solid rgba(173, 216, 230, 0.7);
+    border-right: 2px solid rgba(173, 216, 230, 0.7);
+    /* Adjust clip-path for bottom-right L that respects main panel's clip */
+    /* clip-path: polygon(80% 80%, 100% 80%, 100% 100%, 0% 100%, 0% 0%, 80% 0%); 
+    /* This simple L might look cut off by the main clip-path. A more complex solution for perfect corner accents 
+       on clipped shapes often requires multiple elements or SVG. This is a CSS approximation. */
+/*} */
+
+/* Floating effect for specific panels - these transforms are their RESTING state after animation */
+#panel-system-info, #panel-user-info {
+    /* transform: translateY(-5px); */ /* JS now animates to final resting Y=0 */
+    /* filter: drop-shadow(0 8px 12px rgba(50, 100, 150, 0.35)); */ /* This is fine as a resting state style */
+    /* z-index: 10; */ /* This is fine */
+}
+
+/* Specific Panel Spanning and Ordering (Example - adjust as needed) */
+/* INITIAL STATES FOR ANIMATION - to be animated FROM by JS */
+#panel-system-info {
+  grid-column: 1 / span 5; 
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px; 
+  padding: 10px; 
+  /* Initial animation state */
+  opacity: 0;
+  transform: translateY(-40px) scale(0.9) rotateZ(-5deg);
+  filter: drop-shadow(0 8px 12px rgba(50, 100, 150, 0.35)); /* Resting style */
+  z-index: 10; /* Resting style */
+}
+
+#panel-user-info {
+  grid-column: 6 / span 4; 
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px; 
+  padding: 10px; 
+  /* Initial animation state */
+  opacity: 0;
+  transform: translateY(-40px) scale(0.9) rotateZ(5deg);
+  filter: drop-shadow(0 8px 12px rgba(50, 100, 150, 0.35)); /* Resting style */
+  z-index: 10; /* Resting style */
+}
+
+/* Styles for the new smaller face panel */
+#panel-webgl { /* This panel now holds the small AI face */
+  grid-column: 10 / span 3; 
+  grid-row: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 90px; 
+  z-index: 11; /* Resting style */
+  /* border: 2px solid yellow !important; */ /* DEBUG BORDER REMOVED */
+  
+  /* Initial animation state - restored & simplified filter */
+  opacity: 0;
+  transform: scale(0.6) rotateZ(20deg); 
+  filter: blur(5px) brightness(1.5); /* Simplified filter */
+}
+
+/* Styles for the new AI Face WebGL Canvas */
+#aiFaceCanvas {
+  display: block; /* Remove extra space below canvas */
+  width: 100%; /* Make it responsive within the panel */
+  height: 100%; /* Make it responsive within the panel */
+  max-width: 120px; /* Max size, consistent with old image constraints */
+  max-height: 120px;
+  margin: auto; /* Center it in the panel if panel is larger */
+  border-radius: 60px; /* Circular shape for the globe/core */
+  position: relative;
+  z-index: 2;
+  /* border: 1px dashed orange !important; */ /* DEBUG BORDER REMOVED */
+  /* filter: drop-shadow(0 0 15px rgba(100, 180, 220, 0.5)); */ /* Removed: WebGL handles its own glow */
+  /* No border or box-shadow directly on canvas, effects will be WebGL rendered */
+}
+
+#panel-system-info .widget-item,
+#panel-user-info .widget-item {
+  display: flex;
+  align-items: center;
+  gap: 6px; /* Reduced gap */
+  font-size: 0.9em; /* Reduced font size */
+  margin-bottom: 2px; /* Add small bottom margin */
+}
+
+#panel-system-info .widget-item i,
+#panel-user-info .widget-item i {
+  color: #A0DFFF; /* Icon color */
+  font-size: 1.2em; /* Slightly Reduced icon size */
+  line-height: 1; /* Ensure proper vertical alignment */
+  margin-right: 4px; /* Reduced space */
+}
+
+#panel-system-info #clock {
+  font-size: 1.6em; /* Reduced clock size */
+  color: #FFFFFF;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-shadow: 0 0 4px rgba(255,255,255,0.7);
+}
+
+#panel-system-info #date {
+  font-size: 0.9em; /* Reduced date size */
+  color: #B0C4DE;
+}
+
+#panel-system-info .status-bar {
+    display: flex;
+    gap: 8px; /* Reduced Space between status items */
+    align-items: center;
+    margin-top: 5px; /* Adjusted margin-top */
+}
+
+#panel-system-info .status-indicator {
+    width: 8px; /* Smaller indicator */
+    height: 8px; /* Smaller indicator */
+    border-radius: 50%;
+    background-color: #76FF03; /* Green for online */
+    box-shadow: 0 0 6px #76FF03, 0 0 10px #76FF03; /* Adjusted glow */
+    animation: pulse-indicator 2s infinite;
+}
+
+@keyframes pulse-indicator {
+    0%, 100% { opacity: 1; transform: scale(1); filter: blur(0px); }
+    50% { opacity: 0.7; transform: scale(0.9); filter: blur(0.5px); }
+}
+
+#panel-system-info .status-bar span {
+  font-size: 0.9em;
+  color: #A0DFFF;
+  /* text-align: left; */ /* Already set */
+}
+
+#panel-user-info .username {
+  font-size: 1.1em; /* Reduced username size */
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+#panel-user-info .title {
+  font-size: 0.85em; /* Reduced title size */
+  color: #B0C4DE;
+}
+
+#panel-header-intro {
+  grid-column: span 12; 
+  grid-row: 2;
+  text-align: center;
+  background-color: transparent; 
+  border: none;
+  box-shadow: none;
+  padding: 5px 0 8px 0; 
+  /* Initial animation state */
+  opacity: 0;
+  transform: scale(0.85) translateY(10px); 
+}
+
+#panel-navigation-links {
+  grid-column: span 12; 
+  grid-row: 3;
+  z-index: 5; /* Keep z-index to ensure visibility if needed */
+  padding: 10px 0; /* Add some vertical padding to the panel */
+}
+
+#panel-navigation-links ul li { /* Initial state for individual link items */
+  opacity: 0;
+  transform: translateY(25px) scale(0.8);
+}
+
+#panel-terminal {
+  grid-column: span 12; 
+  grid-row: 4; 
+  min-height: 260px; 
+  padding: 5px; 
+  display: flex; 
+  border: 1px solid rgba(100, 180, 220, 0.3); 
+  background-image: linear-gradient(rgba(10, 25, 50, 0.9), rgba(5, 15, 40, 0.95)); 
+  overflow: hidden; 
+  /* Initial animation state */
+  opacity: 0;
+  transform: scale(0.92);
+  filter: blur(5px) saturate(0.5);
+}
+
+#terminal { /* The actual terminal content area */
+  background-color: rgba(10, 20, 40, 0.8);
+  border: 1px solid rgba(74, 144, 226, 0.25); /* Subtler inner border */
+  font-size: 1.0rem; /* Slightly reduced base terminal font size */
+  padding: 10px; /* Padding inside the terminal */
+  width: 100%; /* Fill parent panel */
+  height: 100%; /* Fill parent panel */
+  box-sizing: border-box;
+  overflow-y: auto; /* Allow internal scrolling */
+  max-height: 100%; /* Ensure it doesn't exceed parent panel's flex height */
+  position: relative; /* For pseudo-elements like the grid */
+  clip-path: none !important; /* Ensure terminal display is not clipped */
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.5); /* Inner shadow for depth */
+  filter: drop-shadow(1px 0 0 rgba(255,100,100,0.3)) 
+            drop-shadow(-1px 0 0 rgba(100,200,255,0.3));
+  /* It might also need its own distinct border/bg if the panel clip-path looks odd with it */
+}
+
+/* User input area styling - make it blend */
+#user-input {
+  display: inline-block;
+  min-width: 10px; /* Minimum width to allow clicking */
+  padding: 0 2px; /* Minimal padding */
+  border: none; /* No border */
+  background-color: transparent; /* Transparent background */
+  color: inherit; /* Inherit text color from parent (.user-prompt-line) */
+  vertical-align: baseline;
+  outline: none; /* Remove focus outline if any */
+}
+
+/* Typography Refresh & General Element Adjustments */
+#header {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2.5rem; 
+  color: #E0F8FF; 
+  text-shadow: 
+    0 0 3px #B0E8FF, 
+    0 0 6px #B0E8FF, 
+    0 0 10px #B0E8FF,
+    0 0 15px rgba(176, 232, 255, 0.8),
+    0 0 25px rgba(176, 232, 255, 0.6),
+    0 0 1px #FFF, /* Central sharp highlight */
+    0 0 30px rgba(160, 223, 255, 0.3); /* Wider diffuse glow */
+  text-align: center; 
+  padding: 0;
+  margin-bottom: 0;
+  animation: header-pulse 2.5s infinite ease-in-out; /* Faster, more energetic pulse */
+  letter-spacing: 2px; 
+  position: relative;
+  z-index: 5;
+}
+
+#panel-header-intro p { 
+  line-height: 1.4; /* Further Reduced line height */
+  margin-top: 0; 
+  text-align: center;
+  font-size: 0.85rem; /* Further Reduced font size */
+  color: #C8D8E8; 
+  font-family: 'Roboto', sans-serif; 
+  font-weight: 300;
+  margin-bottom: 0; /* Removed bottom margin */
+}
+
+.links {
+  margin-top: 0; 
+  gap: 0.5rem; 
+  display: flex; 
+  justify-content: center; 
+  list-style: none; 
+  padding-left: 0; 
+  margin-bottom: 0;
+}
+
+.links li a {
+  color: #A0DFFF; 
+  /* Remove old button styling */
+  /* border: 1px solid rgba(160, 223, 255, 0.25); */
+  /* border-radius: 3px; */
+  font-weight: 500; /* Slightly bolder for clarity */
+  font-family: 'Orbitron', sans-serif; 
+  font-size: 0.9rem; /* Increased font size */
+  padding: 8px 15px; /* More padding for a larger hit area */
+  position: relative;
+  z-index: 1;
+  transform: translateZ(1px); /* Keep this to help with layering if backdrop-filter is on parent */
+  transition: all 0.3s ease;
+  overflow: visible; /* Allow pseudo-elements to extend if needed for underlines */
+  display: inline-flex; /* Align icon and text */
+  align-items: center;
+  /* background-color: rgba(10, 20, 40, 0.3); */ /* Remove specific background */
+  text-decoration: none;
+}
+
+.links li a i {
+  margin-right: 8px; /* Space between icon and text */
+  font-size: 1.1em; /* Slightly larger icons */
+  transition: transform 0.3s ease;
+}
+
+/* New animated underline and hover effect */
+.links li a::after {
+  content: '';
+  position: absolute;
+  left: 15px; /* Align with text start, assuming padding */
+  bottom: 0px; /* Position at the very bottom */
+  width: 0%; /* Start with no width */
+  height: 2px;
+  background-color: var(--bright-cyan);
+  transition: width 0.3s ease-out;
+  box-shadow: 0 0 5px var(--bright-cyan);
+}
+
+.links li a:hover,
+.links li a:focus {
+  color: #FFFFFF; 
+  /* transform: translateY(-2px); */ /* Removing Y translate for a flatter feel, focusing on glow/underline */
+  text-shadow: 0 0 5px var(--bright-cyan); /* Add text glow on hover */
+}
+
+.links li a:hover i {
+  transform: scale(1.1); /* Icon pops a bit on hover */
+}
+
+.links li a:hover::after {
+  width: calc(100% - 30px); /* Expand to full width minus padding */
+}
+
+/* Removed energetic ripple effect .links li a::before */
+
+/* WIDGETS - ADAPTATION TO PANELS */
+.widget {
+  font-family: 'Orbitron', sans-serif;
+  /* REMOVE position: fixed; */
+  /* padding, background-color, border, box-shadow, font-size, z-index, color, border-radius, transition WILL BE SET BY .dashboard-panel */
+  /* Keep specific widget content styling, remove layout affecting properties */
+  height: 100%; /* Make widgets fill their panel space */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.widget:hover {
+  /* Hover effect is now on .dashboard-panel or can be refined here */
+   transform: none; /* Remove old widget hover transform if panel handles it */
+   box-shadow: none; /* Remove old widget hover shadow if panel handles it */
+}
+
+/* Remove .widget.top-left and .widget.top-right absolute positioning */
+/* .widget.top-left { top: 20px; left: 20px; } */
+/* .widget.top-right { top: 20px; right: 20px; text-align: right; } */
+
+.widget .widget-title { 
+  font-size: 0.9rem; 
+  color: #D0EFFF;
+  text-shadow: 
+    0 0 2px #D0EFFF, 
+    0 0 5px rgba(208, 239, 255, 0.8), 
+    0 0 8px rgba(208, 239, 255, 0.6),
+    0 0 0.5px #FFF;
+  margin-bottom: 8px; 
+  padding-bottom: 6px; 
+  border-bottom: 1px solid rgba(160, 223, 255, 0.35);
+  font-weight: 500;
+  text-transform: uppercase; 
+  letter-spacing: 1.5px;
+  position: relative;
+  display: block;
+}
+
+/* Add subtle animation glow to widget titles */
+.widget .widget-title::after {
+  content: '';
+  position: absolute;
+  height: 1px;
+  bottom: -1px;
+  left: 0;
+  width: 30%;
+  background: linear-gradient(90deg, 
+    rgba(160, 223, 255, 0.9), 
+    rgba(160, 223, 255, 0)
+  );
+  animation: title-glow 3s ease-in-out infinite alternate;
+}
+
+@keyframes title-glow {
+  0% { transform: translateX(0); opacity: 0.6; }
+  100% { transform: translateX(230%); opacity: 1; }
+}
+
+/* Canvas for WebGL - ADAPTATION TO PANEL */
+#glCanvas {
+  /* REMOVE position: fixed; */
+  /* width, height are attributes on canvas tag */
+  border: 1px solid rgba(74, 144, 226, 0.3);
+  background-color: transparent; /* Let panel bg show or set specific */
+  /* z-index no longer needed if panel stacking is managed by grid */
+  box-shadow: 0 0 6px rgba(74, 144, 226, 0.2);
+  border-radius: 4px; /* Consistent rounding */
+  /* max-width: 100%; max-height: 100%; if it needs to be responsive within panel */
+}
+
+/* Ensure Roboto font is imported in index.html if used for paragraphs:
+   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&Orbitron:wght@400;500;700;900&Fira+Code:wght@300;400;500;700&display=swap" rel="stylesheet">
+*/
+
+/* Hide initial static terminal lines before animation */
+#terminal > .terminal-line.sys-message {
+    opacity: 0;
+}
+
+/* More sophisticated terminal grid background */
+#terminal::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: 3px;
+  background-image:
+    linear-gradient(rgba(74, 144, 226, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(74, 144, 226, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.5;
+  animation: terminal-grid 60s linear infinite;
+}
+
+@keyframes terminal-grid {
+  0% { background-position: 0 0; }
+  100% { background-position: 40px 40px; }
+}
+
+/* Terminal lines with enhanced glow */
+.terminal-line {
+  margin: 0 0 3px 0;
+  line-height: 1.7;
+  min-height: 1.7em;
+  transition: transform 0.3s ease, text-shadow 0.3s ease;
+}
+
+.terminal-line:hover {
+  transform: translateX(2px);
+  text-shadow: 0 0 3px currentColor, 0 0 5px rgba(137, 207, 240, 0.5);
+}
+
+/* System messages with enhanced styling */
+.sys-message {
+  color: #89CFF0;
+  text-shadow: 0 0 2px #89CFF0, 0 0 4px rgba(137, 207, 240, 0.5);
+}
+
+/* User prompt specific styling for the text part */
+.user-prompt-line > span:not(#user-input):not(.blinking-cursor) {
+  color: #9ACFEF; /* A slightly lighter, distinct blue for the prompt text */
+  text-shadow: 0 0 2px #9ACFEF; /* Subtle glow for the prompt text */
+}
+
+/* Style the blinking cursor with enhanced effect */
+.blinking-cursor {
+  color: #89CFF0;
+  animation: blink-animation 1s step-end infinite;
+  display: inline-block;
+  vertical-align: baseline;
+  margin-left: 2px;
+  position: relative;
+}
+
+@keyframes blink-animation {
+  0%, 40% { color: #89CFF0; text-shadow: 0 0 5px #89CFF0; }
+  50%, 90% { color: transparent; text-shadow: none; }
+  100% { color: #89CFF0; text-shadow: 0 0 5px #89CFF0; }
+}
+
+/* Enhanced header pulse with chromatic aberration effect - Smoothed out */
+@keyframes header-pulse {
+  0%, 100% {
+    text-shadow: 
+      0 0 4px #B0E8FF,  /* Base glow */
+      0 0 8px #B0E8FF, 
+      0 0 12px rgba(176, 232, 255, 0.7), /* Softer outer glow */
+      0 0 1px #FFF, /* Sharp center */
+      0 0 20px rgba(160, 223, 255, 0.2); /* Wider, subtler diffuse glow */
+    filter: drop-shadow(0.5px 0 0 rgba(255,150,150,0.15)) 
+            drop-shadow(-0.5px 0 0 rgba(150,200,255,0.15)); /* Very subtle chromatic aberration */
+  }
+  50% {
+    text-shadow: 
+      0 0 6px #D0F0FF, /* Slightly brighter base */
+      0 0 12px #D0F0FF, 
+      0 0 18px rgba(208, 240, 255, 0.85), /* Brighter outer glow */
+      0 0 1.5px #FFF, /* Sharper center */
+      0 0 30px rgba(192, 239, 255, 0.35); /* Wider, brighter diffuse glow */
+    filter: drop-shadow(1px 0 0 rgba(255,100,100,0.2)) 
+            drop-shadow(-1px 0 0 rgba(100,200,255,0.2)); /* Slightly more pronounced aberration */
+  }
+}
+
+/* Styling for the new NET: ACTIVE indicator */
+.net-active-indicator {
+  background-color: var(--bright-cyan); /* Use a distinct bright cyan */
+  box-shadow: 0 0 7px var(--bright-cyan), 0 0 12px var(--bright-cyan); /* More pronounced glow */
+  animation: pulse-net-indicator 1.5s infinite ease-in-out; /* Different animation timing/curve */
+}
+
+@keyframes pulse-net-indicator {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1.05); /* Slightly larger base and pulse */
+    filter: blur(0.5px);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(0.85);
+    filter: blur(1px);
+  }
+}
+
+#panel-system-info .status-bar span {
+  font-size: 0.9em;
+  color: #A0DFFF;
+  /* text-align: left; */ /* Already set */
+} 

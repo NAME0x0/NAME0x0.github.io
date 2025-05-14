@@ -2,10 +2,96 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Welcome to NAME0x0</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Personal landing page and portfolio of NAME0x0">
+  <title>NAME0x0 :: Advanced Interface // System Online</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;700&family=Orbitron:wght@400;500;700;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+  <!-- Phosphor Icons for UI elements -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
 <body>
-  <h1>Hello, I’m NAME0x0!</h1>
-  <p>This is my introductory page. Here you’ll find links to my projects, blog, and contact info.</p>
+  <canvas id="backgroundCanvas"></canvas>
+  <div id="loader">
+    <div class="loader-text-container">
+      <div class="loader-line" id="loader-line-1">[SYS] Initializing Core Systems<span class="loader-dots"></span></div>
+      <div class="loader-line" id="loader-line-2">[SYS] Loading User Interface Modules<span class="loader-dots"></span></div>
+      <div class="loader-line" id="loader-line-3">[SYS] Calibrating Quantum Entanglement Matrix<span class="loader-dots"></span></div>
+      <div class="loader-line" id="loader-line-4">[NET] Establishing Secure Uplink<span class="loader-dots"></span></div>
+      <div class="loader-line" id="loader-line-5">[AI] Cognitive Matrix: <span class="loader-status pending">PENDING</span><span class="loader-dots"></span></div>
+      <div class="loader-line" id="loader-line-6">[SYS] All Systems Nominal. Standby<span class="loader-dots"></span></div>
+    </div>
+  </div>
+
+  <div id="dashboard-main">
+    <div id="panel-system-info" class="dashboard-panel widget">
+      <span class="widget-title">SYSTEM STATUS</span>
+      <div class="widget-item" id="clock-item">
+        <i class="ph-duotone ph-clock"></i>
+        <div id="clock">--:--:--</div>
+      </div>
+      <div class="widget-item" id="date-item">
+        <i class="ph-duotone ph-calendar-blank"></i>
+        <div id="date">----/--/--</div>
+      </div>
+      <div class="widget-item status-bar">
+        <i class="ph-duotone ph-broadcast"></i>
+        <span class="status-indicator"></span>
+        <span>SYS: ONLINE</span>
+        <span style="margin: 0 5px;">|</span>
+        <span class="status-indicator net-active-indicator"></span>
+        <span>NET: ACTIVE</span>
+      </div>
+    </div>
+
+    <div id="panel-user-info" class="dashboard-panel widget">
+      <span class="widget-title">USER PROFILE</span>
+      <div class="widget-item" id="username-item">
+        <i class="ph-duotone ph-user-circle"></i>
+        <div class="username">NAME0x0</div>
+      </div>
+      <div class="widget-item" id="usertitle-item">
+        <i class="ph-duotone ph-identification-badge"></i>
+        <div class="title">IT Student // Tech Enthusiast</div>
+      </div>
+    </div>
+
+    <div id="panel-header-intro" class="dashboard-panel">
+      <h1 id="header">NAME0x0</h1>
+      <p>I'm NAME0x0, an IT student and tech enthusiast. Here you'll find my projects, blog posts, and contact links.</p>
+    </div>
+    
+    <div id="panel-navigation-links" class="dashboard-panel">
+        <ul class="links">
+          <li><a href="https://github.com/NAME0x0"><i class="ph-duotone ph-github-logo"></i> GitHub</a></li>
+          <li><a href="/projects"><i class="ph-duotone ph-projector-screen-chart"></i> Projects</a></li>
+          <li><a href="/blog"><i class="ph-duotone ph-newspaper"></i> Blog</a></li>
+          <li><a href="/contact"><i class="ph-duotone ph-chat-dots"></i> Contact</a></li>
+        </ul>
+    </div>
+
+    <div id="panel-terminal" class="dashboard-panel">
+      <main id="terminal">
+        <pre class="terminal-line sys-message">INITIALIZING SYSTEM INTERFACE V4.2...</pre>
+        <pre class="terminal-line sys-message">AI CORE STATUS: <span class="status-ok">ONLINE</span></pre>
+        <pre class="terminal-line sys-message">Establishing secure connection to NAME0x0_OS...</pre>
+        <pre class="terminal-line sys-message">Welcome, NAME0x0.</pre>
+        <div id="ai-dynamic-content"></div>
+        <div class="terminal-line user-prompt-line">
+          <span class="prompt-user">NAME0x0</span><span class="prompt-separator">@</span><span class="prompt-host">LOCALHOST</span><span class="prompt-indicator">:$ ~</span> <span id="user-input" contenteditable="false"></span><span class="blinking-cursor">_</span>
+        </div>
+      </main>
+    </div>
+
+    <div id="panel-webgl" class="dashboard-panel">
+      <canvas id="aiFaceCanvas" width="120" height="120"></canvas>
+    </div>
+  </div>
+
+  <script src="js/webgl.js"></script>
+  <script src="js/animations.js"></script>
+  <script src="js/backgroundParticles.js"></script>
+  <script src="js/main.js"></script>
 </body>
 </html>
