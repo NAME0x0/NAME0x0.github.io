@@ -394,64 +394,57 @@ function createLightRays(x, y) {
 // Initialize interactive effects for panels
 function initPanelInteractionEffects() {
   const panels = document.querySelectorAll('.dashboard-panel');
-  
+  const throttleDelay = 16; // roughly 60fps
+
   panels.forEach(panel => {
-    let animationFrameId = null;
+    let lastCallTime = 0;
 
-    // Mouse move effect - 3D tilt based on cursor position
-    panel.addEventListener('mousemove', function(e) {
-      if (panel.classList.contains('animated-tilt')) return;
+    const handleMouseMove = (e) => {
+      const now = performance.now();
+      if (now - lastCallTime < throttleDelay) {
+        return;
+      }
+      lastCallTime = now;
+
+      // const rect = panel.getBoundingClientRect();
+      // const x = e.clientX - rect.left - rect.width / 2;
+      // const y = e.clientY - rect.top - rect.height / 2;
+
+      // // Max rotation (degrees)
+      // const maxRotate = 7;
+
+      // const rotateX = (y / (rect.height / 2)) * -maxRotate;
+      // const rotateY = (x / (rect.width / 2)) * maxRotate;
       
-      // Cancel any pending animation frame to avoid queuing up updates
-      if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId);
-      }
+      // // Apply a perspective shift and subtle glow effect
+      // panel.style.transition = 'transform 0.1s linear, box-shadow 0.2s ease-out'; // Quicker transition for direct interaction
+      // panel.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.03) translateZ(calc(var(--hover-z-lift) * 1.3))`;
+      // panel.style.boxShadow = `
+      //   0 0 50px rgba(140, 220, 255, calc(var(--panel-shadow-intensity) * 1.2)),
+      //   0 4px 15px rgba(0,0,0,0.3),
+      //   inset 0 0 20px rgba(35, 50, 90, 0.7),
+      //   inset 0 0 1px 1px rgba(230, 240, 255, 0.3),
+      //   0 0 0 2px rgba(150, 230, 255, 0.7)
+      // `;
+    };
 
-      animationFrameId = requestAnimationFrame(() => {
-        const rect = this.getBoundingClientRect();
-        const x = e.clientX - rect.left; 
-        const y = e.clientY - rect.top;  
-        
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        const maxRotation = 4; // Slightly reduced max rotation for subtlety
-        
-        const rotateY = maxRotation * ((x - centerX) / centerX);
-        const rotateX = -maxRotation * ((y - centerY) / centerY);
-        
-        this.style.transform = ` 
-          perspective(1200px) 
-          rotateX(${rotateX}deg) 
-          rotateY(${rotateY}deg)
-          translateZ(20px) /* Keep the base Z offset */
-        `;
+    const handleMouseLeave = () => {
+      // panel.style.transition = 'transform 0.5s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.5s ease-out'; // Slower, smoother transition back
+      // panel.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1) translateZ(var(--panel-z-distance))';
+      // // Reset to idle box-shadow (or rely on CSS :hover if preferred for static parts)
+      // // Forcing reset to base values from CSS :root or .dashboard-panel if specific resting state after hover needs to be JS controlled
+      // panel.style.boxShadow = \`
+      //   0 0 35px rgba(100, 180, 220, \${getComputedStyle(document.documentElement).getPropertyValue('--panel-shadow-intensity').trim() * 0.8}),
+      //   0 2px 10px rgba(0,0,0,0.2),
+      //   inset 0 0 15px rgba(20, 30, 70, 0.5),
+      //   inset 0 0 1px 1px rgba(200, 220, 255, 0.15),
+      //   0 0 0 1.5px \${getComputedStyle(document.documentElement).getPropertyValue('--panel-glass-edge').trim()}
+      // \`;
+    };
 
-        // Removed dynamic background update on mousemove for performance.
-        // Rely on base panel styles and hover effects for background changes.
-        // this.style.background = `...`; 
-      });
-    });
-    
-    // Reset on mouse leave
-    panel.addEventListener('mouseleave', function() {
-      // Cancel pending animation frame if mouse leaves before it executes
-      if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId);
-        animationFrameId = null;
-      }
+    panel.addEventListener('mousemove', handleMouseMove);
+    panel.addEventListener('mouseleave', handleMouseLeave);
 
-      // Smooth reset to original position with spring physics
-      anime({
-        targets: this,
-        rotateX: 0,
-        rotateY: 0,
-        translateZ: '20px', // Ensure it returns to its base Z offset defined in CSS
-        duration: springPhysics.duration, // Use existing springPhysics config
-        easing: springPhysics.easing
-        // The background will revert via CSS hover/base states, no JS needed here for that.
-      });
-    });
-    
     // Click effect - energetic pulse
     panel.addEventListener('click', function(e) {
       // Don't apply to panels containing interactive elements
