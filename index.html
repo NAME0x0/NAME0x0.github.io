@@ -3,95 +3,806 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Personal landing page and portfolio of NAME0x0">
-  <title>NAME0x0 :: Advanced Interface // System Online</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;700&family=Orbitron:wght@400;500;700;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-  <!-- Phosphor Icons for UI elements -->
-  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <title>AVA | NAME0x0</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;600&family=Space+Mono&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/fixes.css">
+  
+    <!-- Favicon - commented out to fix 404 error -->
+  <link rel="icon" type="image/png" href="assets/favicon.png">
 </head>
 <body>
-  <canvas id="backgroundCanvas"></canvas>
-  <div id="loader">
-    <div class="loader-text-container">
-      <div class="loader-line" id="loader-line-1">[SYS] Initializing Core Systems<span class="loader-dots"></span></div>
-      <div class="loader-line" id="loader-line-2">[SYS] Loading User Interface Modules<span class="loader-dots"></span></div>
-      <div class="loader-line" id="loader-line-3">[SYS] Calibrating Quantum Entanglement Matrix<span class="loader-dots"></span></div>
-      <div class="loader-line" id="loader-line-4">[NET] Establishing Secure Uplink<span class="loader-dots"></span></div>
-      <div class="loader-line" id="loader-line-5">[AI] Cognitive Matrix: <span class="loader-status pending">PENDING</span><span class="loader-dots"></span></div>
-      <div class="loader-line" id="loader-line-6">[SYS] All Systems Nominal. Standby<span class="loader-dots"></span></div>
+  <!-- Preloader - AVA Boot Sequence -->
+  <div class="preloader">
+    <div class="preloader-content">
+      <div class="system-init">
+        <div class="init-header">
+          <div class="logo">AVA</div>
+          <div class="system-name">Afsah's Virtual Assistant • v4.7.2</div>
+        </div>
+        <div class="init-body">
+          <div class="loading-bar-container">
+            <div class="loading-bar"></div>
+          </div>
+          <div class="status-container">
+            <div class="status-line">Initializing quantum core...</div>
+            <div class="status-line">Loading neural architecture...</div>
+            <div class="status-line">Calibrating synaptic interfaces...</div>
+            <div class="status-line">Establishing quantum entanglement...</div>
+            <div class="status-line">Loading user profile: NAME0x0...</div>
+            <div class="status-line">Preparing neural visualization matrix...</div>
+            <div class="status-line">Optimizing quantum processing parameters...</div>
+            <div class="status-line">Finalizing system initialization...</div>
+          </div>
+        </div>
+        <div class="init-footer">
+          <div>AVA Quantum Core v4.7.2</div>
+          <div>© 2050 NAME0x0</div>
+        </div>
+      </div>
     </div>
   </div>
-
-  <div id="dashboard-main">
-    <div id="panel-system-info" class="dashboard-panel widget">
-      <span class="widget-title">SYSTEM STATUS</span>
-      <div class="widget-item" id="clock-item">
-        <i class="ph-duotone ph-clock"></i>
-        <div id="clock">--:--:--</div>
+  
+  <!-- Custom Cursor -->
+  <div class="cursor-container">
+    <div id="cursor"></div>
+    <div id="cursor-dot"></div>
+    <div id="cursor-ring"></div>
+  </div>
+  
+  <!-- Main Container - AVA's Neural Core -->
+  <div class="main-container">
+    <!-- Neural Network Background -->
+    <div id="neural-network-bg" class="neural-network-bg"></div>
+    
+    <!-- Quantum Particle Field - Disabled -->
+    <div id="quantum-particle-field" class="quantum-particle-field" style="display: none;"></div>
+    
+    <!-- Data Stream Overlay -->
+    <div id="data-stream" class="data-stream"></div>
+    
+    <!-- System Status Bar -->
+    <div class="system-status-bar">
+      <div class="status-item">
+        <div class="status-label">SYSTEM</div>
+        <div class="status-value">ONLINE</div>
       </div>
-      <div class="widget-item" id="date-item">
-        <i class="ph-duotone ph-calendar-blank"></i>
-        <div id="date">----/--/--</div>
+      <div class="status-item">
+        <div class="status-label">QUANTUM CORE</div>
+        <div class="status-value">STABLE</div>
       </div>
-      <div class="widget-item status-bar">
-        <i class="ph-duotone ph-broadcast"></i>
-        <span class="status-indicator"></span>
-        <span>SYS: ONLINE</span>
-        <span style="margin: 0 5px;">|</span>
-        <span class="status-indicator net-active-indicator"></span>
-        <span>NET: ACTIVE</span>
+      <div class="status-item">
+        <div class="status-label">NEURAL DENSITY</div>
+        <div class="status-value">97.3%</div>
       </div>
-    </div>
-
-    <div id="panel-user-info" class="dashboard-panel widget">
-      <span class="widget-title">USER PROFILE</span>
-      <div class="widget-item" id="username-item">
-        <i class="ph-duotone ph-user-circle"></i>
-        <div class="username">NAME0x0</div>
+      <div class="status-item">
+        <div class="status-label">MEMORY ALLOCATION</div>
+        <div class="status-value">OPTIMAL</div>
       </div>
-      <div class="widget-item" id="usertitle-item">
-        <i class="ph-duotone ph-identification-badge"></i>
-        <div class="title">IT Student // Tech Enthusiast</div>
-      </div>
-    </div>
-
-    <div id="panel-header-intro" class="dashboard-panel">
-      <h1 id="header">NAME0x0</h1>
-      <p>I'm NAME0x0, an IT student and tech enthusiast. Here you'll find my projects, blog posts, and contact links.</p>
     </div>
     
-    <div id="panel-navigation-links" class="dashboard-panel">
-        <ul class="links">
-          <li><a href="https://github.com/NAME0x0"><i class="ph-duotone ph-github-logo"></i> GitHub</a></li>
-          <li><a href="/projects"><i class="ph-duotone ph-projector-screen-chart"></i> Projects</a></li>
-          <li><a href="/blog"><i class="ph-duotone ph-newspaper"></i> Blog</a></li>
-          <li><a href="/contact"><i class="ph-duotone ph-chat-dots"></i> Contact</a></li>
-        </ul>
-    </div>
-
-    <div id="panel-terminal" class="dashboard-panel">
-      <main id="terminal">
-        <pre class="terminal-line sys-message">INITIALIZING SYSTEM INTERFACE V4.2...</pre>
-        <pre class="terminal-line sys-message">AI CORE STATUS: <span class="status-ok">ONLINE</span></pre>
-        <pre class="terminal-line sys-message">Establishing secure connection to NAME0x0_OS...</pre>
-        <pre class="terminal-line sys-message">Welcome, NAME0x0.</pre>
-        <div id="ai-dynamic-content"></div>
-        <div class="terminal-line user-prompt-line">
-          <span class="prompt-user">NAME0x0</span><span class="prompt-separator">@</span><span class="prompt-host">LOCALHOST</span><span class="prompt-indicator">:$ ~</span> <span id="user-input" contenteditable="false"></span><span class="blinking-cursor">_</span>
+    <!-- Neural Navigation - Primary Neural Pathways -->
+    <nav class="neural-navigation">
+      <div class="nav-container">
+        <div class="system-identifier">
+          <div class="system-logo">AVA</div>
+          <div class="system-version">v4.7.2</div>
         </div>
-      </main>
+        <ul class="neural-pathways">
+          <li data-section="core-system" class="active">
+            <div class="pathway-node"></div>
+            <span class="pathway-label">Core System</span>
+          </li>
+          <li data-section="knowledge-repository">
+            <div class="pathway-node"></div>
+            <span class="pathway-label">Knowledge Repository</span>
+          </li>
+          <li data-section="project-execution">
+            <div class="pathway-node"></div>
+            <span class="pathway-label">Project Execution</span>
+          </li>
+          <li data-section="capability-matrix">
+            <div class="pathway-node"></div>
+            <span class="pathway-label">Capability Matrix</span>
+          </li>
+          <li data-section="communication-array">
+            <div class="pathway-node"></div>
+            <span class="pathway-label">Communication Array</span>
+          </li>
+        </ul>
+        <div class="quantum-access">
+          <div class="access-indicator"></div>
+          <div class="access-label">QUANTUM ACCESS</div>
+        </div>
+      </div>
+    </nav>
+    
+    <!-- Content - AVA's Subsystems -->
+    <div class="neural-content">
+      <!-- Core System (Home) -->
+      <section id="core-system" class="subsystem active">
+        <div class="holographic-container">
+          <div class="hologram-header">
+            <h1 class="quantum-glitch" data-text="NAME0x0">NAME0x0</h1>
+            <div class="system-subtitle">
+              <span class="quantum-typing">Developer | Innovator | Tech Architect</span>
+            </div>
+          </div>
+          
+          <div class="neural-hub">
+            <div class="hub-core">
+              <div class="core-pulse"></div>
+              <div class="core-rings">
+                <div class="ring ring-1"></div>
+                <div class="ring ring-2"></div>
+                <div class="ring ring-3"></div>
+              </div>
+            </div>
+            
+            <div class="hub-connections">
+              <div class="connection" data-target="knowledge-repository">
+                <div class="connection-path"></div>
+                <div class="connection-label">Knowledge Repository</div>
+              </div>
+              <div class="connection" data-target="project-execution">
+                <div class="connection-path"></div>
+                <div class="connection-label">Project Execution</div>
+              </div>
+              <div class="connection" data-target="capability-matrix">
+                <div class="connection-path"></div>
+                <div class="connection-label">Capability Matrix</div>
+              </div>
+              <div class="connection" data-target="communication-array">
+                <div class="connection-path"></div>
+                <div class="connection-label">Communication Array</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="core-description">
+            <p>Pursuing a BSc (Hons) in IT at Middlesex University Dubai, deeply passionate about creating technology that brings convenience, financial freedom, and positive impact to people's lives.</p>
+          </div>
+          
+          <div class="quantum-actions">
+            <button class="quantum-button" data-target="project-execution">
+              <span class="button-glow"></span>
+              <span class="button-text">Access Projects</span>
+              <span class="button-icon">→</span>
+            </button>
+            <button class="quantum-button secondary" data-target="communication-array">
+              <span class="button-glow"></span>
+              <span class="button-text">Establish Communication</span>
+              <span class="button-icon">→</span>
+            </button>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Knowledge Repository (About) -->
+      <section id="knowledge-repository" class="subsystem">
+        <div class="holographic-container">
+          <div class="subsystem-header">
+            <h2>Knowledge Repository</h2>
+            <div class="header-decoration">
+              <div class="decoration-line"></div>
+              <div class="decoration-dot"></div>
+            </div>
+          </div>
+          
+          <div class="memory-banks">
+            <div class="memory-crystal primary">
+              <div class="crystal-header">
+                <div class="crystal-title">Identity Matrix</div>
+                <div class="crystal-controls">
+                  <div class="crystal-control"></div>
+                  <div class="crystal-control"></div>
+                  <div class="crystal-control"></div>
+                </div>
+              </div>
+              <div class="crystal-body">
+                <div class="identity-structure">
+                  <div class="identity-image">
+                    <div class="image-container">
+                      <img src="https://avatars.githubusercontent.com/u/119836361?v=4" alt="NAME0x0" loading="lazy" decoding="async">
+                    </div>
+                    <div class="image-scan-line"></div>
+                  </div>
+                  <div class="identity-data">
+                    <div class="data-stream-item">
+                      <div class="data-label">Designation:</div>
+                      <div class="data-value">Afsah (NAME0x0)</div>
+                    </div>
+                    <div class="data-stream-item">
+                      <div class="data-label">Location:</div>
+                      <div class="data-value">Dubai</div>
+                    </div>
+                    <div class="data-stream-item">
+                      <div class="data-label">Repository:</div>
+                      <div class="data-value">NAME0x0</div>
+                    </div>
+                    <div class="data-stream-item">
+                      <div class="data-label">Code Archives:</div>
+                      <div class="data-value">33</div>
+                    </div>
+                    <div class="data-stream-item">
+                      <div class="data-label">Network Nodes:</div>
+                      <div class="data-value">46</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="identity-description">
+                  <p>I'm a passionate developer and innovator currently pursuing a BSc (Hons) in Information Technology at Middlesex University Dubai. My focus is on creating technology that brings convenience, financial freedom, and positive impact to people's lives.</p>
+                  <p>With a strong foundation in various programming languages and technologies, I enjoy tackling complex problems and turning innovative ideas into reality. My projects range from AI assistants to quantum-inspired browser experiments.</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="memory-crystal secondary">
+              <div class="crystal-header">
+                <div class="crystal-title">Temporal Record</div>
+                <div class="crystal-controls">
+                  <div class="crystal-control"></div>
+                  <div class="crystal-control"></div>
+                  <div class="crystal-control"></div>
+                </div>
+              </div>
+              <div class="crystal-body">
+                <div class="temporal-stream">
+                  <div class="temporal-item">
+                    <div class="temporal-marker"></div>
+                    <div class="temporal-data">
+                      <div class="temporal-date">2024 - Present</div>
+                      <div class="temporal-title">BSc (Hons) in IT</div>
+                      <div class="temporal-description">Middlesex University Dubai</div>
+                    </div>
+                  </div>
+                  <div class="temporal-item">
+                    <div class="temporal-marker"></div>
+                    <div class="temporal-data">
+                      <div class="temporal-date">2022 - Present</div>
+                      <div class="temporal-title">AVA Project</div>
+                      <div class="temporal-description">Developed a JARVIS-like assistant to automate daily life tasks</div>
+                    </div>
+                  </div>
+                  <div class="temporal-item">
+                    <div class="temporal-marker"></div>
+                    <div class="temporal-data">
+                      <div class="temporal-date">2024 - Present</div>
+                      <div class="temporal-title">Tangled Project</div>
+                      <div class="temporal-description">Created a quantum browser entanglement experiment</div>
+                    </div>
+                  </div>
+                  <div class="temporal-item">
+                    <div class="temporal-marker"></div>
+                    <div class="temporal-data">
+                      <div class="temporal-date">2025 - Present</div>
+                      <div class="temporal-title">MAVIS Project</div>
+                      <div class="temporal-description">Built an advanced system with Rust</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Project Execution Chamber (Projects) -->
+      <section id="project-execution" class="subsystem">
+        <div class="holographic-container">
+          <div class="subsystem-header">
+            <h2>Project Execution Chamber</h2>
+            <div class="header-decoration">
+              <div class="decoration-line"></div>
+              <div class="decoration-dot"></div>
+            </div>
+          </div>
+          
+          <div class="project-chamber">
+            <div class="project-hologram" data-project="ava">
+              <div class="hologram-preview">
+                <div id="ava-model" class="hologram-model"></div>
+                <div class="hologram-scan"></div>
+              </div>
+              <div class="hologram-data">
+                <h3 class="project-title">AVA</h3>
+                <div class="project-subtitle">Afsah's Virtual Assistant</div>
+                <div class="project-description">
+                  A JARVIS-like assistant to automate daily life tasks using advanced natural language processing and machine learning.
+                </div>
+                <div class="project-tech-stack">
+                  <span class="tech-module">Python</span>
+                  <span class="tech-module">NLP</span>
+                  <span class="tech-module">Machine Learning</span>
+                </div>
+                <div class="project-actions">
+                  <button class="quantum-button small view-details" data-project="ava">
+                    <span class="button-glow"></span>
+                    <span class="button-text">Access Details</span>
+                  </button>
+                  <a href="https://github.com/NAME0x0/AVA" target="_blank" class="quantum-button small secondary">
+                    <span class="button-glow"></span>
+                    <span class="button-text">View Repository</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="project-hologram" data-project="tangled">
+              <div class="hologram-preview">
+                <div id="tangled-model" class="hologram-model"></div>
+                <div class="hologram-scan"></div>
+              </div>
+              <div class="hologram-data">
+                <h3 class="project-title">Tangled</h3>
+                <div class="project-subtitle">Quantum Browser Entanglement</div>
+                <div class="project-description">
+                  A project showcasing quantum entanglement between browser windows, creating an interactive visualization of quantum principles.
+                </div>
+                <div class="project-tech-stack">
+                  <span class="tech-module">JavaScript</span>
+                  <span class="tech-module">WebSockets</span>
+                  <span class="tech-module">WebGL</span>
+                </div>
+                <div class="project-actions">
+                  <button class="quantum-button small view-details" data-project="tangled">
+                    <span class="button-glow"></span>
+                    <span class="button-text">Access Details</span>
+                  </button>
+                  <a href="https://github.com/NAME0x0/Tangled" target="_blank" class="quantum-button small secondary">
+                    <span class="button-glow"></span>
+                    <span class="button-text">View Repository</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="project-hologram" data-project="mavis">
+              <div class="hologram-preview">
+                <div id="mavis-model" class="hologram-model"></div>
+                <div class="hologram-scan"></div>
+              </div>
+              <div class="hologram-data">
+                <h3 class="project-title">MAVIS</h3>
+                <div class="project-subtitle">Modern Architecture Virtual Interface System</div>
+                <div class="project-description">
+                  An advanced system built with Rust, focusing on performance optimization and modern programming paradigms.
+                </div>
+                <div class="project-tech-stack">
+                  <span class="tech-module">Rust</span>
+                  <span class="tech-module">Systems Programming</span>
+                  <span class="tech-module">Performance</span>
+                </div>
+                <div class="project-actions">
+                  <button class="quantum-button small view-details" data-project="mavis">
+                    <span class="button-glow"></span>
+                    <span class="button-text">Access Details</span>
+                  </button>
+                  <a href="https://github.com/NAME0x0/MAVIS" target="_blank" class="quantum-button small secondary">
+                    <span class="button-glow"></span>
+                    <span class="button-text">View Repository</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Capability Matrix (Skills) -->
+      <section id="capability-matrix" class="subsystem">
+        <div class="holographic-container">
+          <div class="subsystem-header">
+            <h2>Capability Matrix</h2>
+            <div class="header-decoration">
+              <div class="decoration-line"></div>
+              <div class="decoration-dot"></div>
+            </div>
+          </div>
+          
+          <div class="capability-grid">
+            <!-- Programming Languages -->
+            <div class="capability-cluster">
+              <div class="cluster-header">
+                <div class="cluster-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 20V10"></path>
+                    <path d="M12 20V4"></path>
+                    <path d="M6 20v-6"></path>
+                  </svg>
+                </div>
+                <div class="cluster-title">Core Languages</div>
+              </div>
+              <div class="capability-nodes">
+                <div class="capability-node">
+                  <div class="node-header">
+                    <div class="node-name">Python</div>
+                    <div class="node-level">90%</div>
+                  </div>
+                  <div class="node-energy-bar">
+                    <div class="node-energy" style="width: 90%"></div>
+                  </div>
+                </div>
+                <div class="capability-node">
+                  <div class="node-header">
+                    <div class="node-name">JavaScript</div>
+                    <div class="node-level">85%</div>
+                  </div>
+                  <div class="node-energy-bar">
+                    <div class="node-energy" style="width: 85%"></div>
+                  </div>
+                </div>
+                <div class="capability-node">
+                  <div class="node-header">
+                    <div class="node-name">Rust</div>
+                    <div class="node-level">75%</div>
+                  </div>
+                  <div class="node-energy-bar">
+                    <div class="node-energy" style="width: 75%"></div>
+                  </div>
+                </div>
+                <div class="capability-node">
+                  <div class="node-header">
+                    <div class="node-name">HTML/CSS</div>
+                    <div class="node-level">88%</div>
+                  </div>
+                  <div class="node-energy-bar">
+                    <div class="node-energy" style="width: 88%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Frameworks & Libraries -->
+            <div class="capability-cluster">
+              <div class="cluster-header">
+                <div class="cluster-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="3" y1="9" x2="21" y2="9"></line>
+                    <line x1="9" y1="21" x2="9" y2="9"></line>
+                  </svg>
+                </div>
+                <div class="cluster-title">Frameworks & Libraries</div>
+              </div>
+              <div class="capability-nodes">
+                <div class="capability-node">
+                  <div class="node-header">
+                    <div class="node-name">React</div>
+                    <div class="node-level">82%</div>
+                  </div>
+                  <div class="node-energy-bar">
+                    <div class="node-energy" style="width: 82%"></div>
+                  </div>
+                </div>
+                <div class="capability-node">
+                  <div class="node-header">
+                    <div class="node-name">Three.js</div>
+                    <div class="node-level">78%</div>
+                  </div>
+                  <div class="node-energy-bar">
+                    <div class="node-energy" style="width: 78%"></div>
+                  </div>
+                </div>
+                <div class="capability-node">
+                  <div class="node-header">
+                    <div class="node-name">TensorFlow</div>
+                    <div class="node-level">65%</div>
+                  </div>
+                  <div class="node-energy-bar">
+                    <div class="node-energy" style="width: 65%"></div>
+                  </div>
+                </div>
+                <div class="capability-node">
+                  <div class="node-header">
+                    <div class="node-name">WebGL</div>
+                    <div class="node-level">70%</div>
+                  </div>
+                  <div class="node-energy-bar">
+                    <div class="node-energy" style="width: 70%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Tools & Technologies -->
+            <div class="capability-cluster">
+              <div class="cluster-header">
+                <div class="cluster-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                  </svg>
+                </div>
+                <div class="cluster-title">Tools & Technologies</div>
+              </div>
+              <div class="capability-nodes">
+                <div class="capability-node">
+                  <div class="node-header">
+                    <div class="node-name">Git</div>
+                    <div class="node-level">88%</div>
+                  </div>
+                  <div class="node-energy-bar">
+                    <div class="node-energy" style="width: 88%"></div>
+                  </div>
+                </div>
+                <div class="capability-node">
+                  <div class="node-header">
+                    <div class="node-name">Docker</div>
+                    <div class="node-level">75%</div>
+                  </div>
+                  <div class="node-energy-bar">
+                    <div class="node-energy" style="width: 75%"></div>
+                  </div>
+                </div>
+                <div class="capability-node">
+                  <div class="node-header">
+                    <div class="node-name">AWS</div>
+                    <div class="node-level">68%</div>
+                  </div>
+                  <div class="node-energy-bar">
+                    <div class="node-energy" style="width: 68%"></div>
+                  </div>
+                </div>
+                <div class="capability-node">
+                  <div class="node-header">
+                    <div class="node-name">CI/CD</div>
+                    <div class="node-level">72%</div>
+                  </div>
+                  <div class="node-energy-bar">
+                    <div class="node-energy" style="width: 72%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Soft Skills -->
+            <div class="capability-cluster">
+              <div class="cluster-header">
+                <div class="cluster-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                  </svg>
+                </div>
+                <div class="cluster-title">Soft Skills</div>
+              </div>
+              <div class="capability-nodes">
+                <div class="capability-node">
+                  <div class="node-header">
+                    <div class="node-name">Problem Solving</div>
+                    <div class="node-level">92%</div>
+                  </div>
+                  <div class="node-energy-bar">
+                    <div class="node-energy" style="width: 92%"></div>
+                  </div>
+                </div>
+                <div class="capability-node">
+                  <div class="node-header">
+                    <div class="node-name">Team Leadership</div>
+                    <div class="node-level">85%</div>
+                  </div>
+                  <div class="node-energy-bar">
+                    <div class="node-energy" style="width: 85%"></div>
+                  </div>
+                </div>
+                <div class="capability-node">
+                  <div class="node-header">
+                    <div class="node-name">Communication</div>
+                    <div class="node-level">88%</div>
+                  </div>
+                  <div class="node-energy-bar">
+                    <div class="node-energy" style="width: 88%"></div>
+                  </div>
+                </div>
+                <div class="capability-node">
+                  <div class="node-header">
+                    <div class="node-name">Agile Methodology</div>
+                    <div class="node-level">80%</div>
+                  </div>
+                  <div class="node-energy-bar">
+                    <div class="node-energy" style="width: 80%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Communication Array (Contact) -->
+      <section id="communication-array" class="subsystem">
+        <div class="holographic-container">
+          <div class="subsystem-header">
+            <h2>Communication Array</h2>
+            <div class="header-decoration">
+              <div class="decoration-line"></div>
+              <div class="decoration-dot"></div>
+            </div>
+          </div>
+          
+          <div class="communication-grid">
+            <div class="comm-channels">
+              <div class="comm-channel">
+                <div class="channel-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                  </svg>
+                </div>
+                <div class="channel-data">
+                  <div class="channel-label">Quantum Comm Link</div>
+                  <div class="channel-value">+971558280821</div>
+                </div>
+              </div>
+              <div class="comm-channel">
+                <div class="channel-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                  </svg>
+                </div>
+                <div class="channel-data">
+                  <div class="channel-label">Data Transmission</div>
+                  <div class="channel-value">contact@name0x0.dev</div>
+                </div>
+              </div>
+              <div class="comm-channel">
+                <div class="channel-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg>
+                </div>
+                <div class="channel-data">
+                  <div class="channel-label">Spatial Coordinates</div>
+                  <div class="channel-value">Dubai, UAE</div>
+                </div>
+              </div>
+              
+              <div class="network-nodes">
+                <a href="https://github.com/NAME0x0" target="_blank" class="network-node">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                  </svg>
+                </a>
+                <a href="#" target="_blank" class="network-node">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                    <rect x="2" y="9" width="4" height="12"></rect>
+                    <circle cx="4" cy="4" r="2"></circle>
+                  </svg>
+                </a>
+                <a href="#" target="_blank" class="network-node">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+                  </svg>
+                </a>
+                <a href="#" target="_blank" class="network-node">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                  </svg>
+                </a>
+              </div>
+            </div>
+            
+            <div class="transmission-interface">
+              <form id="transmission-form">
+                <div class="transmission-field">
+                  <label for="sender-id" class="field-label">Sender Identification</label>
+                  <input type="text" id="sender-id" class="quantum-input" required>
+                  <div class="field-glow"></div>
+                </div>
+                <div class="transmission-field">
+                  <label for="sender-comm" class="field-label">Return Transmission Channel</label>
+                  <input type="email" id="sender-comm" class="quantum-input" required>
+                  <div class="field-glow"></div>
+                </div>
+                <div class="transmission-field">
+                  <label for="transmission-subject" class="field-label">Transmission Subject</label>
+                  <input type="text" id="transmission-subject" class="quantum-input" required>
+                  <div class="field-glow"></div>
+                </div>
+                <div class="transmission-field">
+                  <label for="transmission-content" class="field-label">Transmission Content</label>
+                  <textarea id="transmission-content" class="quantum-input" required></textarea>
+                  <div class="field-glow"></div>
+                </div>
+                <button type="submit" class="quantum-button">
+                  <span class="button-glow"></span>
+                  <span class="button-text">Initiate Transmission</span>
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
-
-    <div id="panel-webgl" class="dashboard-panel">
-      <canvas id="aiFaceCanvas" width="120" height="120"></canvas>
+    
+    <!-- System Footer -->
+    <footer class="system-footer">
+      <div class="footer-container">
+        <div class="footer-content">
+          <div class="footer-logo system-identifier">AVA</div>
+          <div class="footer-separator"></div>
+          <div class="footer-tagline">Afsah's Virtual Assistant | Crafting the Future</div>
+          <div class="footer-copyright">© <span id="copyright-year"></span> NAME0x0. All rights reserved.</div>
+        </div>
+      </div>
+    </footer>
+  </div>
+  
+  <!-- Quantum Terminal -->
+  <div id="quantum-terminal" class="quantum-terminal">
+    <div class="terminal-header">
+      <div class="terminal-title">AVA Quantum Terminal v4.7.2</div>
+      <div class="terminal-controls">
+        <div class="terminal-control minimize-terminal"></div>
+        <div class="terminal-control close-terminal"></div>
+      </div>
+    </div>
+    <div class="terminal-body">
+      <div id="terminal-output" class="terminal-output"></div>
+      <div class="terminal-input-container">
+        <div class="terminal-prompt">ava@NAME0x0:~$</div>
+        <input type="text" id="terminal-input" autocomplete="off" spellcheck="false">
+      </div>
     </div>
   </div>
-
-  <script src="js/webgl.js"></script>
-  <script src="js/animations.js"></script>
-  <script src="js/backgroundParticles.js"></script>
+  
+  <!-- Project Details Modal -->
+  <div id="project-details" class="quantum-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modal-title" class="modal-title">Project Title</h3>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="modal-description" class="modal-section"></div>
+        <div id="modal-features" class="modal-section"></div>
+        <div id="modal-tech" class="modal-section"></div>
+      </div>
+      <div class="modal-footer">
+        <a id="modal-github" href="#" target="_blank" class="quantum-button">
+          <span class="button-glow"></span>
+          <span class="button-text">Access Repository</span>
+        </a>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Quantum Transition Layer -->
+  <div class="quantum-transition">
+    <div class="transition-particles"></div>
+  </div>
+  
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="js/preloader.js"></script>
+  <script src="js/silicon-neural-pathways.js"></script>
+  <script src="js/enhanced-synaptic-activity.js"></script>
+  <script src="js/cursor.js"></script>
+  <script src="js/terminal.js"></script>
+  <script src="js/project-showcase.js"></script>
+  <!-- Removed quantum-transitions.js as it doesn't exist -->
+  <script src="js/performance-optimizer.js"></script>
   <script src="js/main.js"></script>
+  <script>
+    document.getElementById('copyright-year').textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
+<!-- <script src="js/enhanced-navigation.js"></script> -->
+<!-- <link rel="stylesheet" href="css/fixes.css"> -->
