@@ -1,12 +1,5 @@
-// Import core libraries
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
-import * as THREE from 'three';
-import Chart from 'chart.js/auto';
-
-// Register GSAP plugins
-gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+// Libraries loaded via CDN in HTML
+// gsap, THREE, Chart are now globally available
 
 // Global App State
 const AppState = {
@@ -26,62 +19,88 @@ const AppState = {
   }
 };
 
-// Initialize everything when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-  console.log('🎬 Initializing cinematic portfolio...');
-  
-  // Core initializations
-  initializeTheme();
-  initializeNavigation();
-  initializeScrollAnimations();
-  
-    // Initialize all sections immediately (simplified approach)
-  console.log('🎭 Initializing all sections...');
-  
-  // Force initialization of all sections
-  setTimeout(() => {
-    console.log('🌟 Initializing prologue...');
-    initializePrologueAnimation();
-  }, 100);
-  
-  setTimeout(() => {
-    console.log('🌍 Initializing origins...');
-    initializeOriginsAnimation();
-  }, 200);
-  
-  setTimeout(() => {
-    console.log('💪 Initializing superpowers...');
-    initializeSuperpowersAnimation();
-    initializeRadarChart();
-  }, 300);
-  
-  setTimeout(() => {
-    console.log('🧪 Initializing projects...');
-    initializeProjects();
-  }, 400);
-  
-  setTimeout(() => {
-    console.log('🤖 Initializing terminal...');
-    initializeTerminal();
-  }, 500);
-  
-  setTimeout(() => {
-    console.log('📱 Initializing widgets...');
-    initializeWidgets();
-  }, 600);
-  
-  setTimeout(() => {
-    console.log('📧 Initializing contact...');
-    initializeContact();
-  }, 700);
+// Wait for all libraries to load, then initialize
+function waitForLibraries() {
+  return new Promise((resolve) => {
+    const checkLibraries = () => {
+      if (typeof gsap !== 'undefined' && 
+          typeof THREE !== 'undefined' && 
+          typeof Chart !== 'undefined' &&
+          typeof ScrollTrigger !== 'undefined') {
+        // Register GSAP plugins
+        gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+        resolve();
+      } else {
+        setTimeout(checkLibraries, 100);
+      }
+    };
+    checkLibraries();
+  });
+}
 
-  // Expose AppState globally for debugging
-  window.AppState = AppState;
-  window.initializePrologueAnimation = initializePrologueAnimation;
-  window.initializeSuperpowersAnimation = initializeSuperpowersAnimation;
-  window.initializeWidgets = initializeWidgets;
+// Initialize everything when DOM and libraries are loaded
+document.addEventListener('DOMContentLoaded', async function() {
+  console.log('🎬 Waiting for libraries to load...');
   
-  console.log('✨ Cinematic portfolio ready!');
+  try {
+    await waitForLibraries();
+    console.log('✅ All libraries loaded successfully');
+    
+    // Core initializations
+    initializeTheme();
+    initializeNavigation();
+    initializeScrollAnimations();
+    
+    // Initialize all sections with proper timing
+    console.log('🎭 Initializing all sections...');
+    
+    setTimeout(() => {
+      console.log('🌟 Initializing prologue...');
+      initializePrologueAnimation();
+    }, 100);
+    
+    setTimeout(() => {
+      console.log('🌍 Initializing origins...');
+      initializeOriginsAnimation();
+    }, 200);
+    
+    setTimeout(() => {
+      console.log('💪 Initializing superpowers...');
+      initializeSuperpowersAnimation();
+      initializeRadarChart();
+    }, 300);
+    
+    setTimeout(() => {
+      console.log('🧪 Initializing projects...');
+      initializeProjects();
+    }, 400);
+    
+    setTimeout(() => {
+      console.log('🤖 Initializing terminal...');
+      initializeTerminal();
+    }, 500);
+    
+    setTimeout(() => {
+      console.log('📱 Initializing widgets...');
+      initializeWidgets();
+    }, 600);
+    
+    setTimeout(() => {
+      console.log('📧 Initializing contact...');
+      initializeContact();
+    }, 700);
+
+    // Expose globally for debugging
+    window.AppState = AppState;
+    window.initializePrologueAnimation = initializePrologueAnimation;
+    window.initializeSuperpowersAnimation = initializeSuperpowersAnimation;
+    window.initializeWidgets = initializeWidgets;
+    
+    console.log('✨ Cinematic portfolio ready!');
+    
+  } catch (error) {
+    console.error('❌ Failed to load libraries:', error);
+  }
 });
 
 // Theme Management

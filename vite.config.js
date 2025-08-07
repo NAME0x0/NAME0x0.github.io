@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import { visualizer } from 'rollup-plugin-visualizer'
 
 export default defineConfig({
-  base: '/', // GitHub Pages root path
+  base: '/', // Custom domain uses root path
   build: {
     outDir: 'dist',
     sourcemap: true,
