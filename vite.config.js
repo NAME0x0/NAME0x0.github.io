@@ -5,7 +5,7 @@ export default defineConfig({
   base: '/', // Custom domain uses root path
   build: {
     outDir: 'dist',
-    sourcemap: true,
+    sourcemap: false, // Disable for GitHub Pages
     target: 'es2017',
     minify: 'terser',
     terserOptions: {
@@ -15,21 +15,14 @@ export default defineConfig({
       },
     },
     rollupOptions: {
+      input: 'index.html',
       output: {
-        manualChunks: {
-          'three': ['three'],
-          'gsap': ['gsap'],
-          'chart': ['chart.js/auto'],
-        },
-        assetFileNames: (assetInfo) => {
-          if (assetInfo.name.endsWith('.css')) {
-            return 'assets/[name].[hash][extname]'
-          }
-          return 'assets/[name].[hash][extname]'
-        },
+        entryFileNames: 'app.js', // Keep consistent filename
+        chunkFileNames: 'assets/[name].[hash].js',
+        assetFileNames: 'assets/[name].[hash][extname]',
       },
     },
-    chunkSizeWarningLimit: 500,
+    chunkSizeWarningLimit: 1000, // Increased due to Three.js bundle size
   },
   plugins: [
     visualizer({

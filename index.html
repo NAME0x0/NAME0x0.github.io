@@ -10,7 +10,7 @@
     
     <!-- Performance & Security -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://plausible.io; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: https:; font-src 'self' data: https://r2cdn.perplexity.ai https://cdn.jsdelivr.net; connect-src 'self' https://api.openweathermap.org https://api.zenquotes.io https://random-word-api.herokuapp.com https://api.dictionaryapi.dev https://stoicquotesapi.com https://export.arxiv.org https://api.quran.com https://bible-api.com https://cdn.jsdelivr.net;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://threejs.org https://plausible.io; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: https:; font-src 'self' data: https://r2cdn.perplexity.ai https://cdn.jsdelivr.net; connect-src 'self' https://api.openweathermap.org https://api.zenquotes.io https://random-word-api.herokuapp.com https://api.dictionaryapi.dev https://stoicquotesapi.com https://export.arxiv.org https://api.quran.com https://bible-api.com https://cdn.jsdelivr.net;">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="X-XSS-Protection" content="1; mode=block">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
@@ -523,14 +523,13 @@
         }
     </script> -->
 
-    <!-- CDN Libraries for GitHub Pages compatibility -->
-    <script src="https://cdn.jsdelivr.net/npm/three@0.179.1/build/three.min.js"></script>
+    <!-- Load GSAP and Chart.js from CDN (stable) -->
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollToPlugin.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js"></script>
     
-    <!-- Main JavaScript -->
-    <script src="./app.js"></script>
+    <!-- Main JavaScript - Vite will process this -->
+    <script type="module" src="/app.js" defer></script>
 </body>
 </html>

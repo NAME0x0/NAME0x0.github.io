@@ -1,5 +1,8 @@
-// Libraries loaded via CDN in HTML
-// gsap, THREE, Chart are now globally available
+// Import Three.js using ES6 modules
+import * as THREE from 'three';
+
+// GSAP and Chart.js loaded via CDN in HTML
+// gsap, Chart are globally available
 
 // Global App State
 const AppState = {
@@ -19,37 +22,42 @@ const AppState = {
   }
 };
 
-// Wait for all libraries to load, then initialize
-function waitForLibraries() {
-  return new Promise((resolve) => {
-    const checkLibraries = () => {
+// Wait for CDN libraries with retries (Three.js is imported)
+function waitForLibraries(retries = 50) {
+  return new Promise((resolve, reject) => {
+    const check = () => {
       if (typeof gsap !== 'undefined' && 
-          typeof THREE !== 'undefined' && 
           typeof Chart !== 'undefined' &&
           typeof ScrollTrigger !== 'undefined') {
-        // Register GSAP plugins
-        gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+        console.log('✅ CDN libraries loaded, Three.js imported as module');
         resolve();
+      } else if (retries > 0) {
+        console.log(`⏳ Waiting for CDN libraries... (${retries} retries left)`);
+        setTimeout(check, 200);
+        retries--;
       } else {
-        setTimeout(checkLibraries, 100);
+        reject(new Error('CDN Libraries failed to load'));
       }
     };
-    checkLibraries();
+    check();
   });
 }
 
-// Initialize everything when DOM and libraries are loaded
-document.addEventListener('DOMContentLoaded', async function() {
-  console.log('🎬 Waiting for libraries to load...');
+// Full initialization
+async function initializePortfolio() {
+  console.log('🎬 Initializing cinematic portfolio...');
   
   try {
     await waitForLibraries();
+    
+    // Register GSAP plugins
+    gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
     console.log('✅ All libraries loaded successfully');
     
     // Core initializations
-    initializeTheme();
-    initializeNavigation();
-    initializeScrollAnimations();
+  initializeTheme();
+  initializeNavigation();
+  initializeScrollAnimations();
     
     // Initialize all sections with proper timing
     console.log('🎭 Initializing all sections...');
@@ -77,17 +85,17 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     setTimeout(() => {
       console.log('🤖 Initializing terminal...');
-      initializeTerminal();
+  initializeTerminal();
     }, 500);
     
     setTimeout(() => {
       console.log('📱 Initializing widgets...');
-      initializeWidgets();
+  initializeWidgets();
     }, 600);
     
     setTimeout(() => {
       console.log('📧 Initializing contact...');
-      initializeContact();
+  initializeContact();
     }, 700);
 
     // Expose globally for debugging
@@ -99,8 +107,53 @@ document.addEventListener('DOMContentLoaded', async function() {
     console.log('✨ Cinematic portfolio ready!');
     
   } catch (error) {
-    console.error('❌ Failed to load libraries:', error);
+    console.error('❌ Failed to initialize:', error);
+    initializePortfolioBasic();
   }
+}
+
+// Basic initialization fallback (no animations)
+function initializePortfolioBasic() {
+  console.log('⚠️ Initializing basic portfolio functionality...');
+  
+  try {
+    initializeTheme();
+    initializeNavigation();
+    initializeTerminal();
+    initializeContact();
+    
+    // Show message about missing features
+    setTimeout(() => {
+      const message = document.createElement('div');
+      message.style.cssText = `
+        position: fixed; top: 20px; left: 20px; right: 20px;
+        background: #ff9800; color: #000; padding: 12px 20px;
+        border-radius: 8px; z-index: 10000; text-align: center;
+        font-weight: 500; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      `;
+      message.innerHTML = '⚠️ Some animations may not be available due to library loading issues. Basic functionality is working.';
+      document.body.appendChild(message);
+      
+      setTimeout(() => message.remove(), 5000);
+    }, 1000);
+    
+    console.log('✅ Basic functionality initialized');
+  } catch (error) {
+    console.error('❌ Even basic initialization failed:', error);
+  }
+}
+
+// DOM initialization with ES6 modules
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('🚀 DOM loaded, starting module-based initialization...');
+  
+  // Small delay to ensure CDN libraries are loaded
+  setTimeout(() => {
+    initializePortfolio().catch(error => {
+      console.error('❌ Full initialization failed:', error);
+      initializePortfolioBasic();
+    });
+  }, 500);
 });
 
 // Theme Management
@@ -294,19 +347,37 @@ function initializePrologueAnimation() {
     return;
   }
 
-  // Create Three.js scene
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-  const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-  
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  container.appendChild(renderer.domElement);
+  console.log('🎨 Three.js module imported successfully');
 
-  // Create particle system
-  const particleCount = 1000;
-  const particles = new THREE.BufferGeometry();
-  const positions = new Float32Array(particleCount * 3);
+  try {
+    // Create Three.js scene with error handling
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    
+    // WebGL renderer with fallback handling
+    let renderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      console.log('✅ WebGL renderer created successfully');
+    } catch (webglError) {
+      console.warn('⚠️ WebGL failed, particles disabled:', webglError);
+      return; // Skip particles if WebGL fails
+    }
+
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    container.appendChild(renderer.domElement);
+
+    // Create particle system with error handling
+    const particleCount = 1000;
+    const particles = new THREE.BufferGeometry();
+    const positions = new Float32Array(particleCount * 3);
+    
+    // Validate positions array
+    if (!positions || positions.length === 0) {
+      console.error('❌ Failed to create positions array for particles');
+      return;
+    }
   const colors = new Float32Array(particleCount * 3);
   
   for (let i = 0; i < particleCount; i++) {
@@ -388,7 +459,13 @@ function initializePrologueAnimation() {
     renderer.setSize(window.innerWidth, window.innerHeight);
   });
 
-  console.log('✨ Particle genesis initialized');
+    console.log('✨ Particle genesis initialized');
+    
+  } catch (threeError) {
+    console.error('❌ Three.js initialization failed:', threeError);
+    // Fallback: Show static background
+    container.style.background = 'radial-gradient(circle, rgba(255,92,0,0.1) 0%, rgba(0,0,0,0.9) 100%)';
+  }
 }
 
 // 🌍 ORIGINS: Interactive Globe Animation
@@ -478,9 +555,9 @@ function initializeOriginsAnimation() {
             gsap.to(item, { opacity: 0.3, y: 20, duration: 0.5 });
           }
         });
+        }
       }
-    }
-  });
+    });
 
   console.log('✨ Globe journey initialized');
 }
@@ -563,7 +640,7 @@ function initializeSuperpowersAnimation() {
       onUpdate: (self) => {
         const progress = self.progress;
         
-        rings.forEach((ring, index) => {
+  rings.forEach((ring, index) => {
           const scale = progress;
           ring.scale.setScalar(scale);
         });
@@ -753,19 +830,19 @@ function initializeTerminal() {
   
   const terminalInput = document.getElementById('terminalInput');
   const terminalOutput = document.getElementById('terminalOutput');
-
+  
   if (!terminalInput || !terminalOutput) {
     console.error('❌ Terminal elements not found');
     return;
   }
-
+  
   // Add welcome message
   addTerminalLine('🤖 Welcome to NAME0x0\'s AI Command Center.', 'ai');
   addTerminalLine('Type "help" for available commands.', 'info');
-
+  
   // Terminal input handler
   terminalInput.addEventListener('keydown', handleTerminalInput);
-
+  
   console.log('✨ AI terminal initialized');
 }
 
@@ -795,7 +872,7 @@ function handleTerminalInput(e) {
       e.target.value = AppState.terminalHistory[AppState.historyIndex];
     } else {
       AppState.historyIndex = AppState.terminalHistory.length;
-      e.target.value = '';
+    e.target.value = '';
     }
   }
 }
@@ -803,7 +880,7 @@ function handleTerminalInput(e) {
 async function executeCommand(command) {
   const cmd = command.toLowerCase().trim();
   const aiPersona = (text) => addTerminalLine(`🤖 ${text}`, 'ai');
-
+  
   switch (cmd) {
     case 'help':
       addTerminalLine('🤖 AI Command Center - Available Commands:', 'info');
@@ -829,7 +906,7 @@ async function executeCommand(command) {
       aiPersona('I specialize in machine learning, web development, and game design.');
       aiPersona('Currently based in Dubai, UAE, building tomorrow\'s technologies today.');
       break;
-
+      
     case 'skills':
       addTerminalLine('Technical Skills:', 'info');
       addTerminalLine('  🤖 AI & Machine Learning - 90%', 'output');
@@ -847,7 +924,7 @@ async function executeCommand(command) {
       addTerminalLine('  • Game Engine (⭐ 256)', 'output');
       addTerminalLine('  • Data Visualizer (⭐ 78)', 'output');
       break;
-
+      
     case 'contact':
       addTerminalLine('Contact Information:', 'info');
       addTerminalLine('  📧 Email: contact@name0x0.dev', 'output');
@@ -855,7 +932,7 @@ async function executeCommand(command) {
       addTerminalLine('  💼 LinkedIn: linkedin.com/in/name0x0', 'output');
       addTerminalLine('  🐦 Twitter: @NAME0x0', 'output');
       break;
-
+      
     case 'theme':
       toggleTheme();
       aiPersona(`Theme switched to ${AppState.theme} mode.`);
@@ -865,7 +942,7 @@ async function executeCommand(command) {
       const now = new Date();
       addTerminalLine(`Current time: ${now.toLocaleString()}`, 'output');
       break;
-
+      
     case 'quote':
       try {
         const response = await fetch('https://api.zenquotes.io/api/random');
@@ -879,7 +956,7 @@ async function executeCommand(command) {
         addTerminalLine('"Innovation distinguishes between a leader and a follower." - Steve Jobs', 'output');
       }
       break;
-
+      
     case 'clear':
       const terminalOutput = document.getElementById('terminalOutput');
       if (terminalOutput) {
@@ -887,12 +964,12 @@ async function executeCommand(command) {
         addTerminalLine('Terminal cleared.', 'info');
       }
       break;
-
+      
     case 'matrix':
       addTerminalLine('Entering the Matrix...', 'info');
       createMatrixEffect();
       break;
-
+      
     case 'portfolio':
       aiPersona('This portfolio showcases cutting-edge web technologies:');
       addTerminalLine('  🎬 Cinematic ScrollTrigger animations', 'output');
@@ -901,7 +978,7 @@ async function executeCommand(command) {
       addTerminalLine('  🎨 Glassmorphism UI with backdrop filters', 'output');
       addTerminalLine('  🚀 Vite build system for optimal performance', 'output');
       break;
-
+      
     case 'easter':
       const easterEggs = [
         '🥚 You found an easter egg! The particles respond to your mouse.',
@@ -913,7 +990,7 @@ async function executeCommand(command) {
       const randomEgg = easterEggs[Math.floor(Math.random() * easterEggs.length)];
       addTerminalLine(randomEgg, 'output');
       break;
-
+      
     default:
       if (cmd.startsWith('go ')) {
         const section = cmd.split(' ')[1];
@@ -938,7 +1015,7 @@ async function executeCommand(command) {
 function addTerminalLine(text, type = 'output') {
   const terminalOutput = document.getElementById('terminalOutput');
   if (!terminalOutput) return;
-
+  
   const line = document.createElement('div');
   line.className = `terminal-line terminal-line--${type}`;
   line.textContent = text;
@@ -1005,7 +1082,7 @@ function initializeWidgets() {
         AppState.currentWidgetIndex = 0;
         if (typeof gsap !== 'undefined') {
           gsap.set(container, { x: 0 });
-        } else {
+      } else {
           container.style.transform = 'translateX(0px)';
         }
       }
@@ -1024,7 +1101,7 @@ function initializeWidgets() {
         AppState.currentWidgetIndex = AppState.totalWidgets - 1;
         if (typeof gsap !== 'undefined') {
           gsap.set(container, { x: -AppState.totalWidgets * 320 });
-        } else {
+      } else {
           container.style.transform = `translateX(-${AppState.totalWidgets * 320}px)`;
         }
       }
@@ -1071,20 +1148,20 @@ function refreshWidget(type, widget) {
           <div class="weather-desc">Sunny</div>
           <div class="weather-location">Dubai, UAE</div>
         `;
-        break;
-      case 'quote':
-        const quotes = [
+      break;
+    case 'quote':
+      const quotes = [
           '"Innovation distinguishes between a leader and a follower." - Steve Jobs',
           '"The future belongs to those who believe in the beauty of their dreams." - Eleanor Roosevelt',
           '"Technology is nothing. What\'s important is that you have a faith in people." - Steve Jobs'
-        ];
-        const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+      ];
+      const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
         const [text, author] = randomQuote.split(' - ');
         content.innerHTML = `
           <div class="quote-text">${text}</div>
           <div class="quote-author">- ${author}</div>
         `;
-        break;
+      break;
     }
     
     gsap.to(widget, { opacity: 1, duration: 0.3 });
@@ -1119,8 +1196,8 @@ function initializeContact() {
 
   if (contactForm) {
     contactForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      
+    e.preventDefault();
+    
       const name = document.getElementById('contactName').value;
       const email = document.getElementById('contactEmail').value;
       

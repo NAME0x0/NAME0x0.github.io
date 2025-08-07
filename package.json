@@ -32,9 +32,6 @@
     "vite": "^6.3.5"
   },
   "dependencies": {
-    "animejs": "^4.1.2",
-    "chart.js": "^4.5.0",
-    "gsap": "^3.13.0",
     "three": "^0.179.1"
   }
 }
