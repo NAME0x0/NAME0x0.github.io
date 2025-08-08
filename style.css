@@ -891,6 +891,41 @@ a:hover {
   transition: transform var(--transition-normal), box-shadow var(--transition-normal);
 }
 
+/* Extend glassmorphism to key UI surfaces */
+.nav-header,
+.project-card-front,
+.project-card-back,
+.contact-form,
+.contact-info,
+.terminal-container,
+.widget,
+.skills-grid .skill-item,
+.journey-timeline .timeline-item {
+  background: rgba(var(--surface-rgb), 0.08) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  border: 1px solid rgba(var(--border-rgb), 0.16) !important;
+  box-shadow: var(--glass-shadow) !important;
+}
+
+/* Chapter HUD */
+#chapterHUD button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(var(--accent-rgb), 0.15);
+}
+
+/* Tilt depth cue */
+.project-card::after,
+.widget::after,
+.skill-item::after,
+.timeline-item::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgba(var(--border-rgb), 0.08);
+  pointer-events: none;
+}
+
 .glass-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 32px rgba(var(--accent-rgb), 0.1);
@@ -1589,15 +1624,15 @@ a:hover {
 .terminal-container {
   max-width: 800px;
   margin: 0 auto;
-  background: rgba(var(--text-rgb), 0.95);
-  color: rgba(var(--bg-rgb), 0.9);
+  background: #0a0f0a;
+  color: #00ff41;
   border-radius: var(--space-md);
   overflow: hidden;
-  box-shadow: 0 20px 60px rgba(var(--text-rgb), 0.3);
+  box-shadow: 0 20px 60px rgba(0, 255, 65, 0.15), inset 0 0 40px rgba(0, 255, 65, 0.05);
 }
 
 .terminal-header {
-  background: rgba(var(--text-rgb), 1);
+  background: #071107;
   padding: var(--space-md);
   display: flex;
   align-items: center;
@@ -1623,7 +1658,8 @@ a:hover {
   font-family: 'Courier New', monospace;
   font-size: var(--font-size-small);
   font-weight: 600;
-  color: rgba(var(--bg-rgb), 0.8);
+  color: #00ff41;
+  text-shadow: 0 0 8px rgba(0,255,65,0.5);
 }
 
 .terminal-body {
@@ -1652,7 +1688,7 @@ a:hover {
 
 .terminal-text {
   flex: 1;
-  color: rgba(var(--bg-rgb), 0.9);
+  color: #00ff41;
 }
 
 .terminal-input-line {
@@ -1663,16 +1699,18 @@ a:hover {
 
 .terminal-input {
   flex: 1;
-  background: none;
-  border: none;
-  color: rgba(var(--bg-rgb), 0.9);
+  background: rgba(0,0,0,0.35);
+  border: 1px solid rgba(0,255,65,0.25);
+  color: #00ff41;
   font-family: 'Courier New', monospace;
   font-size: var(--font-size-body);
   outline: none;
+  padding: 8px 10px;
+  border-radius: 6px;
 }
 
 .terminal-input::placeholder {
-  color: rgba(var(--bg-rgb), 0.5);
+  color: rgba(0,255,65,0.4);
 }
 
 /* Daily Ops Section */

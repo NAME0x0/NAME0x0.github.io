@@ -11,6 +11,7 @@ const AppState = {
   historyIndex: -1,
   currentWidgetIndex: 0,
   totalWidgets: 0,
+  globeRotationY: 0,
   initialized: {
     prologue: false,
     origins: false,
@@ -21,6 +22,49 @@ const AppState = {
     contact: false
   }
 };
+
+// Helpers
+function createCircleTexture() {
+  const size = 64;
+  const canvas = document.createElement('canvas');
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext('2d');
+  const gradient = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+  gradient.addColorStop(0, 'rgba(255,255,255,1)');
+  gradient.addColorStop(0.4, 'rgba(255,255,255,0.6)');
+  gradient.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.fillStyle = gradient;
+  ctx.beginPath();
+  ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
+  ctx.fill();
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.minFilter = THREE.LinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.needsUpdate = true;
+  return texture;
+}
+
+function latLonToVector3(lat, lon, radius) {
+  const phi = (90 - lat) * (Math.PI / 180);
+  const theta = (lon + 180) * (Math.PI / 180);
+  const x = -radius * Math.sin(phi) * Math.cos(theta);
+  const z = radius * Math.sin(phi) * Math.sin(theta);
+  const y = radius * Math.cos(phi);
+  return new THREE.Vector3(x, y, z);
+}
+
+function createArcGeometry(startVec3, endVec3, altitude = 0.6, segments = 64) {
+  const mid = startVec3.clone().add(endVec3).multiplyScalar(0.5);
+  const midLength = mid.length();
+  mid.normalize();
+  mid.multiplyScalar(midLength + altitude);
+  const curve = new THREE.QuadraticBezierCurve3(startVec3, mid, endVec3);
+  const points = curve.getPoints(segments);
+  const geometry = new THREE.BufferGeometry().setFromPoints(points);
+  geometry.setDrawRange(0, 0);
+  return geometry;
+}
 
 // Wait for CDN libraries with retries (Three.js is imported)
 function waitForLibraries(retries = 50) {
@@ -55,9 +99,13 @@ async function initializePortfolio() {
     console.log('✅ All libraries loaded successfully');
     
     // Core initializations
-  initializeTheme();
-  initializeNavigation();
-  initializeScrollAnimations();
+    initializeTheme();
+    initializeNavigation();
+    initializeScrollAnimations();
+    initializeHackerVibe();
+    initializeChapterHUD();
+    enableTiltInteractions();
+    initializeGlassLight();
     
     // Initialize all sections with proper timing
     console.log('🎭 Initializing all sections...');
@@ -156,9 +204,44 @@ document.addEventListener('DOMContentLoaded', function() {
   }, 500);
 });
 
+// 90s Hacker vibe overlay
+function initializeHackerVibe() {
+  // CRT scanlines
+  const scan = document.createElement('div');
+  scan.style.cssText = `
+    position: fixed; inset: 0; pointer-events: none; z-index: 9998;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(0,255,65,0.06) 0px,
+      rgba(0,255,65,0.06) 1px,
+      transparent 2px,
+      transparent 4px
+    );
+    mix-blend-mode: screen;
+  `;
+  document.body.appendChild(scan);
+  if (typeof gsap !== 'undefined') {
+    gsap.to(scan, { opacity: 0.7, duration: 1.2, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+  }
+
+  // Vignette
+  const vignette = document.createElement('div');
+  vignette.style.cssText = `
+    position: fixed; inset: 0; pointer-events: none; z-index: 9997;
+    background: radial-gradient(ellipse at center, rgba(0,0,0,0) 60%, rgba(0,0,0,0.35) 100%);
+  `;
+  document.body.appendChild(vignette);
+}
+
 // Theme Management
 function initializeTheme() {
   document.documentElement.setAttribute('data-theme', AppState.theme);
+  document.documentElement.setAttribute('data-color-scheme', AppState.theme);
+  // Update meta theme-color for mobile address bar
+  const metaTheme = document.querySelector('meta[name="theme-color"]');
+  if (metaTheme) {
+    metaTheme.setAttribute('content', AppState.theme === 'dark' ? '#000000' : '#F5F5F5');
+  }
   
   const themeToggle = document.getElementById('themeToggle');
   if (themeToggle) {
@@ -172,6 +255,7 @@ function initializeTheme() {
 function toggleTheme() {
   AppState.theme = AppState.theme === 'dark' ? 'light' : 'dark';
   document.documentElement.setAttribute('data-theme', AppState.theme);
+  document.documentElement.setAttribute('data-color-scheme', AppState.theme);
   localStorage.setItem('theme', AppState.theme);
   
   const themeToggle = document.getElementById('themeToggle');
@@ -180,7 +264,13 @@ function toggleTheme() {
   }
   
   // Smooth theme transition
-  gsap.to('body', { duration: 0.3, ease: 'power2.inOut' });
+  if (typeof gsap !== 'undefined') {
+    gsap.to(document.documentElement, { duration: 0.3, ease: 'power2.inOut' });
+  }
+  const metaTheme = document.querySelector('meta[name="theme-color"]');
+  if (metaTheme) {
+    metaTheme.setAttribute('content', AppState.theme === 'dark' ? '#000000' : '#F5F5F5');
+  }
   
   console.log(`🎨 Theme switched to: ${AppState.theme}`);
 }
@@ -296,6 +386,20 @@ function initializeScrollAnimations() {
       stagger: 0.1,
       ease: 'power2.out'
     }, '-=0.6');
+
+    // Cinematic gradient sweep and parallax accent
+    const accent = document.createElement('div');
+    accent.style.cssText = `position:absolute;inset:0;pointer-events:none;opacity:0;background:radial-gradient(1000px 300px at 20% 10%, rgba(255,92,0,0.08), rgba(0,0,0,0) 60%);mix-blend-mode:screen;`;
+    section.appendChild(accent);
+    gsap.to(accent, {
+      opacity: 1,
+      scrollTrigger: {
+        trigger: section,
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: true
+      }
+    });
   });
 
   // Add smooth scroll behavior
@@ -321,7 +425,7 @@ function initializeScrollAnimations() {
     left: 0;
     width: 0%;
     height: 3px;
-    background: linear-gradient(90deg, #ff5c00, #ff8f00);
+    background: linear-gradient(90deg, #00ff41, #00ffaa);
     z-index: 9999;
     transition: width 0.1s ease;
   `;
@@ -335,6 +439,110 @@ function initializeScrollAnimations() {
       progressBar.style.width = (self.progress * 100) + '%';
     }
   });
+}
+
+// Chapter HUD (Scrollytelling chapters)
+function initializeChapterHUD() {
+  const chapters = [
+    { id: 'prologue', label: 'Prologue' },
+    { id: 'origins', label: 'Origins' },
+    { id: 'superpowers', label: 'Superpowers' },
+    { id: 'lab', label: 'Lab' },
+    { id: 'terminal', label: 'Command' },
+    { id: 'ops', label: 'Ops' },
+    { id: 'contact', label: 'Signal' },
+  ];
+  const hud = document.createElement('div');
+  hud.id = 'chapterHUD';
+  hud.style.cssText = `
+    position: fixed; top: 50%; right: 20px; transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 10px; z-index: 9996; pointer-events: none;
+  `;
+  chapters.forEach((c, i) => {
+    const item = document.createElement('button');
+    item.type = 'button';
+    item.textContent = c.label;
+    item.setAttribute('data-target', c.id);
+    item.style.cssText = `
+      pointer-events: all; cursor: pointer; padding: 8px 12px; font-size: 12px;
+      color: var(--text); background: rgba(var(--surface-rgb), 0.1);
+      border: 1px solid var(--border); border-radius: 999px; opacity: 0.7;
+      backdrop-filter: var(--glass-blur); transition: all .25s ease;
+    `;
+    item.addEventListener('click', () => {
+      const target = document.getElementById(c.id);
+      if (target) {
+        gsap.to(window, { duration: 1.2, scrollTo: { y: target, offsetY: 80 }, ease: 'power3.inOut' });
+      }
+    });
+    hud.appendChild(item);
+  });
+  document.body.appendChild(hud);
+
+  // Highlight active chapter
+  gsap.utils.toArray('.section').forEach((section) => {
+    ScrollTrigger.create({
+      trigger: section,
+      start: 'top center',
+      end: 'bottom center',
+      onToggle: (st) => {
+        const id = st.trigger.id;
+        hud.querySelectorAll('button').forEach(btn => {
+          const active = btn.getAttribute('data-target') === id;
+          btn.style.opacity = active ? '1' : '0.6';
+          btn.style.borderColor = active ? 'var(--accent)' : 'var(--border)';
+        });
+      }
+    });
+  });
+}
+
+// Micro-interaction: 3D tilt on hover for cards and widgets
+function enableTiltInteractions() {
+  const tiltables = document.querySelectorAll('.project-card, .widget, .skill-item, .timeline-item');
+  tiltables.forEach(el => {
+    el.style.transformStyle = 'preserve-3d';
+    el.addEventListener('mousemove', (e) => {
+      const rect = el.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const rotateY = ((x / rect.width) - 0.5) * 10; // degrees
+      const rotateX = ((y / rect.height) - 0.5) * -10;
+      el.style.transition = 'transform 0.08s ease-out';
+      el.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    });
+    el.addEventListener('mouseleave', () => {
+      el.style.transition = 'transform 0.3s ease';
+      el.style.transform = 'rotateX(0deg) rotateY(0deg)';
+    });
+  });
+}
+
+// Enhanced glass light reflections
+function initializeGlassLight() {
+  const glassy = document.querySelectorAll('.glass-card, .project-card-front, .project-card-back, .widget, .contact-form');
+  glassy.forEach(el => {
+    const light = document.createElement('div');
+    light.className = 'glass-light-layer';
+    light.setAttribute('data-js-background-attachment-fixed', '');
+    el.style.position = 'relative';
+    light.style.cssText = `
+      position:absolute;inset:0;opacity:.08;z-index:-1;background-image:radial-gradient(750px 750px at 0 0, rgba(255,255,255,.6), rgba(255,255,255,0) 60%);
+      background-repeat:repeat; background-size:750px 750px; pointer-events:none; border-radius:inherit;
+    `;
+    el.appendChild(light);
+  });
+
+  // Simulate background-attachment: fixed
+  const updatePositions = () => {
+    document.querySelectorAll('[data-js-background-attachment-fixed]').forEach(el => {
+      const r = el.getBoundingClientRect();
+      el.style.backgroundPositionX = `${-r.x}px`;
+      el.style.backgroundPositionY = `${-r.y}px`;
+    });
+    requestAnimationFrame(updatePositions);
+  };
+  requestAnimationFrame(updatePositions);
 }
 
 // 🎬 PROLOGUE: Particle Genesis Animation
@@ -368,51 +576,48 @@ function initializePrologueAnimation() {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     container.appendChild(renderer.domElement);
 
-    // Create particle system with error handling
-    const particleCount = 1000;
+    // Create particle system with error handling (spherical sprites, smaller size)
+    const particleCount = 1800;
     const particles = new THREE.BufferGeometry();
     const positions = new Float32Array(particleCount * 3);
-    
-    // Validate positions array
-    if (!positions || positions.length === 0) {
-      console.error('❌ Failed to create positions array for particles');
-      return;
+    const colors = new Float32Array(particleCount * 3);
+    const radius = 10;
+    for (let i = 0; i < particleCount; i++) {
+      const i3 = i * 3;
+      const r = radius * Math.cbrt(Math.random());
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(2 * Math.random() - 1);
+      positions[i3] = r * Math.sin(phi) * Math.cos(theta);
+      positions[i3 + 1] = r * Math.cos(phi);
+      positions[i3 + 2] = r * Math.sin(phi) * Math.sin(theta);
+      colors[i3] = 1;
+      colors[i3 + 1] = 0.36;
+      colors[i3 + 2] = 0;
     }
-  const colors = new Float32Array(particleCount * 3);
-  
-  for (let i = 0; i < particleCount; i++) {
-    const i3 = i * 3;
-    positions[i3] = (Math.random() - 0.5) * 20;
-    positions[i3 + 1] = (Math.random() - 0.5) * 20;
-    positions[i3 + 2] = (Math.random() - 0.5) * 20;
-    
-    colors[i3] = 1; // R
-    colors[i3 + 1] = 0.36; // G (FF5C00 = 1, 0.36, 0)
-    colors[i3 + 2] = 0; // B
-  }
-  
-  particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-  particles.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-  
-  const particleMaterial = new THREE.PointsMaterial({
-    size: 2,
-    vertexColors: true,
-    transparent: true,
-    opacity: 0.8
-  });
-  
-  const particleSystem = new THREE.Points(particles, particleMaterial);
-  scene.add(particleSystem);
+    particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    particles.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    const sprite = createCircleTexture();
+    const particleMaterial = new THREE.PointsMaterial({
+      size: 0.08,
+      map: sprite,
+      alphaTest: 0.01,
+      transparent: true,
+      depthWrite: false,
+      vertexColors: true,
+      opacity: 0.9
+    });
+    const particleSystem = new THREE.Points(particles, particleMaterial);
+    scene.add(particleSystem);
 
-  // Create central sphere
-  const sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
-  const sphereMaterial = new THREE.MeshBasicMaterial({
-    color: 0xff5c00,
-    transparent: true,
-    opacity: 0
-  });
-  const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-  scene.add(sphere);
+  // Create central "enigma" energy core as volumetric glow
+  const coreGeometry = new THREE.SphereGeometry(1.2, 64, 64);
+  const coreMaterial = new THREE.MeshBasicMaterial({ color: 0xff5c00, transparent: true, opacity: 0.0 });
+  const core = new THREE.Mesh(coreGeometry, coreMaterial);
+  scene.add(core);
+  const auraGeometry = new THREE.SphereGeometry(1.6, 64, 64);
+  const auraMaterial = new THREE.MeshBasicMaterial({ color: 0xff8f00, transparent: true, opacity: 0.0, wireframe: true });
+  const aura = new THREE.Mesh(auraGeometry, auraMaterial);
+  scene.add(aura);
 
   camera.position.z = 5;
 
@@ -420,14 +625,16 @@ function initializePrologueAnimation() {
   function animate() {
     requestAnimationFrame(animate);
     
-    particleSystem.rotation.y += 0.002;
-    sphere.rotation.y += 0.01;
+    particleSystem.rotation.y += 0.0018;
+    particleSystem.rotation.x += 0.0008;
+    core.rotation.y += 0.01;
+    aura.rotation.y -= 0.008;
     
     renderer.render(scene, camera);
   }
   animate();
 
-  // Scroll-triggered morphing animation
+  // Scroll-triggered morphing animation (particles -> energy core -> globe)
   const tl = gsap.timeline({
     scrollTrigger: {
       trigger: '#prologue',
@@ -438,15 +645,25 @@ function initializePrologueAnimation() {
       anticipatePin: 1,
       onUpdate: (self) => {
         const progress = self.progress;
-        
-        // Morph particles into sphere
-        if (progress < 0.5) {
-          particleMaterial.opacity = 0.8 - progress;
-          sphereMaterial.opacity = progress * 2;
-        } else {
-          particleMaterial.opacity = 0;
-          sphereMaterial.opacity = 1;
-          sphere.scale.setScalar(1 + (progress - 0.5) * 2);
+        // 0->0.4: fade-in core, reduce particles
+        if (progress < 0.4) {
+          particleMaterial.opacity = gsap.utils.mapRange(0, 0.4, 0.9, 0.2, progress);
+          coreMaterial.opacity = gsap.utils.mapRange(0, 0.4, 0.0, 0.9, progress);
+          auraMaterial.opacity = gsap.utils.mapRange(0.2, 0.4, 0.0, 0.6, progress);
+        }
+        // 0.4->0.7: collapse particles into the core
+        else if (progress < 0.7) {
+          const t = gsap.utils.mapRange(0.4, 0.7, 0, 1, progress);
+          core.scale.setScalar(1.2 + t * 0.4);
+          aura.scale.setScalar(1.6 + t * 0.6);
+          particleMaterial.opacity = Math.max(0, 0.2 - t * 0.2);
+        }
+        // 0.7->1: transform core into globe shell
+        else {
+          const t = gsap.utils.mapRange(0.7, 1, 0, 1, progress);
+          coreMaterial.opacity = 0.9 * (1 - t);
+          auraMaterial.opacity = 0.6 * (1 - t);
+          core.scale.setScalar(1.6 + t * 0.8);
         }
       }
     }
@@ -487,18 +704,17 @@ function initializeOriginsAnimation() {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   container.appendChild(renderer.domElement);
 
-  // Create globe
+  // Create globe shell with dual layers (wireframe + atmosphere)
   const globeGeometry = new THREE.SphereGeometry(2, 64, 64);
-  const globeMaterial = new THREE.MeshBasicMaterial({
-    color: 0xff5c00,
-    wireframe: true,
-    transparent: true,
-    opacity: 0.7
-  });
-  const globe = new THREE.Mesh(globeGeometry, globeMaterial);
+  const globeWire = new THREE.MeshBasicMaterial({ color: 0xff5c00, wireframe: true, transparent: true, opacity: 0.35 });
+  const globeSurf = new THREE.MeshBasicMaterial({ color: 0x0a0a0a, wireframe: false, transparent: true, opacity: 0.15 });
+  const globe = new THREE.Mesh(globeGeometry, globeWire);
+  const globeSurface = new THREE.Mesh(globeGeometry.clone(), globeSurf);
+  globeSurface.scale.setScalar(0.998);
+  scene.add(globeSurface);
   scene.add(globe);
 
-  // Add country markers
+  // Add origin countries and custom arcs
   const countries = [
     { name: 'Pakistan', lat: 30.3753, lon: 69.3451 },
     { name: 'Qatar', lat: 25.276987, lon: 51.520008 },
@@ -509,28 +725,37 @@ function initializeOriginsAnimation() {
   ];
 
   const markers = [];
+  const arcs = [];
+  const sprite = createCircleTexture();
+  const markerMat = new THREE.SpriteMaterial({ map: sprite, color: 0xff5c00, transparent: true, opacity: 0.95 });
   countries.forEach((country, index) => {
-    const markerGeometry = new THREE.SphereGeometry(0.05, 8, 8);
-    const markerMaterial = new THREE.MeshBasicMaterial({
-      color: index === countries.length - 1 ? 0x00ff00 : 0xffffff
-    });
-    const marker = new THREE.Mesh(markerGeometry, markerMaterial);
-    
-    // Convert lat/lon to 3D position
-    const phi = (90 - country.lat) * (Math.PI / 180);
-    const theta = (country.lon + 180) * (Math.PI / 180);
-    marker.position.setFromSphericalCoords(2.1, phi, theta);
-    
+    const pos = latLonToVector3(country.lat, country.lon, 2.05);
+    const marker = new THREE.Sprite(markerMat.clone());
+    marker.scale.set(0.15, 0.15, 1);
+    marker.position.copy(pos);
     scene.add(marker);
     markers.push(marker);
   });
+
+  // Create great-circle arcs between consecutive origins
+  for (let i = 0; i < countries.length - 1; i++) {
+    const start = latLonToVector3(countries[i].lat, countries[i].lon, 2.02);
+    const end = latLonToVector3(countries[i + 1].lat, countries[i + 1].lon, 2.02);
+    const arcGeom = createArcGeometry(start, end, 0.8, 96);
+    const arcMat = new THREE.LineBasicMaterial({ color: 0xff8f00, transparent: true, opacity: 0.0 });
+    const arc = new THREE.Line(arcGeom, arcMat);
+    scene.add(arc);
+    arcs.push(arc);
+  }
 
   camera.position.z = 5;
 
   // Animation loop
   function animate() {
     requestAnimationFrame(animate);
-    globe.rotation.y += 0.005;
+    AppState.globeRotationY += 0.0035;
+    globe.rotation.y = AppState.globeRotationY;
+    globeSurface.rotation.y = AppState.globeRotationY * 1.02;
     renderer.render(scene, camera);
   }
   animate();
@@ -554,6 +779,15 @@ function initializeOriginsAnimation() {
         } else {
             gsap.to(item, { opacity: 0.3, y: 20, duration: 0.5 });
           }
+        });
+        // reveal arcs progressively
+        const step = 1 / Math.max(1, arcs.length);
+        arcs.forEach((arc, i) => {
+          const t = gsap.utils.clamp(0, 1, (progress - i * step) / step);
+          const count = Math.floor(t * 96);
+          arc.geometry.setDrawRange(0, count);
+          arc.material.opacity = t * 0.9;
+          arc.geometry.attributes.position.needsUpdate = true;
         });
         }
       }
@@ -679,7 +913,8 @@ function initializeRadarChart() {
     data.push(percentage);
   });
 
-  new Chart(ctx, {
+  if (typeof Chart !== 'undefined') {
+    new Chart(ctx, {
     type: 'radar',
     data: {
       labels: labels,
@@ -714,7 +949,8 @@ function initializeRadarChart() {
         }
       }
     }
-  });
+    });
+  }
 
   console.log('✨ Radar chart initialized');
 }
@@ -837,7 +1073,8 @@ function initializeTerminal() {
   }
   
   // Add welcome message
-  addTerminalLine('🤖 Welcome to NAME0x0\'s AI Command Center.', 'ai');
+  addTerminalLine('█▀▀ █ █   ▀█▀ ▀█▀ ▀█▀  ▄█  NAME0x0 AI OPS CONSOLE', 'ai');
+  addTerminalLine('█▄▄ █ █▄▄  █   █   █  ▄▀   type `help` — 1990s cyberdeck online…', 'ai');
   addTerminalLine('Type "help" for available commands.', 'info');
   
   // Terminal input handler
@@ -1019,6 +1256,10 @@ function addTerminalLine(text, type = 'output') {
   const line = document.createElement('div');
   line.className = `terminal-line terminal-line--${type}`;
   line.textContent = text;
+  if (type !== 'input') {
+    line.style.textShadow = '0 0 6px rgba(0,255,65,0.6)';
+    line.style.color = '#00ff41';
+  }
   
   terminalOutput.appendChild(line);
   terminalOutput.scrollTop = terminalOutput.scrollHeight;
