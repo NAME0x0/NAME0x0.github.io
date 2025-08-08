@@ -213,6 +213,21 @@
                 <p class="section-subtitle">The journey that shaped me</p>
                 
                 <div class="origins-content">
+                    <!-- Neural Sprout SVG Layer -->
+                    <svg id="neural-sprout" viewBox="0 0 1200 600" aria-hidden="true" focusable="false" style="position:absolute;left:0;right:0;margin:auto;max-width:100%;height:400px;pointer-events:none">
+                        <g class="sprout-group" transform="translate(600,280)">
+                            <path class="sprout-path" d="M0 0 C 40 -30, 90 -60, 160 -80" />
+                            <text class="sprout-label" x="170" y="-85">Python</text>
+                        </g>
+                        <g class="sprout-group" transform="translate(600,300)">
+                            <path class="sprout-path" d="M0 0 C -30 -20, -70 -60, -130 -120" />
+                            <text class="sprout-label" x="-150" y="-125">Bash</text>
+                        </g>
+                        <g class="sprout-group" transform="translate(600,320)">
+                            <path class="sprout-path" d="M0 0 C 20 10, 60 40, 120 70" />
+                            <text class="sprout-label" x="130" y="80">First Game</text>
+                        </g>
+                    </svg>
                     <div class="globe-container" id="globe-container" role="img" aria-label="Interactive globe showing my journey"></div>
                     <div class="journey-timeline" role="list">
                         <div class="timeline-item" role="listitem" data-lat="30.3753" data-lon="69.3451">
@@ -291,6 +306,11 @@
         <!-- Lab Experiments Section -->
         <section class="section lab-experiments" id="lab" role="region" aria-label="Projects">
             <div class="parallax-bg" aria-hidden="true"></div>
+            <!-- Vault Door overlay -->
+            <div id="vault-door" aria-hidden="true" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none">
+                <div class="vault-ring vault-ring--outer"></div>
+                <div class="vault-ring vault-ring--inner"></div>
+            </div>
             <div class="container">
                 <h2 class="section-title">Lab Experiments</h2>
                 <p class="section-subtitle">Projects that push boundaries</p>
@@ -529,7 +549,18 @@
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollToPlugin.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js"></script>
     
-    <!-- Main JavaScript - Vite will process this -->
-    <script type="module" src="/app.js" defer></script>
+        <!-- Main JavaScript - Vite will process this -->
+        <script type="module" src="/app.js" defer></script>
+        <script>
+          // Optional: enable TTS for the Awakening Interface when supported
+          window.addEventListener('load', () => {
+            try {
+              const msg = new SpeechSynthesisUtterance("Hello world. I'm NAME zero x zero. Welcome to the cinematic portfolio.");
+              msg.rate = 1.02; msg.pitch = 1; msg.volume = 0.45;
+              // Do not autoplay; expose as function to be called from terminal or a button
+              window.playIntroVoice = () => window.speechSynthesis.speak(msg);
+            } catch {}
+          });
+        </script>
 </body>
 </html>

@@ -1,5 +1,5 @@
-// Import Three.js using ES6 modules
-import * as THREE from 'three';
+// Three.js will be dynamically imported to reduce initial bundle size
+let THREE;
 
 // GSAP and Chart.js loaded via CDN in HTML
 // gsap, Chart are globally available
@@ -19,7 +19,8 @@ const AppState = {
     projects: false,
     terminal: false,
     widgets: false,
-    contact: false
+    contact: false,
+    sprout: false
   }
 };
 
@@ -93,6 +94,11 @@ async function initializePortfolio() {
   
   try {
     await waitForLibraries();
+    // Dynamically import Three when needed
+    if (!THREE) {
+      const mod = await import('three');
+      THREE = mod;
+    }
     
     // Register GSAP plugins
     gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
@@ -106,6 +112,8 @@ async function initializePortfolio() {
     initializeChapterHUD();
     enableTiltInteractions();
     initializeGlassLight();
+    initializeOnboarding();
+  initializeCodexStory();
     
     // Initialize all sections with proper timing
     console.log('🎭 Initializing all sections...');
@@ -280,6 +288,24 @@ function initializeNavigation() {
   const navLinks = document.querySelectorAll('.nav-link');
   const navToggle = document.getElementById('navToggle');
   const navMenu = document.getElementById('navMenu');
+  // Awakening Interface: floating intro typing bar in prologue
+  const prologue = document.getElementById('prologue');
+  if (prologue && !document.getElementById('awakeningBar')) {
+    const bar = document.createElement('div');
+    bar.id = 'awakeningBar';
+    bar.setAttribute('role', 'status');
+    bar.style.cssText = `position:absolute;left:50%;top:18%;transform:translateX(-50%);padding:10px 14px;border-radius:10px;
+      color:var(--text);border:1px solid var(--border);backdrop-filter:var(--glass-blur);background:rgba(var(--surface-rgb),0.12);
+      box-shadow:var(--glass-shadow);font-family: 'Courier New', monospace; font-size: 14px; white-space: pre;`;
+    bar.textContent = '';
+    prologue.appendChild(bar);
+    const msg = "Hello, world... I'm NAME0x0";
+    let i = 0;
+    const type = () => {
+      if (i <= msg.length) { bar.textContent = msg.slice(0, i++); setTimeout(type, 60); }
+    };
+    setTimeout(type, 500);
+  }
 
   // Smooth scroll navigation
   navLinks.forEach(link => {
@@ -545,9 +571,63 @@ function initializeGlassLight() {
   requestAnimationFrame(updatePositions);
 }
 
+// Playful onboarding overlay (opt-in, dismissible)
+function initializeOnboarding() {
+  if (sessionStorage.getItem('onboardingDismissed') === '1') return;
+  const overlay = document.createElement('div');
+  overlay.id = 'onboardingOverlay';
+  overlay.style.cssText = `position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);z-index:9999;display:flex;align-items:center;justify-content:center;`;
+  overlay.innerHTML = `
+    <div class="glass-card" style="max-width:720px;width:90%;padding:24px;border-radius:16px;text-align:center;">
+      <h3 style="margin-bottom:8px;">Welcome to the Cinematic Portfolio</h3>
+      <p style="opacity:0.8;margin-bottom:16px;">Use the right HUD to jump chapters. Scroll to advance the story. Type <code>help</code> in the Command Center to explore.</p>
+      <div style="display:flex;gap:12px;justify-content:center;">
+        <button id="obEnter" class="btn btn--primary">Enter</button>
+        <button id="obVoice" class="btn btn--secondary">Play Voice Intro</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  overlay.querySelector('#obEnter').addEventListener('click', () => {
+    sessionStorage.setItem('onboardingDismissed', '1');
+    if (typeof gsap !== 'undefined') gsap.to('#onboardingOverlay', { opacity: 0, duration: 0.35, onComplete: () => overlay.remove() });
+    else overlay.remove();
+  });
+  overlay.querySelector('#obVoice').addEventListener('click', () => {
+    if (window.playIntroVoice) window.playIntroVoice();
+  });
+}
+
+// Add a Codex mini-HUD for frame jumps
+function initializeCodexStory() {
+  if (document.getElementById('codexHUD')) return;
+  const hud = document.createElement('div');
+  hud.id = 'codexHUD';
+  hud.style.cssText = `position:fixed;left:20px;bottom:20px;display:flex;gap:8px;z-index:9996;pointer-events:auto;flex-wrap:wrap;`;
+  const frames = [
+    { key: 'seed', label: 'Data Seed' },
+    { key: 'sprout', label: 'Neural Sprout' },
+    { key: 'rings', label: 'Growth Rings' },
+    { key: 'constellation', label: 'Constellation' },
+    { key: 'vault', label: 'Archive Vault' },
+    { key: 'nexus', label: 'Command Nexus' },
+    { key: 'flux', label: 'Flux Dashboard' },
+    { key: 'beacon', label: 'Beacon' },
+  ];
+  frames.forEach(f => {
+    const btn = document.createElement('button');
+    btn.className = 'btn btn--outline';
+    btn.textContent = f.label;
+    btn.style.opacity = '0.85';
+    btn.addEventListener('click', () => executeCommand(f.key));
+    hud.appendChild(btn);
+  });
+  document.body.appendChild(hud);
+}
+
 // 🎬 PROLOGUE: Particle Genesis Animation
 function initializePrologueAnimation() {
   console.log('🌟 Initializing particle genesis...');
+  if (!THREE) return;
   
   const container = document.getElementById('particlesContainer');
   if (!container) {
@@ -669,6 +749,9 @@ function initializePrologueAnimation() {
     }
   });
 
+  // Circuit traces (Data Seed → Circuits)
+  addCircuitTraces();
+
   // Handle resize
   window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -685,9 +768,45 @@ function initializePrologueAnimation() {
   }
 }
 
+// Add simple DOM-based circuit traces emanating from center
+function addCircuitTraces() {
+  const host = document.getElementById('prologue');
+  if (!host) return;
+  const layer = document.createElement('div');
+  layer.style.cssText = 'position:absolute;inset:0;pointer-events:none;z-index:2;';
+  host.appendChild(layer);
+  const cx = window.innerWidth / 2;
+  const cy = window.innerHeight * 0.4;
+  const count = 18;
+  for (let i = 0; i < count; i++) {
+    const line = document.createElement('div');
+    line.style.position = 'absolute';
+    line.style.height = '2px';
+    line.style.width = '0px';
+    line.style.background = 'linear-gradient(90deg, rgba(255,92,0,0.5), rgba(255,92,0,0))';
+    line.style.transformOrigin = '0 50%';
+    const angle = (i / count) * Math.PI * 2 + (Math.random() * 0.2);
+    const len = 120 + Math.random() * 120;
+    line.style.left = `${cx}px`;
+    line.style.top = `${cy}px`;
+    line.style.transform = `rotate(${angle}rad)`;
+    layer.appendChild(line);
+    if (typeof gsap !== 'undefined') {
+      gsap.to(line, { width: len, duration: 1.2, delay: 0.2 + i * 0.05, ease: 'power2.out' });
+    } else {
+      line.style.width = `${len}px`;
+    }
+  }
+  // Auto fade the layer after a moment
+  if (typeof gsap !== 'undefined') {
+    gsap.to(layer, { opacity: 0, delay: 3, duration: 1, onComplete: () => layer.remove() });
+  }
+}
+
 // 🌍 ORIGINS: Interactive Globe Animation
 function initializeOriginsAnimation() {
   console.log('🌍 Initializing globe journey...');
+  if (!THREE) return;
   
   const container = document.getElementById('globe-container');
   if (!container) {
@@ -789,6 +908,14 @@ function initializeOriginsAnimation() {
           arc.material.opacity = t * 0.9;
           arc.geometry.attributes.position.needsUpdate = true;
         });
+        // Trigger Neural Sprout once when Origins enters center
+        if (!AppState.initialized.sprout && progress > 0.05) {
+          AppState.initialized.sprout = true;
+          const sprout = document.getElementById('neural-sprout');
+          if (sprout) {
+            sprout.style.opacity = '1';
+          }
+        }
         }
       }
     });
@@ -799,6 +926,7 @@ function initializeOriginsAnimation() {
 // 💪 SUPERPOWERS: 3D Rings Animation
 function initializeSuperpowersAnimation() {
   console.log('💪 Initializing 3D skill rings...');
+  if (!THREE) return;
   
   const container = document.getElementById('skills-canvas-container');
   if (!container) {
@@ -963,6 +1091,21 @@ function initializeProjects() {
   if (!masonry) {
     console.error('❌ Projects masonry not found');
     return;
+  }
+
+  // Vault door open on enter
+  const labSection = document.getElementById('lab');
+  const vault = document.getElementById('vault-door');
+  if (labSection && vault) {
+    ScrollTrigger.create({
+      trigger: labSection,
+      start: 'top 65%',
+      once: true,
+      onEnter: () => {
+        document.body.classList.add('vault-open');
+        gsap.to('#vault-door', { opacity: 0, duration: 0.8, delay: 0.8, onComplete: () => vault.remove() });
+      }
+    });
   }
 
   // Sample project data
@@ -1214,6 +1357,44 @@ async function executeCommand(command) {
       addTerminalLine('  📊 Interactive Chart.js visualizations', 'output');
       addTerminalLine('  🎨 Glassmorphism UI with backdrop filters', 'output');
       addTerminalLine('  🚀 Vite build system for optimal performance', 'output');
+      break;
+
+    // Narrative jumps
+    case 'codex':
+      aiPersona('Summoning the Quantum Codex...');
+      initializeCodexStory();
+      break;
+    case 'seed':
+      aiPersona('Frame 1 — The Data Seed');
+      gsap.to(window, { duration: 1.2, scrollTo: { y: '#prologue', offsetY: 80 }, ease: 'power3.inOut' });
+      break;
+    case 'sprout':
+      aiPersona('Frame 2 — The Neural Sprout');
+      gsap.to(window, { duration: 1.2, scrollTo: { y: '#origins', offsetY: 80 }, ease: 'power3.inOut' });
+      break;
+    case 'rings':
+      aiPersona('Frame 3 — The Growth Rings');
+      gsap.to(window, { duration: 1.2, scrollTo: { y: '#superpowers', offsetY: 80 }, ease: 'power3.inOut' });
+      break;
+    case 'constellation':
+      aiPersona('Frame 4 — The Digital Constellation');
+      gsap.to(window, { duration: 1.2, scrollTo: { y: '#origins', offsetY: 80 }, ease: 'power3.inOut' });
+      break;
+    case 'vault':
+      aiPersona('Frame 5 — The Archive Vault');
+      gsap.to(window, { duration: 1.2, scrollTo: { y: '#lab', offsetY: 80 }, ease: 'power3.inOut' });
+      break;
+    case 'nexus':
+      aiPersona('Frame 6 — The Command Nexus');
+      gsap.to(window, { duration: 1.2, scrollTo: { y: '#terminal', offsetY: 80 }, ease: 'power3.inOut' });
+      break;
+    case 'flux':
+      aiPersona('Frame 7 — The Flux Dashboard');
+      gsap.to(window, { duration: 1.2, scrollTo: { y: '#ops', offsetY: 80 }, ease: 'power3.inOut' });
+      break;
+    case 'beacon':
+      aiPersona('Frame 8 — The Beacon of Connection');
+      gsap.to(window, { duration: 1.2, scrollTo: { y: '#contact', offsetY: 80 }, ease: 'power3.inOut' });
       break;
       
     case 'easter':
