@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { gsap } from "@/lib/gsap/gsapClient";
+import gsap from "gsap";
 
 export function AvaChat() {
   const [open, setOpen] = useState(false);
@@ -67,6 +67,8 @@ export function AvaChat() {
           ease: "power2.in",
           onComplete: () => setOpen(false),
         });
+      } else {
+        setOpen(false);
       }
     } else {
       setOpen(true);

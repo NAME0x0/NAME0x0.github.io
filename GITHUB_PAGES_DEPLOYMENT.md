@@ -29,7 +29,7 @@ cp -r /path/to/futuristic-portfolio-prototype/.* .
 
 # Add and commit all changes
 git add .
-git commit -m "🎬 Deploy Next.js futuristic portfolio with hydration fixes"
+git commit -m "🎬 Deploy Next.js futuristic portfolio with GSAP import fixes"
 git push origin main
 ```
 
