@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { gsap } from "@/lib/gsap/gsapClient";
+import gsap from "gsap";
 
 type Skill = {
   title: string;

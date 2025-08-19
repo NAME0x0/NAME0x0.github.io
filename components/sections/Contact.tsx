@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { gsap } from "@/lib/gsap/gsapClient";
+import gsap from "gsap";
 
 export function Contact() {
   const [formData, setFormData] = useState({

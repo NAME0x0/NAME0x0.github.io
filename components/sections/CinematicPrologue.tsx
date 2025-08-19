@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { gsap, ScrollTrigger } from "@/lib/gsap/gsapClient";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export function CinematicPrologue() {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -11,6 +12,11 @@ export function CinematicPrologue() {
   const gridRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    // Register ScrollTrigger plugin
+    if (typeof window !== "undefined") {
+      gsap.registerPlugin(ScrollTrigger);
+    }
+
     const container = containerRef.current;
     const title = titleRef.current;
     const subtitle = subtitleRef.current;

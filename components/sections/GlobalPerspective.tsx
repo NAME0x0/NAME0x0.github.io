@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useRef } from "react";
-import { gsap } from "@/lib/gsap/gsapClient";
+import gsap from "gsap";
 
 const Globe = dynamic(() => import("@/components/three/Globe").then(m => m.Globe), { ssr: false });
 

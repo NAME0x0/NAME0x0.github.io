@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import { useEffect, useRef } from "react";
-import { gsap, ScrollTrigger } from "@/lib/gsap/gsapClient";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 type Project = {
   title: string;
@@ -49,6 +50,11 @@ export function Projects() {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    // Register ScrollTrigger plugin
+    if (typeof window !== "undefined") {
+      gsap.registerPlugin(ScrollTrigger);
+    }
+
     const container = containerRef.current;
     if (!container) return;
 

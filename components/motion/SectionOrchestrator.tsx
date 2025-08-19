@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { gsap, ScrollTrigger } from "@/lib/gsap/gsapClient";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export function SectionOrchestrator() {
   const progressRef = useRef<HTMLDivElement>(null);
@@ -9,6 +10,10 @@ export function SectionOrchestrator() {
 
   useEffect(() => {
     setIsClient(true);
+    // Register ScrollTrigger plugin
+    if (typeof window !== "undefined") {
+      gsap.registerPlugin(ScrollTrigger);
+    }
   }, []);
 
   useEffect(() => {

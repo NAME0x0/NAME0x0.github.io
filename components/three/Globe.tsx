@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
-import { gsap } from "@/lib/gsap/gsapClient";
+import gsap from "gsap";
 
 interface Country {
   name: string;

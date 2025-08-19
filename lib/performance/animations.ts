@@ -3,7 +3,7 @@
  * Ensures smooth 60fps animations with proper optimization
  */
 
-import { gsap } from "@/lib/gsap/gsapClient";
+import gsap from "gsap";
 
 // Performance configuration
 export const PERFORMANCE_CONFIG = {

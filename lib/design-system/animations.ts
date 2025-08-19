@@ -3,7 +3,7 @@
  * Centralized animation system for consistent motion design
  */
 
-import { gsap } from "@/lib/gsap/gsapClient";
+import gsap from "gsap";
 
 // Animation Configuration
 export const animationConfig = {
