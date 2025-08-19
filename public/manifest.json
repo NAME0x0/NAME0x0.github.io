@@ -1,0 +1,15 @@
+{
+  "name": "Muhammad Afsah Mumtaz - Cinematic Portfolio",
+  "short_name": "Afsah",
+  "description": "Immersive, scroll-driven portfolio with AVA AI and cinematic animations.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#0A0A0A",
+  "background_color": "#000000",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "192x192", "type": "image/svg+xml" },
+    { "src": "/icon.svg", "sizes": "512x512", "type": "image/svg+xml" }
+  ]
+}
+

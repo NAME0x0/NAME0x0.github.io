@@ -1,21 +1,52 @@
-# Build outputs
-dist/
-build/
-
-# Package manager files
+# Dependencies
 node_modules/
-package-lock.json
-yarn.lock
+.pnp
+.pnp.js
 
-# Environment files
+# Testing
+/coverage/
+
+# Next.js
+/.next/
+/out/
+
+# Production
+/build
+/dist
+
+# Misc
+.DS_Store
+*.pem
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Local env files
+.env*.local
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.development
+.env.production
+
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Cache
+.cache/
+.parcel-cache/
+.vite/
 
 # IDE/Editor files
-.vscode/
+.vscode/settings.json
+.vscode/launch.json
+.vscode/extensions.json
+*.code-workspace
 .idea/
 *.swp
 *.swo
@@ -29,19 +60,78 @@ yarn.lock
 .Trashes
 ehthumbs.db
 Thumbs.db
+Thumbs.db:encryptable
+ehthumbs_vista.db
+*.lnk
 
-# Logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-lerna-debug.log*
-
-# Cache directories
-.cache/
-.parcel-cache/
-.vite/
+# Package manager
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
 
 # Temporary files
 *.tmp
 *.temp
+*.bak
+*.backup
+
+# Logs
+*.log
+lerna-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# ESLint cache
+.eslintcache
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Optional npm cache directory
+.npm
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# Stores VSCode versions used for testing VSCode extensions
+.vscode-test
+
+# yarn v2
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# Storybook build outputs
+storybook-static
+
+# Deployment platforms
+.netlify
+.vercel
+
+# GSAP (if you have licensed files)
+gsap/
+
+# Three.js cache
+.three/
