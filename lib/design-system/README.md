@@ -227,6 +227,7 @@ This document outlines the comprehensive design system implemented for the cinem
 ```
 
 ### Animated Section
+{% raw %}
 ```tsx
 <section className="cinematic-section">
   <div className="container-cinematic">
@@ -247,6 +248,7 @@ This document outlines the comprehensive design system implemented for the cinem
   </div>
 </section>
 ```
+{% endraw %}
 
 ## 🚀 Implementation Notes
 
