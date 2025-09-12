@@ -135,3 +135,6 @@ gsap/
 
 # Three.js cache
 .three/
+=======
+node_modules/
+.next/
