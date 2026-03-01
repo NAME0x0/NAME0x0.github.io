@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NAME0x0 Portfolio Wireframe — Desktop 1440px</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Manrope:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ── RESET ── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    /* ── TOKENS ── */
+    :root {
+      --void: #000000;
+      --ink: #E8E4DE;
+      --ink-dim: #8A8578;
+      --ink-faint: #3A3832;
+      --accent: #C4B5A0;
+      --glass-stroke: rgba(232, 228, 222, 0.08);
+      --glass-fill: rgba(232, 228, 222, 0.03);
+
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Manrope', sans-serif;
+      --font-mono: 'Geist Mono', 'SF Mono', 'Fira Code', monospace;
+
+      --display: 72px;
+      --h1: 36px;
+      --h2: 24px;
+      --overline: 12px;
+      --body: 16px;
+      --body-sm: 14px;
+      --code: 13px;
+    }
+
+    /* ── BASE ── */
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--void);
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-size: var(--body);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── UTILITIES ── */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
+    .overline {
+      font-family: var(--font-mono);
+      font-size: var(--overline);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-dim);
+    }
+    .display {
+      font-family: var(--font-heading);
+      font-size: var(--display);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      color: var(--ink);
+    }
+    .h1 {
+      font-family: var(--font-heading);
+      font-size: var(--h1);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      color: var(--ink);
+    }
+    .h2 {
+      font-family: var(--font-heading);
+      font-size: var(--h2);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+      color: var(--ink);
+    }
+    .body-dim { color: var(--ink-dim); }
+    .body-faint { color: var(--ink-faint); }
+    .code {
+      font-family: var(--font-mono);
+      font-size: var(--code);
+      color: var(--ink-dim);
+    }
+    .body-sm {
+      font-size: var(--body-sm);
+      color: var(--ink-dim);
+    }
+
+    /* ── PROGRESS BAR ── */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 35%;
+      height: 2px;
+      background: var(--ink);
+      z-index: 100;
+    }
+    .progress-track {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--ink-faint);
+      z-index: 99;
+    }
+
+    /* ── NAV ── */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(12px);
+      z-index: 90;
+      border-bottom: 1px solid var(--ink-faint);
+    }
+    .nav-logo { font-family: var(--font-mono); font-size: var(--code); color: var(--ink-dim); }
+    .nav-links { display: flex; gap: 32px; }
+    .nav-link {
+      font-family: var(--font-mono);
+      font-size: var(--overline);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-dim);
+      text-decoration: none;
+      padding-bottom: 4px;
+    }
+    .nav-link.active {
+      color: var(--ink);
+      border-bottom: 2px solid var(--ink);
+    }
+
+    /* ══════════════════════════════════════════════════════
+       SECTION 0: // INIT — HERO
+       ══════════════════════════════════════════════════════ */
+    .hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+    }
+
+    /* ASCII Hands placeholder */
+    .ascii-hands {
+      width: 600px;
+      height: 260px;
+      border: 1px dashed var(--ink-faint);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 48px;
+      position: relative;
+    }
+    .ascii-hands::before {
+      content: '';
+      position: absolute;
+      left: 60px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 200px;
+      height: 160px;
+      background: radial-gradient(circle at 80% 50%, var(--ink) 1px, transparent 1px),
+                  radial-gradient(circle at 60% 30%, var(--ink) 0.8px, transparent 0.8px),
+                  radial-gradient(circle at 70% 70%, var(--ink) 0.6px, transparent 0.6px),
+                  radial-gradient(circle at 90% 40%, var(--ink) 1px, transparent 1px),
+                  radial-gradient(circle at 50% 55%, var(--ink) 0.7px, transparent 0.7px);
+      background-size: 8px 8px, 12px 12px, 10px 10px, 6px 6px, 14px 14px;
+      opacity: 0.4;
+    }
+    .ascii-hands::after {
+      content: '';
+      position: absolute;
+      right: 60px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 200px;
+      height: 160px;
+      background: radial-gradient(circle at 20% 50%, var(--ink) 1px, transparent 1px),
+                  radial-gradient(circle at 40% 30%, var(--ink) 0.8px, transparent 0.8px),
+                  radial-gradient(circle at 30% 70%, var(--ink) 0.6px, transparent 0.6px),
+                  radial-gradient(circle at 10% 40%, var(--ink) 1px, transparent 1px),
+                  radial-gradient(circle at 50% 55%, var(--ink) 0.7px, transparent 0.7px);
+      background-size: 8px 8px, 12px 12px, 10px 10px, 6px 6px, 14px 14px;
+      opacity: 0.4;
+    }
+    .ascii-hands-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-faint);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .hands-gap {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 40px;
+      height: 80px;
+      border-left: 1px dashed var(--accent);
+      border-right: 1px dashed var(--accent);
+      opacity: 0.3;
+    }
+    .hands-gap::after {
+      content: '~40px gap';
+      position: absolute;
+      bottom: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    .hero-name { margin-bottom: 12px; }
+    .hero-role { margin-bottom: 0; }
+
+    .scroll-cue {
+      position: absolute;
+      bottom: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .scroll-cue-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, transparent, var(--ink-dim));
+    }
+    .scroll-cue-text {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--ink-faint);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    /* Particle field annotation */
+    .particle-annotation {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--ink-faint);
+      border: 1px dashed var(--ink-faint);
+      padding: 6px 10px;
+      opacity: 0.5;
+    }
+
+    /* ══════════════════════════════════════════════════════
+       SECTION 1: // ARCHITECTURE — SOVEREIGN STACK
+       ══════════════════════════════════════════════════════ */
+    .stack {
+      min-height: 100vh;
+      padding: 120px 0;
+    }
+    .section-header { margin-bottom: 48px; }
+    .section-header .overline { margin-bottom: 12px; }
+    .section-header .h1 { margin-bottom: 8px; }
+
+    .stack-layers { display: flex; flex-direction: column; }
+    .stack-row {
+      display: flex;
+      align-items: flex-start;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--ink-faint);
+      gap: 24px;
+    }
+    .stack-row:last-child { border-bottom: none; }
+    .stack-num {
+      font-family: var(--font-mono);
+      font-size: var(--overline);
+      color: var(--ink-dim);
+      min-width: 32px;
+      padding-top: 4px;
+    }
+    .stack-content { flex: 1; }
+    .stack-label {
+      font-family: var(--font-heading);
+      font-size: var(--h2);
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+    .stack-desc {
+      font-size: var(--body-sm);
+      color: var(--ink-dim);
+      margin-top: 4px;
+    }
+    .stack-tech {
+      font-family: var(--font-mono);
+      font-size: var(--code);
+      color: var(--ink-dim);
+      text-align: right;
+      min-width: 260px;
+      padding-top: 4px;
+    }
+
+    /* ══════════════════════════════════════════════════════
+       SECTION 2: // DEPLOYMENTS — PROJECTS
+       ══════════════════════════════════════════════════════ */
+    .projects { padding: 120px 0; }
+
+    .filter-tabs {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+    .filter-tab {
+      font-family: var(--font-mono);
+      font-size: var(--overline);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-dim);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding-bottom: 6px;
+    }
+    .filter-tab.active {
+      color: var(--ink);
+      border-bottom: 2px solid var(--ink);
+    }
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .project-card {
+      border: 1px solid var(--glass-stroke);
+      background: var(--glass-fill);
+      border-radius: 8px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .project-card:hover {
+      border-color: rgba(232, 228, 222, 0.15);
+      transform: translateY(-2px);
+    }
+    .project-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .project-name { margin: 0; }
+    .project-badge {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--accent);
+      border: 1px solid rgba(196, 181, 160, 0.3);
+      padding: 2px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .project-desc {
+      font-size: var(--body-sm);
+      color: var(--ink-dim);
+      line-height: 1.5;
+    }
+    .project-tags {
+      font-family: var(--font-mono);
+      font-size: var(--code);
+      color: var(--ink-faint);
+    }
+    .project-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: auto;
+      padding-top: 8px;
+    }
+    .project-lang {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: var(--code);
+      color: var(--ink-dim);
+    }
+    .lang-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .project-link {
+      font-family: var(--font-mono);
+      font-size: var(--code);
+      color: var(--ink-dim);
+      text-decoration: none;
+    }
+
+    /* ══════════════════════════════════════════════════════
+       SECTION 3: // IDENTITY — ABOUT
+       ══════════════════════════════════════════════════════ */
+    .about { padding: 120px 0; }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 80px;
+    }
+
+    .about-bio { font-size: var(--body); color: var(--ink); line-height: 1.7; margin-bottom: 32px; }
+
+    .capabilities { margin-bottom: 32px; }
+    .capabilities .overline { margin-bottom: 16px; }
+    .cap-domain {
+      font-size: var(--body-sm);
+      color: var(--ink);
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
+    .cap-skills {
+      font-family: var(--font-mono);
+      font-size: var(--code);
+      color: var(--ink-dim);
+      margin-bottom: 16px;
+    }
+
+    .about-meta {
+      font-family: var(--font-mono);
+      font-size: var(--code);
+      color: var(--ink-dim);
+      line-height: 1.8;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+    .stat-item {}
+    .stat-label {
+      font-family: var(--font-mono);
+      font-size: var(--overline);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-dim);
+      margin-bottom: 4px;
+    }
+    .stat-value {
+      font-family: var(--font-heading);
+      font-size: var(--h2);
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .lang-chart { }
+    .lang-chart .overline { margin-bottom: 16px; }
+    .lang-bar-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .lang-bar {
+      height: 6px;
+      border-radius: 3px;
+      background: var(--ink);
+      opacity: 0.6;
+    }
+    .lang-bar-label {
+      font-family: var(--font-mono);
+      font-size: var(--code);
+      color: var(--ink-dim);
+      min-width: 100px;
+      text-align: right;
+    }
+    .lang-bar-pct {
+      font-family: var(--font-mono);
+      font-size: var(--code);
+      color: var(--ink-faint);
+      min-width: 36px;
+    }
+
+    /* ══════════════════════════════════════════════════════
+       SECTION 4: // UPLINK — CONTACT
+       ══════════════════════════════════════════════════════ */
+    .contact {
+      min-height: 50vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 0 60px;
+      position: relative;
+    }
+    .contact .overline { margin-bottom: 12px; }
+    .contact .h1 { margin-bottom: 24px; }
+    .contact-email {
+      font-family: var(--font-body);
+      font-size: var(--body);
+      color: var(--accent);
+      text-decoration: none;
+      margin-bottom: 16px;
+      display: inline-block;
+      border-bottom: 1px solid transparent;
+    }
+    .contact-email:hover { border-bottom-color: var(--accent); }
+    .contact-socials {
+      font-family: var(--font-mono);
+      font-size: var(--code);
+      color: var(--ink-dim);
+      margin-bottom: 48px;
+    }
+    .contact-socials a {
+      color: var(--ink-dim);
+      text-decoration: none;
+    }
+    .contact-socials a:hover { color: var(--ink); }
+    .contact-rule {
+      width: 200px;
+      height: 1px;
+      background: var(--ink-faint);
+      margin-bottom: 24px;
+    }
+    .contact-copy {
+      font-family: var(--font-mono);
+      font-size: var(--code);
+      color: var(--ink-faint);
+    }
+
+    /* Faded hands background annotation */
+    .contact-bg-annotation {
+      position: absolute;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 500px;
+      height: 200px;
+      border: 1px dashed var(--ink-faint);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.08;
+      z-index: -1;
+    }
+
+    /* ── ANNOTATION BADGES ── */
+    .annotation {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--accent);
+      border: 1px dashed rgba(196, 181, 160, 0.3);
+      padding: 3px 8px;
+      border-radius: 3px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      display: inline-block;
+      opacity: 0.6;
+    }
+  </style>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</head>
+<body>
+
+  <!-- PROGRESS BAR -->
+  <div class="progress-track"></div>
+  <div class="progress-bar"></div>
+
+  <!-- NAVIGATION -->
+  <nav class="nav">
+    <div class="nav-logo">NAME0x0</div>
+    <div class="nav-links">
+      <a href="#stack" class="nav-link active">Stack</a>
+      <a href="#projects" class="nav-link">Work</a>
+      <a href="#about" class="nav-link">About</a>
+      <a href="#contact" class="nav-link">Contact</a>
+    </div>
+  </nav>
+
+  <!-- ══════════════════════════════════════════════════════
+       SECTION 0: // INIT — HERO
+       ══════════════════════════════════════════════════════ -->
+  <section class="hero" id="hero">
+    <div class="particle-annotation">WebGL: Particle field (continuous drift)</div>
+
+    <div class="ascii-hands">
+      <div class="hands-gap"></div>
+      <span class="ascii-hands-label">ASCII Dot-Matrix · Creation of Adam · WebGL Shader</span>
+    </div>
+
+    <h1 class="display hero-name">MUHAMMAD AFSAH MUMTAZ</h1>
+    <p class="overline hero-role">Systems Architect · AI Engineer · OS Developer</p>
+
+    <div class="scroll-cue">
+      <div class="scroll-cue-line"></div>
+      <span class="scroll-cue-text">Scroll</span>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       SECTION 1: // ARCHITECTURE — SOVEREIGN STACK
+       ══════════════════════════════════════════════════════ -->
+  <section class="stack" id="stack">
+    <div class="container">
+      <div class="section-header">
+        <p class="overline">// ARCHITECTURE</p>
+        <h2 class="h1">THE STACK</h2>
+        <p class="body-dim">Building from bare metal to browser.</p>
+      </div>
+
+      <div class="stack-layers">
+        <div class="stack-row">
+          <span class="stack-num">01</span>
+          <div class="stack-content">
+            <div class="stack-label">FOUNDATION</div>
+            <p class="stack-desc">Secure local-first systems and dependable execution layers.</p>
+          </div>
+          <span class="stack-tech">Rust · Linux · LUKS · s6</span>
+        </div>
+
+        <div class="stack-row">
+          <span class="stack-num">02</span>
+          <div class="stack-content">
+            <div class="stack-label">INTERFACE</div>
+            <p class="stack-desc">Terminal-centric environments and shell ergonomics.</p>
+          </div>
+          <span class="stack-tech">C++ · Rust · Lua · CMake</span>
+        </div>
+
+        <div class="stack-row">
+          <span class="stack-num">03</span>
+          <div class="stack-content">
+            <div class="stack-label">INTELLIGENCE</div>
+            <p class="stack-desc">Agentic and retrieval-assisted AI systems that stay local by default.</p>
+          </div>
+          <span class="stack-tech">Python · TypeScript · RAG · LLM</span>
+        </div>
+
+        <div class="stack-row">
+          <span class="stack-num">04</span>
+          <div class="stack-content">
+            <div class="stack-label">VISUALIZATION</div>
+            <p class="stack-desc">Interactive 3D systems and motion-driven visual communication.</p>
+          </div>
+          <span class="stack-tech">Three.js · WebGL · GLSL · Next.js</span>
+        </div>
+
+        <div class="stack-row">
+          <span class="stack-num">05</span>
+          <div class="stack-content">
+            <div class="stack-label">TOOLS</div>
+            <p class="stack-desc">Automation and operator workflows that improve delivery speed.</p>
+          </div>
+          <span class="stack-tech">PowerShell · CI/CD · Desktop</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       SECTION 2: // DEPLOYMENTS — PROJECTS
+       ══════════════════════════════════════════════════════ -->
+  <section class="projects" id="projects">
+    <div class="container">
+      <div class="section-header">
+        <p class="overline">// DEPLOYMENTS</p>
+        <h2 class="h1">WORK</h2>
+      </div>
+
+      <div class="filter-tabs">
+        <button class="filter-tab active">All</button>
+        <button class="filter-tab">Foundation</button>
+        <button class="filter-tab">Interface</button>
+        <button class="filter-tab">Intelligence</button>
+        <button class="filter-tab">Visualization</button>
+        <button class="filter-tab">Tools</button>
+      </div>
+
+      <div class="project-grid">
+        <!-- OMNI — Flagship -->
+        <div class="project-card">
+          <div class="project-card-header">
+            <h3 class="h2 project-name">OMNI</h3>
+            <span class="project-badge">Flagship</span>
+          </div>
+          <p class="project-desc">Sparse Mixture-of-Experts 1.05T parameter language model engineered for 4 GB VRAM execution via layer streaming, ternary inference, and geometry-based routing.</p>
+          <p class="project-tags">rust · llm · sparse-moe · ternary-inference · local-ai</p>
+          <div class="project-footer">
+            <span class="project-lang"><span class="lang-dot" style="background:#dea584"></span> Rust</span>
+            <a href="#" class="project-link">GitHub →</a>
+          </div>
+        </div>
+
+        <!-- SMNTC -->
+        <div class="project-card">
+          <div class="project-card-header">
+            <h3 class="h2 project-name">SMNTC</h3>
+            <span class="project-badge">Featured</span>
+          </div>
+          <p class="project-desc">Semantic motion and topography engine that abstracts WebGL behavior into intent-level tokens.</p>
+          <p class="project-tags">typescript · webgl · animation · semantic</p>
+          <div class="project-footer">
+            <span class="project-lang"><span class="lang-dot" style="background:#3178c6"></span> TypeScript</span>
+            <a href="#" class="project-link">GitHub →</a>
+          </div>
+        </div>
+
+        <!-- AVA -->
+        <div class="project-card">
+          <div class="project-card-header">
+            <h3 class="h2 project-name">AVA</h3>
+            <span class="project-badge">Featured</span>
+          </div>
+          <p class="project-desc">Local-first personal assistant with retrieval pipelines and controllable orchestration.</p>
+          <p class="project-tags">python · assistant · llm · ollama · automation</p>
+          <div class="project-footer">
+            <span class="project-lang"><span class="lang-dot" style="background:#3572A5"></span> Python</span>
+            <a href="#" class="project-link">GitHub →</a>
+          </div>
+        </div>
+
+        <!-- MALD -->
+        <div class="project-card">
+          <div class="project-card-header">
+            <h3 class="h2 project-name">MALD</h3>
+            <span class="project-badge">Featured</span>
+          </div>
+          <p class="project-desc">Terminal-first PKM with local AI retrieval and citation-backed answers, shipped as a single binary.</p>
+          <p class="project-tags">rust · local-ai · rag · terminal · semantic-search</p>
+          <div class="project-footer">
+            <span class="project-lang"><span class="lang-dot" style="background:#dea584"></span> Rust</span>
+            <a href="#" class="project-link">GitHub →</a>
+          </div>
+        </div>
+
+        <!-- MAVIS -->
+        <div class="project-card">
+          <div class="project-card-header">
+            <h3 class="h2 project-name">MAVIS</h3>
+            <span class="project-badge">Featured</span>
+          </div>
+          <p class="project-desc">Rust-native shell replacement that merges terminal, file exploration, and system control.</p>
+          <p class="project-tags">rust · windows-shell · desktop-environment · lua</p>
+          <div class="project-footer">
+            <span class="project-lang"><span class="lang-dot" style="background:#dea584"></span> Rust</span>
+            <a href="#" class="project-link">GitHub →</a>
+          </div>
+        </div>
+
+        <!-- Terminus -->
+        <div class="project-card">
+          <div class="project-card-header">
+            <h3 class="h2 project-name">TERMINUS</h3>
+            <span class="project-badge">Featured</span>
+          </div>
+          <p class="project-desc">Desktop-replacing terminal environment engineered for a keyboard-first workflow.</p>
+          <p class="project-tags">c++ · terminal · desktop</p>
+          <div class="project-footer">
+            <span class="project-lang"><span class="lang-dot" style="background:#f34b7d"></span> C++</span>
+            <a href="#" class="project-link">GitHub →</a>
+          </div>
+        </div>
+
+        <!-- Tangled -->
+        <div class="project-card">
+          <div class="project-card-header">
+            <h3 class="h2 project-name">TANGLED</h3>
+          </div>
+          <p class="project-desc">Synchronized WebGL scenes shared across browser contexts to explore linked state.</p>
+          <p class="project-tags">webgl · 3d · creative-coding</p>
+          <div class="project-footer">
+            <span class="project-lang"><span class="lang-dot" style="background:#f1e05a"></span> JavaScript</span>
+            <a href="#" class="project-link">GitHub →</a>
+          </div>
+        </div>
+
+        <!-- WebDesk -->
+        <div class="project-card">
+          <div class="project-card-header">
+            <h3 class="h2 project-name">WEBDESK</h3>
+          </div>
+          <p class="project-desc">Desktop wallpaper runtime that executes local web experiences with live interactivity.</p>
+          <p class="project-tags">python · windows · desktop-customization</p>
+          <div class="project-footer">
+            <span class="project-lang"><span class="lang-dot" style="background:#3572A5"></span> Python</span>
+            <a href="#" class="project-link">GitHub →</a>
+          </div>
+        </div>
+
+        <!-- QuickTask -->
+        <div class="project-card" style="grid-column: span 2;">
+          <div class="project-card-header">
+            <h3 class="h2 project-name">QUICKTASK</h3>
+          </div>
+          <p class="project-desc">Offline CLI planner that converts natural language into structured tasks with local models.</p>
+          <p class="project-tags">python · ollama · task-management</p>
+          <div class="project-footer">
+            <span class="project-lang"><span class="lang-dot" style="background:#3572A5"></span> Python</span>
+            <a href="#" class="project-link">GitHub →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       SECTION 3: // IDENTITY — ABOUT
+       ══════════════════════════════════════════════════════ -->
+  <section class="about" id="about">
+    <div class="container">
+      <div class="section-header">
+        <p class="overline">// IDENTITY</p>
+        <h2 class="h1">ABOUT</h2>
+      </div>
+
+      <div class="about-grid">
+        <!-- LEFT COLUMN -->
+        <div>
+          <p class="about-bio">I design sovereign computing systems across operating environments, AI workflows, and immersive interfaces.</p>
+
+          <div class="capabilities">
+            <p class="overline">Capabilities</p>
+            <div style="margin-top:16px">
+              <p class="cap-domain">Systems Engineering</p>
+              <p class="cap-skills">OS and shell architecture · Local-first tooling · Security-first workflows · Cross-language systems design</p>
+
+              <p class="cap-domain">AI Engineering</p>
+              <p class="cap-skills">RAG pipelines · LLM orchestration · Inference optimization · Agentic workflows</p>
+
+              <p class="cap-domain">Interactive Web</p>
+              <p class="cap-skills">Next.js · Three.js / R3F · GSAP scroll systems · Motion + performance tuning</p>
+            </div>
+          </div>
+
+          <div class="about-meta">
+            Dubai, UAE<br>
+            BSc (Hons) IT — Middlesex University Dubai
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <p class="stat-label">Repos</p>
+              <p class="stat-value">24</p>
+            </div>
+            <div class="stat-item">
+              <p class="stat-label">Contributions</p>
+              <p class="stat-value">847</p>
+            </div>
+            <div class="stat-item">
+              <p class="stat-label">Stars</p>
+              <p class="stat-value">12</p>
+            </div>
+            <div class="stat-item">
+              <p class="stat-label">Since</p>
+              <p class="stat-value">2022</p>
+            </div>
+          </div>
+
+          <div class="lang-chart">
+            <p class="overline">Languages</p>
+            <div style="margin-top:16px">
+              <div class="lang-bar-row">
+                <span class="lang-bar-label">Rust</span>
+                <div class="lang-bar" style="width:168px; background:#dea584"></div>
+                <span class="lang-bar-pct">28%</span>
+              </div>
+              <div class="lang-bar-row">
+                <span class="lang-bar-label">Python</span>
+                <div class="lang-bar" style="width:132px; background:#3572A5"></div>
+                <span class="lang-bar-pct">22%</span>
+              </div>
+              <div class="lang-bar-row">
+                <span class="lang-bar-label">TypeScript</span>
+                <div class="lang-bar" style="width:108px; background:#3178c6"></div>
+                <span class="lang-bar-pct">18%</span>
+              </div>
+              <div class="lang-bar-row">
+                <span class="lang-bar-label">C++</span>
+                <div class="lang-bar" style="width:72px; background:#f34b7d"></div>
+                <span class="lang-bar-pct">12%</span>
+              </div>
+              <div class="lang-bar-row">
+                <span class="lang-bar-label">JavaScript</span>
+                <div class="lang-bar" style="width:60px; background:#f1e05a"></div>
+                <span class="lang-bar-pct">10%</span>
+              </div>
+              <div class="lang-bar-row">
+                <span class="lang-bar-label">Other</span>
+                <div class="lang-bar" style="width:60px; background:#6e7681"></div>
+                <span class="lang-bar-pct">10%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       SECTION 4: // UPLINK — CONTACT
+       ══════════════════════════════════════════════════════ -->
+  <footer class="contact" id="contact">
+    <p class="overline">// UPLINK</p>
+    <h2 class="h1">LET'S BUILD</h2>
+
+    <a href="mailto:m.afsah.279@gmail.com" class="contact-email">m.afsah.279@gmail.com</a>
+
+    <p class="contact-socials">
+      <a href="#">GitHub</a> · <a href="#">LinkedIn</a> · <a href="#">Twitter</a>
+    </p>
+
+    <div class="contact-rule"></div>
+
+    <p class="contact-copy">&copy; 2026 Muhammad Afsah Mumtaz</p>
+
+    <div class="contact-bg-annotation">
+      <span class="ascii-hands-label">Faded ASCII hands callback (5-8% opacity)</span>
+    </div>
+  </footer>
+
+</body>
+</html>

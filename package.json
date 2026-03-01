@@ -5,9 +5,12 @@
   "description": "Cinematic single-page portfolio for Muhammad Afsah Mumtaz with Next.js, Tailwind, GSAP, and Three.js",
   "scripts": {
     "dev": "next dev",
+    "snapshot": "node scripts/fetch-github-snapshot.mjs",
+    "prebuild": "node scripts/fetch-github-snapshot.mjs",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [
     "portfolio",
@@ -32,6 +35,7 @@
     "@heroicons/react": "^2.2.0",
     "@react-three/drei": "^9.122.0",
     "@react-three/fiber": "^8.18.0",
+    "geist": "^1.7.0",
     "gsap": "^3.12.5",
     "next": "^14.2.5",
     "react": "^18.3.1",

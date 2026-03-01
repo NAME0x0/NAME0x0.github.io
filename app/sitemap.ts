@@ -1,38 +1,44 @@
-import { MetadataRoute } from 'next';
+import { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://name0x0.github.io';
+  const baseUrl = "https://name0x0.is-a.dev";
   const lastModified = new Date();
 
   return [
     {
       url: baseUrl,
       lastModified,
-      changeFrequency: 'weekly',
+      changeFrequency: "weekly",
       priority: 1,
     },
     {
-      url: `${baseUrl}/#skills`,
+      url: `${baseUrl}/#hero`,
       lastModified,
-      changeFrequency: 'monthly',
-      priority: 0.8,
+      changeFrequency: "monthly",
+      priority: 0.9,
     },
     {
       url: `${baseUrl}/#projects`,
       lastModified,
-      changeFrequency: 'monthly',
+      changeFrequency: "daily",
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/#global`,
+      url: `${baseUrl}/#stack`,
       lastModified,
-      changeFrequency: 'yearly',
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/#about`,
+      lastModified,
+      changeFrequency: "weekly",
       priority: 0.7,
     },
     {
       url: `${baseUrl}/#contact`,
       lastModified,
-      changeFrequency: 'monthly',
+      changeFrequency: "monthly",
       priority: 0.6,
     },
   ];
