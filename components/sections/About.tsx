@@ -216,26 +216,26 @@ export function About() {
     <section
       ref={sectionRef}
       id="about"
-      className="relative z-10 min-h-screen scroll-mt-24 py-[clamp(80px,7.6vw+50px,160px)]"
+      className="relative z-10 min-h-screen scroll-mt-24 py-[clamp(80px,7.6vw+50px,180px)]"
       aria-labelledby="about-heading"
     >
       {/* Dark vignette behind content for readability over particles */}
       <div className="pointer-events-none absolute inset-0" aria-hidden="true"
         style={{ background: "radial-gradient(ellipse 80% 60% at 50% 50%, rgba(0,0,0,0.55) 0%, transparent 70%)" }}
       />
-      <div className="relative mx-auto w-full max-w-[1200px] px-4 lg:px-16">
-        <div className="grid grid-cols-1 gap-20 lg:grid-cols-[1.5fr_1fr]">
+      <div className="relative mx-auto w-full max-w-[1280px] px-4 lg:px-16">
+        <div className="grid grid-cols-1 gap-16 lg:grid-cols-[1.5fr_1fr]">
           <div ref={leftRef}>
             <p className="terminal-cursor mb-3 font-mono text-xs uppercase tracking-[0.12em] text-ink-dim">
-              {"// IDENTITY"}
+              {'// "IDENTITY"'}
             </p>
-            <h2 id="about-heading" className="mb-2 font-heading text-3xl font-semibold text-ink">
+            <h2 id="about-heading" className="mb-5 font-heading text-3xl font-semibold text-ink">
               ABOUT
             </h2>
 
             <div className="mb-8 space-y-4">
               {bioEntries.map((entry, index) => (
-                <p key={`${entry}-${index}`} className="font-body text-base leading-relaxed text-ink">
+                <p key={`${entry}-${index}`} className="max-w-[65ch] font-body text-base leading-relaxed text-ink">
                   {entry}
                 </p>
               ))}
@@ -288,7 +288,7 @@ export function About() {
                     : 0;
 
                 return (
-                  <div key={language.name} className="mb-2.5 flex items-center gap-3">
+                  <div key={language.name} className="mb-3 flex items-center gap-3">
                     <span className="min-w-[100px] text-right font-mono text-sm text-ink-dim">
                       {language.name}
                     </span>

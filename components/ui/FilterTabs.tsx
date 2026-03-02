@@ -86,7 +86,7 @@ export function FilterTabs({
       ref={containerRef}
       role="toolbar"
       aria-label={label}
-      className="relative flex gap-6 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      className="relative flex gap-5 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
     >
       {categories.map((category) => {
         const isActive = active === category;
@@ -135,7 +135,7 @@ export function FilterTabs({
             }}
             aria-pressed={isActive}
             aria-controls={controlsId}
-            className={`whitespace-nowrap pb-1.5 font-mono text-xs uppercase tracking-[0.12em] transition-colors duration-200 ${activeClass}`}
+            className={`inline-flex min-h-11 items-center whitespace-nowrap px-1 pb-2 pt-2 font-mono text-sm uppercase tracking-[0.1em] transition-colors duration-200 ${activeClass}`}
           >
             {category}
           </button>

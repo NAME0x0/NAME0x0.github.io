@@ -95,7 +95,7 @@ export function Contact() {
       ref={sectionRef}
       id="contact"
       role="contentinfo"
-      className="relative z-10 flex min-h-screen scroll-mt-24 flex-col items-center justify-center px-6 pt-[120px] pb-[60px] text-center"
+      className="relative z-10 flex min-h-screen scroll-mt-24 flex-col items-center justify-center px-6 py-[clamp(80px,7.6vw+50px,180px)] text-center"
       aria-labelledby="contact-heading"
     >
       {/* Dark vignette behind content for readability over wave surface */}
@@ -104,7 +104,7 @@ export function Contact() {
       />
       <div className="relative flex flex-col items-center">
         <p className="terminal-cursor mb-3 font-mono text-xs uppercase tracking-[0.12em] text-ink-dim">
-          {"// UPLINK"}
+          {'// "UPLINK"'}
         </p>
         <h2
           ref={headingRef}

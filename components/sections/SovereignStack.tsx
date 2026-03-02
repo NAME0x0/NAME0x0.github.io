@@ -143,20 +143,20 @@ export function SovereignStack() {
     <section
       ref={sectionRef}
       id="stack"
-      className="relative z-10 min-h-screen scroll-mt-24 py-[clamp(80px,7.6vw+50px,160px)]"
+      className="relative z-10 min-h-screen scroll-mt-24 py-[clamp(80px,7.6vw+50px,180px)]"
       aria-labelledby="stack-heading"
     >
       <div aria-hidden="true" className="bg-dotmatrix pointer-events-none absolute inset-0" />
 
-      <div className="relative mx-auto w-full max-w-[1200px] px-4 lg:px-16">
+      <div className="relative mx-auto w-full max-w-[1280px] px-4 lg:px-16">
         <div ref={headerRef}>
           <p className="terminal-cursor mb-3 font-mono text-xs uppercase tracking-[0.12em] text-ink-dim">
-            {"// ARCHITECTURE"}
+            {'// "ARCHITECTURE"'}
           </p>
-          <h2 id="stack-heading" className="mb-2 font-heading text-3xl font-semibold text-ink">
+          <h2 id="stack-heading" className="mb-4 font-heading text-3xl font-semibold text-ink">
             THE STACK
           </h2>
-          <p className="mb-12 text-base text-ink-dim">Building from bare metal to browser.</p>
+          <p className="mb-12 max-w-[60ch] text-base text-ink-dim">Building from bare metal to browser.</p>
         </div>
 
         <div ref={layersContainerRef} className="flex flex-col">

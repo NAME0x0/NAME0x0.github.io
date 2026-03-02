@@ -210,10 +210,10 @@ export function Hero() {
         <div className="absolute -right-[1px] -top-[1px] h-2 w-2 border-r border-t border-ink-dim/50" />
         <div className="absolute -bottom-[1px] -left-[1px] h-2 w-2 border-b border-l border-ink-dim/50" />
         <div className="absolute -bottom-[1px] -right-[1px] h-2 w-2 border-b border-r border-ink-dim/50" />
-        <div className="text-halo-sm absolute top-4 left-4 font-mono text-[10px] uppercase tracking-widest text-ink-dim/70">
+        <div className="text-halo-sm absolute top-4 left-4 font-mono text-[11px] uppercase tracking-[0.16em] text-ink-dim/70">
           SYS.INIT // SOVEREIGN_ARCHITECT
         </div>
-        <div className="text-halo-sm absolute bottom-4 right-4 font-mono text-[10px] uppercase tracking-widest text-ink-dim/70">
+        <div className="text-halo-sm absolute bottom-4 right-4 font-mono text-[11px] uppercase tracking-[0.16em] text-ink-dim/70">
           SECURE ENCLAVE ACTIVE
         </div>
       </div>
@@ -239,23 +239,23 @@ export function Hero() {
         >
           {ROLE_TEXT}
         </p>
-        <p ref={summaryRef} className="text-halo-sm mt-5 max-w-[760px] text-balance text-sm text-ink-dim sm:text-base">
+        <p ref={summaryRef} className="text-halo-sm mt-5 max-w-[65ch] text-balance text-sm text-ink-dim sm:text-base">
           {summaryText}
         </p>
-        <div ref={actionsRef} className="mt-8 flex flex-wrap items-center justify-center gap-3">
+        <div ref={actionsRef} className="mt-8 flex flex-wrap items-center justify-center gap-4">
           <a
             href="#projects"
             onClick={(e) => handleScrollTo(e, "projects")}
-            className="text-halo-sm inline-flex items-center border border-ink/40 bg-void/40 px-4 py-2 font-mono text-xs uppercase tracking-[0.14em] text-ink backdrop-blur-sm transition-colors duration-300 hover:bg-ink hover:text-void hover:[text-shadow:none] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+            className="text-halo-sm inline-flex min-h-11 items-center border border-ink/40 bg-void/40 px-5 py-2.5 font-mono text-xs uppercase tracking-[0.12em] text-ink backdrop-blur-sm transition-colors duration-300 hover:bg-ink hover:text-void hover:[text-shadow:none] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
           >
-            View Work
+            "VIEW WORK"
           </a>
           <a
             href="#contact"
             onClick={(e) => handleScrollTo(e, "contact")}
-            className="text-halo-sm inline-flex items-center border border-ink-faint/60 bg-void/40 px-4 py-2 font-mono text-xs uppercase tracking-[0.14em] text-ink-dim backdrop-blur-sm transition-colors duration-300 hover:border-ink hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+            className="text-halo-sm inline-flex min-h-11 items-center border border-ink-faint/60 bg-void/40 px-5 py-2.5 font-mono text-xs uppercase tracking-[0.12em] text-ink-dim backdrop-blur-sm transition-colors duration-300 hover:border-ink hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
           >
-            Start Conversation
+            "START CONVERSATION"
           </a>
         </div>
       </div>
@@ -264,7 +264,7 @@ export function Hero() {
         aria-hidden="true"
         className="absolute bottom-12 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2"
       >
-        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-dim">
+        <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-dim">
           AWAITING_INPUT
         </span>
         <div className="h-4 w-[6px] bg-ink-dim" />

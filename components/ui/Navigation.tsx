@@ -244,12 +244,12 @@ export function Navigation({ activeSection }: NavigationProps) {
       <div ref={navRef} className="fixed top-0 z-40 w-full pointer-events-none opacity-0">
         <nav
           aria-label="Main navigation"
-          className="hidden items-center justify-between border-b border-ink/10 bg-void/80 px-8 py-5 backdrop-blur-[12px] transition-all duration-500 lg:flex"
+          className="relative hidden h-16 items-center justify-between border-b border-ink/10 bg-void/80 px-6 backdrop-blur-[12px] transition-all duration-500 lg:flex xl:px-8"
         >
           <a
             href="#hero"
             onClick={(event) => handleNavClick(event, "hero", false)}
-            className="group flex items-baseline font-mono text-sm font-bold tracking-[0.06em] text-ink transition-opacity duration-300 hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+            className="group inline-flex min-h-11 items-center gap-0.5 px-1 font-mono text-sm font-semibold tracking-[0.04em] text-ink transition-opacity duration-300 hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
             aria-current={activeSection === "hero" ? "page" : undefined}
             aria-label="NAME0x0, go to home"
           >
@@ -258,7 +258,7 @@ export function Navigation({ activeSection }: NavigationProps) {
             <span className="text-ink-dim/50 transition-colors duration-300 group-hover:text-ink-dim" aria-hidden="true">&quot;</span>
           </a>
 
-          <div className="relative flex items-center gap-8">
+          <div className="relative flex items-center gap-7">
             {DESKTOP_NAV_ITEMS.map((item) => {
               const isActive = activeSection === item.id;
               return (
@@ -266,19 +266,27 @@ export function Navigation({ activeSection }: NavigationProps) {
                   key={item.id}
                   href={`#${item.id}`}
                   onClick={(event) => handleNavClick(event, item.id, false)}
-                  className={`font-mono text-[11px] uppercase tracking-[0.15em] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink ${isActive ? "text-ink font-semibold" : "text-ink-dim font-medium hover:text-ink"
+                  className={`inline-flex min-h-11 items-center px-1 font-mono text-sm uppercase tracking-[0.1em] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink ${isActive ? "text-ink font-semibold" : "text-ink-dim font-medium hover:text-ink"
                     }`}
                   aria-current={isActive ? "page" : undefined}
                 >
-                  {isActive ? `[ ${item.label} ]` : item.label}
+                  {isActive ? `[ "${item.label}" ]` : item.label}
                 </a>
               );
             })}
           </div>
 
-          <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink-dim">
+          <p className="font-mono text-xs uppercase tracking-[0.12em] text-ink-dim">
             {`PAGE ${String(activePosition).padStart(2, "0")} / ${String(totalSections).padStart(2, "0")}`}
           </p>
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-px opacity-45"
+            style={{
+              background:
+                "repeating-linear-gradient(90deg, rgba(232, 228, 222, 0.3) 0 12px, transparent 12px 20px)",
+            }}
+          />
         </nav>
 
         <button
@@ -288,7 +296,7 @@ export function Navigation({ activeSection }: NavigationProps) {
           aria-expanded={isOpen}
           aria-controls="mobile-navigation-dialog"
           onClick={() => setIsOpen(true)}
-          className={`fixed right-4 top-4 z-50 items-center justify-center p-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink lg:hidden ${isOpen ? "hidden" : "flex"
+          className={`fixed right-4 top-4 z-50 h-11 w-11 items-center justify-center p-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink lg:hidden ${isOpen ? "hidden" : "flex"
             }`}
         >
           <span className="flex flex-col space-y-[5px]">
@@ -330,7 +338,7 @@ export function Navigation({ activeSection }: NavigationProps) {
           aria-label="Close menu"
           tabIndex={isOpen ? 0 : -1}
           onClick={() => setIsOpen(false)}
-          className="absolute right-4 top-4 z-[70] p-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+          className="absolute right-4 top-4 z-[70] h-11 w-11 p-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
         >
           <span className="relative block h-6 w-6">
             <span className="absolute left-0 top-1/2 h-[2px] w-6 -translate-y-1/2 rotate-45 bg-ink" />
@@ -349,17 +357,17 @@ export function Navigation({ activeSection }: NavigationProps) {
                 }}
                 tabIndex={isOpen ? 0 : -1}
                 onClick={(event) => handleNavClick(event, item.id, true)}
-                className={`font-mono text-xl uppercase tracking-widest transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink lg:text-2xl ${activeSection === item.id ? "text-ink font-bold" : "text-ink-dim hover:text-ink"
+                className={`font-mono text-xl uppercase tracking-[0.14em] transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink lg:text-2xl ${activeSection === item.id ? "text-ink font-bold" : "text-ink-dim hover:text-ink"
                   }`}
                 aria-current={activeSection === item.id ? "page" : undefined}
               >
-                {activeSection === item.id ? `[ ${item.label} ]` : item.label}
+                {activeSection === item.id ? `[ "${item.label}" ]` : item.label}
               </a>
             ))}
           </div>
         </nav>
 
-        <p className="pointer-events-none absolute bottom-8 left-1/2 -translate-x-1/2 font-mono text-[11px] uppercase tracking-[0.14em] text-ink-dim">
+        <p className="pointer-events-none absolute bottom-8 left-1/2 -translate-x-1/2 font-mono text-xs uppercase tracking-[0.12em] text-ink-dim">
           {`PAGE ${String(activePosition).padStart(2, "0")} / ${String(totalSections).padStart(2, "0")}`}
         </p>
       </div>

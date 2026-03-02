@@ -236,18 +236,18 @@ export function Projects() {
     <section
       ref={sectionRef}
       id="projects"
-      className="relative z-10 min-h-screen scroll-mt-24 py-[clamp(80px,7.6vw+50px,160px)]"
+      className="relative z-10 min-h-screen scroll-mt-24 py-[clamp(80px,7.6vw+50px,180px)]"
       aria-labelledby="projects-heading"
     >
-      <div className="mx-auto w-full max-w-[1200px] px-4 lg:px-16">
+      <div className="mx-auto w-full max-w-[1280px] px-4 lg:px-16">
         <p className="terminal-cursor mb-3 font-mono text-xs uppercase tracking-[0.12em] text-ink-dim">
-          {"// DEPLOYMENTS"}
+          {'// "DEPLOYMENTS"'}
         </p>
-        <h2 id="projects-heading" className="mb-8 font-heading text-3xl font-semibold text-ink">
+        <h2 id="projects-heading" className="mb-6 font-heading text-3xl font-semibold text-ink">
           WORK
         </h2>
 
-        <div className="mb-8">
+        <div className="mb-10">
           <FilterTabs
             categories={FILTER_CATEGORIES}
             active={activeFilter}
