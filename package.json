@@ -2,7 +2,7 @@
   "name": "futuristic-portfolio-prototype",
   "version": "1.0.0",
   "private": true,
-  "description": "Cinematic single-page portfolio for Muhammad Afsah Mumtaz with Next.js, Tailwind, GSAP, and Three.js",
+  "description": "Production source for a cinematic single-page portfolio built with Next.js, TypeScript, GSAP, and Three.js.",
   "scripts": {
     "dev": "next dev",
     "snapshot": "node scripts/fetch-github-snapshot.mjs",

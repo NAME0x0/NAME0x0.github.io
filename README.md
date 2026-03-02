@@ -1,39 +1,48 @@
-﻿# NAME0x0 Portfolio (Next.js + Three.js)
+﻿# NAME0x0 Portfolio
 
-Single-page portfolio rebuilt for high-end hiring and personal brand presence.
+## About
 
-## Visual system
-
-- Systems-minimal typography and spacing rhythm
-- Layered topographic 3D terrain
-- Grunge abstract strata overlays
-- Dot-matrix field animation inspired by hardware UI language
-- Scroll-cinematic section orchestration via GSAP
+This repository contains the production source for a cinematic, single-page portfolio built to present systems architecture work through interactive motion, 3D visuals, and curated project data.
 
 ## Stack
 
-- Next.js 14 (static export for GitHub Pages)
-- TailwindCSS
-- GSAP ScrollTrigger
-- Three.js / React Three Fiber
+- Next.js 14 (App Router, static export)
+- TypeScript
+- Tailwind CSS
+- GSAP (ScrollTrigger)
+- Three.js + React Three Fiber
 - SWR
 
-## Data model
+## Data flow
 
-Hybrid repository pipeline:
+Project data uses a hybrid GitHub pipeline:
 
 1. Build-time snapshot at `public/data/github-snapshot.json`
-2. Runtime live refresh from GitHub API
-3. Automatic fallback to snapshot when live refresh is unavailable
+2. Runtime refresh from GitHub API
+3. Automatic fallback to the snapshot when live fetch fails
+
+## Local development
+
+```bash
+npm install
+npm run dev
+```
 
 ## Scripts
 
 ```bash
-npm run dev
-npm run snapshot   # refresh local snapshot
-npm run typecheck
-npm run lint
-npm run build
+npm run snapshot   # refresh GitHub snapshot data
+npm run lint       # eslint (Next.js config)
+npm run typecheck  # tsc --noEmit
+npm run build      # static export (writes to out/)
 ```
 
-`npm run build` runs the snapshot script automatically through `prebuild`.
+`npm run build` executes `prebuild`, which refreshes the snapshot automatically.
+
+## CI/CD
+
+GitHub Actions workflow: `.github/workflows/nextjs.yml`
+
+- Runs on `pull_request` and `push` to `main`
+- Enforces `lint` and `typecheck` before build
+- Builds static output and deploys to GitHub Pages on non-PR runs
