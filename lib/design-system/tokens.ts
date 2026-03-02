@@ -109,7 +109,7 @@ export const components = {
     background: colors.glass.fill,
     backdropFilter: `blur(${colors.glass.blur})`,
     border: `1px solid ${colors.glass.stroke}`,
-    borderRadius: "0.5rem",
+    borderRadius: "0",
     shadow: shadows.glass,
     hoverShadow: shadows["glow-hover"],
   },

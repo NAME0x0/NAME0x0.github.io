@@ -11,6 +11,7 @@ import {
 import { useGitHubPortfolioData } from "@/lib/hooks/useGitHubPortfolioData";
 import { FilterTabs } from "@/components/ui/FilterTabs";
 import { ProjectCard, type ProjectCardProps } from "@/components/ui/ProjectCard";
+import { MOTION } from "@/lib/motion/motionTokens";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -128,15 +129,15 @@ export function Projects() {
       }
 
       gsap.from(cards, {
-        y: 30,
+        y: MOTION.translate.card,
         opacity: 0,
         rotateX: 1,
-        stagger: { each: 0.1, from: "start" },
-        duration: 1.0,
-        ease: "power2.out",
+        stagger: { each: MOTION.stagger.cards, from: "start" },
+        duration: MOTION.duration.slow,
+        ease: MOTION.ease.reveal,
         scrollTrigger: {
           trigger: gridEl,
-          start: "top 85%",
+          start: MOTION.trigger.standard,
           once: true,
         },
       });
@@ -176,13 +177,13 @@ export function Projects() {
 
       gsap.fromTo(
         cards,
-        { opacity: 0, y: 15 },
+        { opacity: 0, y: MOTION.translate.md },
         {
           opacity: 1,
           y: 0,
-          stagger: 0.06,
-          duration: 0.5,
-          ease: "power2.out",
+          stagger: MOTION.stagger.filterCards,
+          duration: MOTION.duration.normal,
+          ease: MOTION.ease.reveal,
         }
       );
     }, sectionEl);
@@ -218,10 +219,10 @@ export function Projects() {
 
       gsap.to(cards, {
         opacity: 0,
-        y: 12,
-        stagger: 0.04,
-        duration: 0.35,
-        ease: "power2.in",
+        y: MOTION.translate.sm,
+        stagger: MOTION.stagger.filterExit,
+        duration: MOTION.duration.fast,
+        ease: MOTION.ease.exit,
         onComplete: () => {
           shouldAnimateFilterInRef.current = true;
           setActiveFilter(category);
@@ -235,12 +236,12 @@ export function Projects() {
     <section
       ref={sectionRef}
       id="projects"
-      className="relative z-10 py-[clamp(80px,7.6vw+50px,160px)]"
+      className="relative z-10 min-h-screen scroll-mt-24 py-[clamp(80px,7.6vw+50px,160px)]"
       aria-labelledby="projects-heading"
     >
       <div className="mx-auto w-full max-w-[1200px] px-4 lg:px-16">
         <p className="terminal-cursor mb-3 font-mono text-xs uppercase tracking-[0.12em] text-ink-dim">
-          // DEPLOYMENTS
+          {"// DEPLOYMENTS"}
         </p>
         <h2 id="projects-heading" className="mb-8 font-heading text-3xl font-semibold text-ink">
           WORK
@@ -251,11 +252,17 @@ export function Projects() {
             categories={FILTER_CATEGORIES}
             active={activeFilter}
             onChange={handleFilterChange}
+            controlsId="projects-grid"
+            label="Filter projects by stack layer"
           />
         </div>
 
         <div
           ref={gridRef}
+          id="projects-grid"
+          role="region"
+          aria-labelledby="projects-heading"
+          aria-live="polite"
           className="grid grid-cols-1 gap-6 lg:grid-cols-2"
         >
           {filteredProjects.map((project) => (

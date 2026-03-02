@@ -7,9 +7,17 @@ export interface FilterTabsProps {
   categories: readonly string[];
   active: string;
   onChange: (category: string) => void;
+  controlsId?: string;
+  label?: string;
 }
 
-export function FilterTabs({ categories, active, onChange }: FilterTabsProps) {
+export function FilterTabs({
+  categories,
+  active,
+  onChange,
+  controlsId,
+  label = "Project category filters",
+}: FilterTabsProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const indicatorRef = useRef<HTMLDivElement | null>(null);
   const tabRefs = useRef<Record<string, HTMLButtonElement | null>>({});
@@ -23,6 +31,10 @@ export function FilterTabs({ categories, active, onChange }: FilterTabsProps) {
       setIndicatorReady(false);
       return;
     }
+
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
 
     const ctx = gsap.context(() => {
       const positionIndicator = (animate: boolean) => {
@@ -40,7 +52,7 @@ export function FilterTabs({ categories, active, onChange }: FilterTabsProps) {
 
         setIndicatorReady(true);
 
-        if (animate) {
+        if (animate && !prefersReducedMotion) {
           gsap.to(indicatorEl, {
             left,
             width,
@@ -72,6 +84,8 @@ export function FilterTabs({ categories, active, onChange }: FilterTabsProps) {
   return (
     <div
       ref={containerRef}
+      role="toolbar"
+      aria-label={label}
       className="relative flex gap-6 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
     >
       {categories.map((category) => {
@@ -82,6 +96,7 @@ export function FilterTabs({ categories, active, onChange }: FilterTabsProps) {
             : isActive
               ? "text-ink"
               : "text-ink-dim hover:text-ink";
+        const currentIndex = categories.indexOf(category);
 
         return (
           <button
@@ -91,6 +106,35 @@ export function FilterTabs({ categories, active, onChange }: FilterTabsProps) {
             }}
             type="button"
             onClick={() => onChange(category)}
+            onKeyDown={(event) => {
+              if (
+                event.key !== "ArrowRight" &&
+                event.key !== "ArrowLeft" &&
+                event.key !== "Home" &&
+                event.key !== "End"
+              ) {
+                return;
+              }
+
+              event.preventDefault();
+
+              let nextIndex = currentIndex;
+              if (event.key === "ArrowRight") {
+                nextIndex = (currentIndex + 1) % categories.length;
+              } else if (event.key === "ArrowLeft") {
+                nextIndex = (currentIndex - 1 + categories.length) % categories.length;
+              } else if (event.key === "Home") {
+                nextIndex = 0;
+              } else if (event.key === "End") {
+                nextIndex = categories.length - 1;
+              }
+
+              const nextCategory = categories[nextIndex];
+              onChange(nextCategory);
+              tabRefs.current[nextCategory]?.focus();
+            }}
+            aria-pressed={isActive}
+            aria-controls={controlsId}
             className={`whitespace-nowrap pb-1.5 font-mono text-xs uppercase tracking-[0.12em] transition-colors duration-200 ${activeClass}`}
           >
             {category}

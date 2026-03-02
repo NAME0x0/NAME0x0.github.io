@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SOVEREIGN_STACK } from "@/lib/data/curated";
+import { MOTION } from "@/lib/motion/motionTokens";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -55,13 +56,13 @@ export function SovereignStack() {
       }
 
       gsap.from(headerEl, {
-        x: -30,
+        x: -MOTION.translate.card,
         opacity: 0,
-        duration: 1.0,
-        ease: "power2.out",
+        duration: MOTION.duration.slow,
+        ease: MOTION.ease.reveal,
         scrollTrigger: {
           trigger: sectionEl,
-          start: "top 80%",
+          start: MOTION.trigger.standard,
           once: true,
         },
       });
@@ -70,14 +71,14 @@ export function SovereignStack() {
 
       if (layerEls.length > 0) {
         gsap.from(layerEls, {
-          x: -20,
+          x: -MOTION.translate.md,
           opacity: 0,
-          stagger: 0.15,
-          duration: 0.9,
-          ease: "power2.out",
+          stagger: MOTION.stagger.layers,
+          duration: MOTION.duration.slow,
+          ease: MOTION.ease.reveal,
           scrollTrigger: {
             trigger: layersContainerEl,
-            start: "top 75%",
+            start: MOTION.trigger.standard,
             once: true,
           },
         });
@@ -98,12 +99,12 @@ export function SovereignStack() {
             { scaleX: 0, transformOrigin: "left" },
             {
               scaleX: 1,
-              duration: 0.9,
-              delay: index * 0.08,
-              ease: "power2.out",
+              duration: MOTION.duration.slow,
+              delay: index * MOTION.stagger.lines,
+              ease: MOTION.ease.reveal,
               scrollTrigger: {
                 trigger: rowEl,
-                start: "top 82%",
+                start: MOTION.trigger.standard,
                 once: true,
               },
             }
@@ -120,13 +121,13 @@ export function SovereignStack() {
             { opacity: 0 },
             {
               keyframes: [
-                { opacity: 1, duration: 0.4, ease: "power2.out" },
-                { opacity: 0.6, duration: 0.5, ease: "power2.out" },
+                { opacity: 1, duration: MOTION.duration.fast, ease: MOTION.ease.reveal },
+                { opacity: 0.6, duration: MOTION.duration.fast, ease: MOTION.ease.reveal },
               ],
               immediateRender: false,
               scrollTrigger: {
                 trigger: numberEl,
-                start: "top 84%",
+                start: MOTION.trigger.lazy,
                 once: true,
               },
             }
@@ -142,7 +143,7 @@ export function SovereignStack() {
     <section
       ref={sectionRef}
       id="stack"
-      className="relative z-10 min-h-screen py-[clamp(80px,7.6vw+50px,160px)]"
+      className="relative z-10 min-h-screen scroll-mt-24 py-[clamp(80px,7.6vw+50px,160px)]"
       aria-labelledby="stack-heading"
     >
       <div aria-hidden="true" className="bg-dotmatrix pointer-events-none absolute inset-0" />
@@ -150,7 +151,7 @@ export function SovereignStack() {
       <div className="relative mx-auto w-full max-w-[1200px] px-4 lg:px-16">
         <div ref={headerRef}>
           <p className="terminal-cursor mb-3 font-mono text-xs uppercase tracking-[0.12em] text-ink-dim">
-            // ARCHITECTURE
+            {"// ARCHITECTURE"}
           </p>
           <h2 id="stack-heading" className="mb-2 font-heading text-3xl font-semibold text-ink">
             THE STACK
@@ -163,7 +164,7 @@ export function SovereignStack() {
             <div
               key={layer.name}
               data-layer-row
-              className="group relative flex flex-col items-start gap-6 border-b border-ink-faint/20 py-6 transition-colors duration-300 hover:bg-[rgba(232,228,222,0.02)] last:border-b-0 lg:flex-row"
+              className="group relative flex flex-col items-start gap-6 border-b border-ink-faint/40 py-6 transition-colors duration-300 hover:bg-[rgba(232,228,222,0.02)] last:border-b-0 lg:flex-row"
             >
               <span
                 data-layer-number
@@ -190,7 +191,7 @@ export function SovereignStack() {
                 <div
                   aria-hidden="true"
                   data-layer-line
-                  className="pointer-events-none absolute bottom-0 left-0 h-px w-full origin-left bg-ink-faint"
+                  className="pointer-events-none absolute bottom-0 left-0 h-px w-full origin-left bg-ink-dim/30"
                 />
               ) : null}
             </div>

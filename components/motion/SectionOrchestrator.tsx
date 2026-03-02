@@ -2,17 +2,13 @@
 
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useScrollSpy } from "@/lib/hooks/useScrollSpy";
-
-gsap.registerPlugin(ScrollTrigger);
-
-const SECTION_IDS: string[] = ["hero", "stack", "projects", "about", "contact"];
+import { SECTION_ORDER } from "@/lib/navigation/sections";
 
 export function SectionOrchestrator() {
   const progressWrapperRef = useRef<HTMLDivElement>(null);
   const barRef = useRef<HTMLDivElement>(null);
-  const activeSection = useScrollSpy(SECTION_IDS);
+  const activeSection = useScrollSpy(SECTION_ORDER);
 
   useEffect(() => {
     const progressWrapperEl = progressWrapperRef.current;
@@ -25,41 +21,94 @@ export function SectionOrchestrator() {
       "(prefers-reduced-motion: reduce)"
     ).matches;
 
-    const ctx = gsap.context(() => {
-      let isVisible = false;
+    let isVisible = false;
+    let rafId = 0;
 
-      gsap.to(barEl, {
-        scaleX: 1,
-        ease: "none",
-        scrollTrigger: {
-          trigger: document.documentElement,
-          start: "top top",
-          end: "bottom bottom",
-          scrub: prefersReducedMotion ? true : 0.3,
-          onUpdate: (self) => {
-            const shouldShow = self.progress > 0.05;
+    const setScaleX = prefersReducedMotion
+      ? (value: number) => {
+          gsap.set(barEl, { scaleX: value });
+        }
+      : gsap.quickTo(barEl, "scaleX", {
+          duration: 0.18,
+          ease: "power2.out",
+          overwrite: "auto",
+        });
 
-            if (shouldShow !== isVisible) {
-              isVisible = shouldShow;
-              gsap.to(progressWrapperEl, {
-                opacity: shouldShow ? 1 : 0,
-                duration: prefersReducedMotion ? 0 : 0.3,
-                ease: "power2.out",
-                overwrite: "auto",
-              });
-            }
+    const getProgress = () => {
+      const doc = document.documentElement;
+      const body = document.body;
+      const scrollTop = window.scrollY || doc.scrollTop || body.scrollTop || 0;
+      const scrollHeight = Math.max(doc.scrollHeight, body.scrollHeight);
+      const viewportHeight = window.innerHeight || doc.clientHeight || 1;
+      const maxScroll = Math.max(1, scrollHeight - viewportHeight);
 
-            window.dispatchEvent(
-              new CustomEvent("portfolio-scroll-progress", {
-                detail: { progress: self.progress },
-              })
-            );
-          },
-        },
-      });
-    }, progressWrapperEl);
+      return Math.max(0, Math.min(1, scrollTop / maxScroll));
+    };
 
-    return () => ctx.revert();
+    const applyProgress = (progress: number) => {
+      setScaleX(progress);
+
+      const shouldShow = progress > 0.05;
+      if (shouldShow !== isVisible) {
+        isVisible = shouldShow;
+        gsap.to(progressWrapperEl, {
+          opacity: shouldShow ? 1 : 0,
+          duration: prefersReducedMotion ? 0 : 0.3,
+          ease: "power2.out",
+          overwrite: "auto",
+        });
+      }
+
+      window.dispatchEvent(
+        new CustomEvent("portfolio-scroll-progress", {
+          detail: { progress },
+        })
+      );
+    };
+
+    const update = () => {
+      rafId = 0;
+      applyProgress(getProgress());
+    };
+
+    const requestUpdate = () => {
+      if (rafId !== 0) {
+        window.cancelAnimationFrame(rafId);
+      }
+      rafId = window.requestAnimationFrame(update);
+    };
+
+    const warmupTimers = [
+      window.setTimeout(requestUpdate, 80),
+      window.setTimeout(requestUpdate, 250),
+      window.setTimeout(requestUpdate, 700),
+      window.setTimeout(requestUpdate, 1400),
+    ];
+
+    const resizeObserver =
+      typeof ResizeObserver !== "undefined"
+        ? new ResizeObserver(() => requestUpdate())
+        : null;
+
+    resizeObserver?.observe(document.documentElement);
+    resizeObserver?.observe(document.body);
+
+    window.addEventListener("scroll", requestUpdate, { passive: true });
+    window.addEventListener("resize", requestUpdate);
+    window.addEventListener("orientationchange", requestUpdate);
+
+    requestUpdate();
+
+    return () => {
+      if (rafId !== 0) {
+        window.cancelAnimationFrame(rafId);
+      }
+      warmupTimers.forEach((timer) => window.clearTimeout(timer));
+      resizeObserver?.disconnect();
+      window.removeEventListener("scroll", requestUpdate);
+      window.removeEventListener("resize", requestUpdate);
+      window.removeEventListener("orientationchange", requestUpdate);
+    };
   }, []);
 
   useEffect(() => {

@@ -1,38 +1,107 @@
 "use client";
 
-import { Canvas } from "@react-three/fiber";
+import { useRef, type RefObject } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { KineticWall } from "@/components/three/KineticWall";
 import { VoidParticles } from "@/components/three/VoidParticles";
 import { WaveSurface } from "@/components/three/WaveSurface";
 import { usePerformanceTier } from "@/lib/hooks/usePerformanceTier";
+import {
+  computeSceneParams,
+  WALL_ROWS_DESKTOP,
+  WALL_ROWS_TABLET,
+  WALL_ROWS_MOBILE,
+  type SceneParams,
+} from "@/lib/scene/sceneConfig";
 
 export interface SceneContainerProps {
-  scrollProgress: number;
-  activeSection: string;
-  mousePosition: [number, number];
+  scrollProgressRef: RefObject<number>;
+  mousePosRef: RefObject<[number, number]>;
 }
 
-function clamp01(value: number): number {
-  if (value < 0) {
-    return 0;
-  }
+interface SceneDriverProps {
+  scrollProgressRef: RefObject<number>;
+  mousePosRef: RefObject<[number, number]>;
+  particleCount: number;
+  waveSegments: number;
+  wallRows: number;
+}
 
-  if (value > 1) {
-    return 1;
-  }
+function SceneDriver({
+  scrollProgressRef,
+  mousePosRef,
+  particleCount,
+  waveSegments,
+  wallRows,
+}: SceneDriverProps) {
+  const paramsRef = useRef<SceneParams>({
+    particleOpacity: 1,
+    particleSpeed: 1,
+    wallOpacity: 1,
+    wallEnergy: 1,
+    wallRevealTarget: 1,
+    waveOpacity: 0,
+    waveAmplitude: 0,
+  });
 
-  return value;
+  const particleOpacityRef = useRef(1);
+  const particleSpeedRef = useRef(1);
+  const wallOpacityRef = useRef(1);
+  const wallEnergyRef = useRef(1);
+  const wallRevealRef = useRef(1);
+  const waveOpacityRef = useRef(0);
+  const waveAmplitudeRef = useRef(0);
+  const scrollYRef = useRef(0);
+  const mousePosPassRef = useRef<[number, number]>([0, 0]);
+
+  useFrame(() => {
+    const scroll = scrollProgressRef.current ?? 0;
+    const params = computeSceneParams(scroll);
+    paramsRef.current = params;
+
+    // Update values for children to read
+    particleOpacityRef.current = params.particleOpacity;
+    particleSpeedRef.current = params.particleSpeed;
+    wallOpacityRef.current = params.wallOpacity;
+    wallEnergyRef.current = params.wallEnergy;
+    wallRevealRef.current = params.wallRevealTarget;
+    waveOpacityRef.current = params.waveOpacity;
+    waveAmplitudeRef.current = params.waveAmplitude;
+    scrollYRef.current = -scroll * 1.5;
+    mousePosPassRef.current = mousePosRef.current ?? [0, 0];
+  });
+
+  return (
+    <>
+      <VoidParticles
+        count={particleCount}
+        globalOpacityRef={particleOpacityRef}
+        speedScaleRef={particleSpeedRef}
+        scrollYRef={scrollYRef}
+      />
+      <KineticWall
+        globalOpacityRef={wallOpacityRef}
+        energyRef={wallEnergyRef}
+        revealTargetRef={wallRevealRef}
+        mousePosRef={mousePosPassRef}
+        wallRows={wallRows}
+      />
+      <WaveSurface
+        segments={waveSegments}
+        globalOpacityRef={waveOpacityRef}
+        amplitudeRef={waveAmplitudeRef}
+      />
+    </>
+  );
 }
 
 export function SceneContainer({
-  scrollProgress,
-  activeSection,
-  mousePosition,
+  scrollProgressRef,
+  mousePosRef,
 }: SceneContainerProps) {
   const { tier, config } = usePerformanceTier();
 
   if (tier === "reduced" || config.disabled) {
-    // CSS-only fallback: subtle grid pattern evokes the kinetic wall
     return (
       <div
         className="kinetic-wall-fallback"
@@ -41,11 +110,12 @@ export function SceneContainer({
     );
   }
 
-  const clampedScroll = clamp01(scrollProgress);
-  const isContactSection = activeSection === "contact" || clampedScroll > 0.82;
-  const particlesVisible = clampedScroll < 0.96;
-  const wallVisible = !isContactSection && clampedScroll < 0.8;
-  const wallProgress = clamp01((clampedScroll - 0.02) / 0.45);
+  const wallRows =
+    tier === "desktop"
+      ? WALL_ROWS_DESKTOP
+      : tier === "tablet"
+        ? WALL_ROWS_TABLET
+        : WALL_ROWS_MOBILE;
 
   return (
     <div
@@ -65,21 +135,16 @@ export function SceneContainer({
         style={{ background: "transparent" }}
         resize={{ scroll: false }}
       >
-        <VoidParticles
-          count={config.particleCount}
-          scrollY={-clampedScroll * 1.5}
-          visible={particlesVisible}
+        <SceneDriver
+          scrollProgressRef={scrollProgressRef}
+          mousePosRef={mousePosRef}
+          particleCount={config.particleCount}
+          waveSegments={config.waveSegments}
+          wallRows={wallRows}
         />
-        <KineticWall
-          progress={wallVisible ? wallProgress : 0}
-          mousePosition={mousePosition}
-          visible={wallVisible}
-        />
-        <WaveSurface segments={config.waveSegments} visible={isContactSection} />
       </Canvas>
     </div>
   );
 }
 
 export default SceneContainer;
-

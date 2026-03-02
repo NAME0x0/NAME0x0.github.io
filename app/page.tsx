@@ -1,9 +1,10 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { Suspense, useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import Navigation from "@/components/ui/Navigation";
 import SectionOrchestrator from "@/components/motion/SectionOrchestrator";
+import { isSectionId, type SectionId } from "@/lib/navigation/sections";
 
 const SceneContainer = dynamic(() => import("@/components/three/SceneContainer"), {
   ssr: false,
@@ -32,26 +33,28 @@ function SectionShimmer() {
 }
 
 export default function Page() {
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const [activeSection, setActiveSection] = useState("hero");
-  const [mousePos, setMousePos] = useState<[number, number]>([0, 0]);
+  const scrollProgressRef = useRef(0);
+  const mousePosRef = useRef<[number, number]>([0, 0]);
+  const [activeSection, setActiveSection] = useState<SectionId>("hero");
 
   const handleMouseMove = useCallback((event: MouseEvent) => {
-    setMousePos([
+    mousePosRef.current = [
       (event.clientX / window.innerWidth) * 2 - 1,
       -(event.clientY / window.innerHeight) * 2 + 1,
-    ]);
+    ];
   }, []);
 
   useEffect(() => {
     const onProgress: EventListener = (event) => {
       const customEvent = event as CustomEvent<ScrollProgressDetail>;
-      setScrollProgress(customEvent.detail.progress);
+      scrollProgressRef.current = customEvent.detail.progress;
     };
 
     const onSection: EventListener = (event) => {
       const customEvent = event as CustomEvent<ActiveSectionDetail>;
-      setActiveSection(customEvent.detail.section);
+      if (isSectionId(customEvent.detail.section)) {
+        setActiveSection(customEvent.detail.section);
+      }
     };
 
     window.addEventListener("mousemove", handleMouseMove);
@@ -69,13 +72,12 @@ export default function Page() {
     <>
       <Suspense fallback={null}>
         <SceneContainer
-          scrollProgress={scrollProgress}
-          activeSection={activeSection}
-          mousePosition={mousePos}
+          scrollProgressRef={scrollProgressRef}
+          mousePosRef={mousePosRef}
         />
       </Suspense>
 
-      <Navigation />
+      <Navigation activeSection={activeSection} />
       <SectionOrchestrator />
 
       <main

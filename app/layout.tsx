@@ -5,7 +5,7 @@ import "./globals.css";
 import { StructuredData } from "@/components/StructuredData";
 
 const spaceGrotesk = Space_Grotesk({
-  weight: ["400", "600", "700"],
+  weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
   variable: "--font-heading",
   display: "swap",

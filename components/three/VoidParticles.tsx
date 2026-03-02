@@ -1,30 +1,35 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, type RefObject } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
+import { PARTICLE_OPACITY_DAMP } from "@/lib/scene/sceneConfig";
 
 export interface VoidParticlesProps {
   count: number;
-  scrollY: number;
-  visible: boolean;
+  globalOpacityRef: RefObject<number>;
+  speedScaleRef: RefObject<number>;
+  scrollYRef: RefObject<number>;
 }
 
 type VoidUniforms = {
   uTime: { value: number };
   uScrollY: { value: number };
   uResolution: { value: THREE.Vector2 };
+  uGlobalOpacity: { value: number };
+  uSpeedScale: { value: number };
 };
 
 const vertexShader = /* glsl */ `
   uniform float uTime;
   uniform float uScrollY;
   uniform vec2 uResolution;
+  uniform float uSpeedScale;
   attribute float aRandomOffset;
   varying float vDepthFactor;
 
   void main() {
-    float time = uTime;
+    float time = uTime * uSpeedScale;
     float randomOffset = aRandomOffset;
     vec3 pos = position;
 
@@ -44,6 +49,7 @@ const vertexShader = /* glsl */ `
 `;
 
 const fragmentShader = /* glsl */ `
+  uniform float uGlobalOpacity;
   varying float vDepthFactor;
 
   void main() {
@@ -55,14 +61,25 @@ const fragmentShader = /* glsl */ `
     }
 
     float edge = smoothstep(0.5, 0.4, dist);
-    float opacity = mix(0.03, 0.15, vDepthFactor) * edge;
+    float opacity = mix(0.03, 0.15, vDepthFactor) * edge * uGlobalOpacity;
+
+    if (opacity < 0.001) {
+      discard;
+    }
+
     gl_FragColor = vec4(vec3(0.91, 0.89, 0.87), opacity);
   }
 `;
 
-export function VoidParticles({ count, scrollY, visible }: VoidParticlesProps) {
+export function VoidParticles({
+  count,
+  globalOpacityRef,
+  speedScaleRef,
+  scrollYRef,
+}: VoidParticlesProps) {
   const geometryRef = useRef<THREE.BufferGeometry>(null);
   const materialRef = useRef<THREE.ShaderMaterial>(null);
+  const dampedOpacity = useRef(1);
   const { size } = useThree();
 
   const uniforms = useMemo<VoidUniforms>(
@@ -70,6 +87,8 @@ export function VoidParticles({ count, scrollY, visible }: VoidParticlesProps) {
       uTime: { value: 0 },
       uScrollY: { value: 0 },
       uResolution: { value: new THREE.Vector2(1, 1) },
+      uGlobalOpacity: { value: 1 },
+      uSpeedScale: { value: 1 },
     }),
     []
   );
@@ -105,23 +124,41 @@ export function VoidParticles({ count, scrollY, visible }: VoidParticlesProps) {
   }, [particleData]);
 
   useEffect(() => {
+    const geometry = geometryRef.current;
+    const material = materialRef.current;
+
     return () => {
-      geometryRef.current?.dispose();
-      materialRef.current?.dispose();
+      geometry?.dispose();
+      material?.dispose();
     };
   }, []);
 
-  useFrame(({ clock }) => {
-    if (!visible || materialRef.current === null) {
+  useFrame(({ clock }, delta) => {
+    const mat = materialRef.current;
+    if (!mat) return;
+
+    const targetOpacity = globalOpacityRef.current ?? 0;
+    dampedOpacity.current = THREE.MathUtils.damp(
+      dampedOpacity.current,
+      targetOpacity,
+      PARTICLE_OPACITY_DAMP,
+      delta
+    );
+
+    // Skip uniform updates when effectively invisible
+    if (dampedOpacity.current < 0.005) {
+      mat.uniforms.uGlobalOpacity.value = 0;
       return;
     }
 
-    materialRef.current.uniforms.uTime.value = clock.getElapsedTime();
-    materialRef.current.uniforms.uScrollY.value = scrollY;
+    mat.uniforms.uGlobalOpacity.value = dampedOpacity.current;
+    mat.uniforms.uSpeedScale.value = speedScaleRef.current ?? 1;
+    mat.uniforms.uTime.value = clock.getElapsedTime();
+    mat.uniforms.uScrollY.value = scrollYRef.current ?? 0;
   });
 
   return (
-    <points visible={visible} frustumCulled={false}>
+    <points frustumCulled={false}>
       <bufferGeometry ref={geometryRef} />
       <shaderMaterial
         ref={materialRef}

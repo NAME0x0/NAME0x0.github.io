@@ -3,39 +3,38 @@
 import { useCallback, useEffect, useRef, useState, type MouseEvent } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ScrollToPlugin } from "gsap/ScrollToPlugin";
-import { useScrollSpy } from "@/lib/hooks/useScrollSpy";
+import {
+  DESKTOP_NAV_ITEMS,
+  MOBILE_NAV_ITEMS,
+  SECTION_ORDER,
+  getSectionPosition,
+  type SectionId,
+} from "@/lib/navigation/sections";
 
-gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+gsap.registerPlugin(ScrollTrigger);
 
-type NavItem = {
-  id: string;
-  label: string;
+type NavigationProps = {
+  activeSection: SectionId;
 };
 
-const NAV_ITEMS: NavItem[] = [
-  { id: "stack", label: "Stack" },
-  { id: "projects", label: "Work" },
-  { id: "about", label: "About" },
-  { id: "contact", label: "Contact" },
-];
-
-const SPY_SECTION_IDS: string[] = ["hero", "stack", "projects", "about", "contact"];
-
-export function Navigation() {
+export function Navigation({ activeSection }: NavigationProps) {
   const navRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
-  const desktopLinksRef = useRef<HTMLDivElement>(null);
-  const desktopLinkRefs = useRef<Array<HTMLAnchorElement | null>>([]);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const previousActiveElementRef = useRef<HTMLElement | null>(null);
   const mobileLinkRefs = useRef<Array<HTMLAnchorElement | null>>([]);
-  const indicatorRef = useRef<HTMLDivElement>(null);
-  const scrollTweenRef = useRef<gsap.core.Tween | null>(null);
-  const scrollContextRef = useRef<gsap.Context | null>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const activeSection = useScrollSpy(SPY_SECTION_IDS);
+  const activePosition = getSectionPosition(activeSection);
+  const totalSections = SECTION_ORDER.length;
 
-  const scrollToSection = useCallback((sectionId: string) => {
+  const scrollToSection = useCallback((sectionId: SectionId) => {
     if (typeof window === "undefined") {
+      return;
+    }
+
+    const target = document.getElementById(sectionId);
+    if (!target) {
       return;
     }
 
@@ -43,26 +42,18 @@ export function Navigation() {
       "(prefers-reduced-motion: reduce)"
     ).matches;
 
-    scrollTweenRef.current?.kill();
-    scrollContextRef.current?.revert();
-
-    scrollContextRef.current = gsap.context(() => {
-      scrollTweenRef.current = gsap.to(window, {
-        scrollTo: `#${sectionId}`,
-        duration: prefersReducedMotion ? 0 : 1,
-        ease: prefersReducedMotion ? "none" : "power2.inOut",
-        overwrite: "auto",
-        onComplete: () => {
-          scrollTweenRef.current = null;
-          scrollContextRef.current?.revert();
-          scrollContextRef.current = null;
-        },
-      });
+    target.scrollIntoView({
+      behavior: prefersReducedMotion ? "auto" : "smooth",
+      block: "start",
     });
+
+    if (window.location.hash !== `#${sectionId}`) {
+      window.history.replaceState(null, "", `#${sectionId}`);
+    }
   }, []);
 
   const handleNavClick = useCallback(
-    (event: MouseEvent<HTMLAnchorElement>, sectionId: string, closeMenu: boolean) => {
+    (event: MouseEvent<HTMLAnchorElement>, sectionId: SectionId, closeMenu: boolean) => {
       event.preventDefault();
       if (closeMenu) {
         setIsOpen(false);
@@ -72,6 +63,7 @@ export function Navigation() {
     [scrollToSection]
   );
 
+  // Nav bar visibility on scroll
   useEffect(() => {
     const navEl = navRef.current;
     if (!navEl || typeof window === "undefined") {
@@ -96,8 +88,11 @@ export function Navigation() {
         },
       });
 
+      const heroEl = document.getElementById("hero");
+
       ScrollTrigger.create({
-        start: "100vh top",
+        trigger: heroEl ?? document.documentElement,
+        start: heroEl ? "bottom top" : "100vh top",
         onEnter: () => visibilityTween.play(),
         onLeaveBack: () => visibilityTween.reverse(),
       });
@@ -106,6 +101,7 @@ export function Navigation() {
     return () => ctx.revert();
   }, []);
 
+  // Escape key to close
   useEffect(() => {
     if (!isOpen || typeof window === "undefined") {
       return;
@@ -121,75 +117,123 @@ export function Navigation() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [isOpen]);
 
+  // aria-hidden on <main> when mobile menu opens
   useEffect(() => {
-    if (!isOpen || typeof window === "undefined") {
-      return;
+    const mainEl = document.getElementById("main");
+    if (!mainEl) return;
+
+    if (isOpen) {
+      mainEl.setAttribute("aria-hidden", "true");
+    } else {
+      mainEl.removeAttribute("aria-hidden");
     }
-
-    const overlayEl = overlayRef.current;
-    if (!overlayEl) {
-      return;
-    }
-
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        overlayEl,
-        { opacity: prefersReducedMotion ? 1 : 0 },
-        { opacity: 1, duration: prefersReducedMotion ? 0 : 0.2, ease: "power2.out" }
-      );
-
-      const links = mobileLinkRefs.current.filter(
-        (link): link is HTMLAnchorElement => link !== null
-      );
-      if (links.length > 0) {
-        gsap.fromTo(
-          links,
-          { y: prefersReducedMotion ? 0 : 30, opacity: prefersReducedMotion ? 1 : 0 },
-          {
-            y: 0,
-            opacity: 1,
-            stagger: prefersReducedMotion ? 0 : 0.1,
-            duration: prefersReducedMotion ? 0 : 0.4,
-            ease: "power2.out",
-          }
-        );
-      }
-    }, overlayEl);
 
     return () => {
-      document.body.style.overflow = previousOverflow;
-      ctx.revert();
+      mainEl.removeAttribute("aria-hidden");
     };
   }, [isOpen]);
 
+  // Overlay open/close animation + focus trap
   useEffect(() => {
-    const linksContainerEl = desktopLinksRef.current;
-    if (!linksContainerEl || typeof window === "undefined") {
-      return;
-    }
+    const overlayEl = overlayRef.current;
+    if (!overlayEl || typeof window === "undefined") return;
 
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
 
-    // We are no longer using the animated bottom border indicator.
-    // Active state is now handled purely via React state/props in the render loop
-    // representing terminal style brackets `[ Link ]`.
+    if (isOpen) {
+      const previousActiveElement =
+        document.activeElement instanceof HTMLElement ? document.activeElement : null;
+      previousActiveElementRef.current = previousActiveElement;
+      document.body.style.overflow = "hidden";
 
-  }, [activeSection]);
+      const ctx = gsap.context(() => {
+        gsap.to(overlayEl, {
+          opacity: 1,
+          duration: prefersReducedMotion ? 0 : 0.2,
+          ease: "power2.out",
+        });
 
-  useEffect(() => {
-    return () => {
-      scrollTweenRef.current?.kill();
-      scrollContextRef.current?.revert();
-    };
-  }, []);
+        const links = mobileLinkRefs.current.filter(
+          (link): link is HTMLAnchorElement => link !== null
+        );
+        if (links.length > 0) {
+          gsap.fromTo(
+            links,
+            { y: prefersReducedMotion ? 0 : 30, opacity: prefersReducedMotion ? 1 : 0 },
+            {
+              y: 0,
+              opacity: 1,
+              stagger: prefersReducedMotion ? 0 : 0.1,
+              duration: prefersReducedMotion ? 0 : 0.4,
+              ease: "power2.out",
+            }
+          );
+        }
+      }, overlayEl);
+
+      const focusTarget = closeButtonRef.current ?? mobileLinkRefs.current[0];
+      if (focusTarget) {
+        window.requestAnimationFrame(() => {
+          focusTarget.focus();
+        });
+      }
+
+      const trapFocus = (event: KeyboardEvent) => {
+        if (event.key !== "Tab") {
+          return;
+        }
+
+        const focusable = Array.from(
+          overlayEl.querySelectorAll<HTMLElement>(
+            "a[href], button:not([disabled]), [tabindex]:not([tabindex='-1'])"
+          )
+        ).filter((element) => !element.hasAttribute("disabled"));
+
+        if (focusable.length === 0) {
+          return;
+        }
+
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        const active = document.activeElement;
+
+        if (event.shiftKey && active === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && active === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      };
+
+      window.addEventListener("keydown", trapFocus);
+
+      return () => {
+        window.removeEventListener("keydown", trapFocus);
+        ctx.revert();
+      };
+    } else {
+      // Animate out
+      const ctx = gsap.context(() => {
+        gsap.to(overlayEl, {
+          opacity: 0,
+          duration: prefersReducedMotion ? 0 : 0.2,
+          ease: "power2.in",
+        });
+      }, overlayEl);
+
+      document.body.style.overflow = "";
+      const restoreTarget = previousActiveElementRef.current ?? menuButtonRef.current;
+      restoreTarget?.focus();
+      previousActiveElementRef.current = null;
+
+      return () => {
+        ctx.revert();
+      };
+    }
+  }, [isOpen]);
 
   return (
     <>
@@ -200,28 +244,29 @@ export function Navigation() {
       <div ref={navRef} className="fixed top-0 z-40 w-full pointer-events-none opacity-0">
         <nav
           aria-label="Main navigation"
-          className="hidden items-center justify-between border-b border-ink-faint bg-void/80 px-6 py-4 backdrop-blur-[12px] transition-all duration-500 lg:flex"
+          className="hidden items-center justify-between border-b border-ink/10 bg-void/80 px-8 py-5 backdrop-blur-[12px] transition-all duration-500 lg:flex"
         >
           <a
             href="#hero"
             onClick={(event) => handleNavClick(event, "hero", false)}
-            className="font-heading text-sm font-bold text-ink transition-all duration-300 hover:tracking-[0.05em] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+            className="group flex items-baseline font-mono text-sm font-bold tracking-[0.06em] text-ink transition-opacity duration-300 hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+            aria-current={activeSection === "hero" ? "page" : undefined}
+            aria-label="NAME0x0, go to home"
           >
-            NAME0x0
+            <span className="text-ink-dim/50 transition-colors duration-300 group-hover:text-ink-dim" aria-hidden="true">&quot;</span>
+            <span>NAME0x0</span>
+            <span className="text-ink-dim/50 transition-colors duration-300 group-hover:text-ink-dim" aria-hidden="true">&quot;</span>
           </a>
 
-          <div ref={desktopLinksRef} className="relative flex items-center gap-8">
-            {NAV_ITEMS.map((item, index) => {
+          <div className="relative flex items-center gap-8">
+            {DESKTOP_NAV_ITEMS.map((item) => {
               const isActive = activeSection === item.id;
               return (
                 <a
                   key={item.id}
                   href={`#${item.id}`}
-                  ref={(element) => {
-                    desktopLinkRefs.current[index] = element;
-                  }}
                   onClick={(event) => handleNavClick(event, item.id, false)}
-                  className={`font-mono text-[11px] uppercase tracking-[0.15em] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink ${isActive ? "text-ink font-semibold" : "text-ink-dim hover:text-ink"
+                  className={`font-mono text-[11px] uppercase tracking-[0.15em] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink ${isActive ? "text-ink font-semibold" : "text-ink-dim font-medium hover:text-ink"
                     }`}
                   aria-current={isActive ? "page" : undefined}
                 >
@@ -230,11 +275,18 @@ export function Navigation() {
               );
             })}
           </div>
+
+          <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink-dim">
+            {`PAGE ${String(activePosition).padStart(2, "0")} / ${String(totalSections).padStart(2, "0")}`}
+          </p>
         </nav>
 
         <button
+          ref={menuButtonRef}
           type="button"
           aria-label="Open navigation menu"
+          aria-expanded={isOpen}
+          aria-controls="mobile-navigation-dialog"
           onClick={() => setIsOpen(true)}
           className={`fixed right-4 top-4 z-50 items-center justify-center p-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink lg:hidden ${isOpen ? "hidden" : "flex"
             }`}
@@ -247,47 +299,70 @@ export function Navigation() {
         </button>
       </div>
 
-      {isOpen ? (
-        <div
-          ref={overlayRef}
-          className="fixed inset-0 z-[60] bg-void"
-          style={{
-            background:
-              "radial-gradient(circle at center, rgba(232, 228, 222, 0.08) 0%, rgba(0, 0, 0, 0) 55%), #000000",
-          }}
+      {/* Always-mounted mobile overlay — animated via opacity */}
+      <div
+        ref={overlayRef}
+        id="mobile-navigation-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="mobile-navigation-title"
+        aria-hidden={!isOpen}
+        className={`fixed inset-0 z-[60] bg-void ${
+          isOpen ? "pointer-events-auto" : "pointer-events-none"
+        }`}
+        style={{
+          opacity: 0,
+          background:
+            "radial-gradient(circle at center, rgba(232, 228, 222, 0.08) 0%, rgba(0, 0, 0, 0) 55%), #000000",
+        }}
+        onMouseDown={(event) => {
+          if (isOpen && event.target === event.currentTarget) {
+            setIsOpen(false);
+          }
+        }}
+      >
+        <h2 id="mobile-navigation-title" className="sr-only">
+          Site navigation
+        </h2>
+        <button
+          ref={closeButtonRef}
+          type="button"
+          aria-label="Close menu"
+          tabIndex={isOpen ? 0 : -1}
+          onClick={() => setIsOpen(false)}
+          className="absolute right-4 top-4 z-[70] p-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
         >
-          <button
-            type="button"
-            aria-label="Close menu"
-            onClick={() => setIsOpen(false)}
-            className="absolute right-4 top-4 z-[70] p-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
-          >
-            <span className="relative block h-6 w-6">
-              <span className="absolute left-0 top-1/2 h-[2px] w-6 -translate-y-1/2 rotate-45 bg-ink" />
-              <span className="absolute left-0 top-1/2 h-[2px] w-6 -translate-y-1/2 -rotate-45 bg-ink" />
-            </span>
-          </button>
+          <span className="relative block h-6 w-6">
+            <span className="absolute left-0 top-1/2 h-[2px] w-6 -translate-y-1/2 rotate-45 bg-ink" />
+            <span className="absolute left-0 top-1/2 h-[2px] w-6 -translate-y-1/2 -rotate-45 bg-ink" />
+          </span>
+        </button>
 
-          <nav aria-label="Main navigation" className="flex h-full items-center justify-center">
-            <div className="flex flex-col items-center gap-8">
-              {NAV_ITEMS.map((item, index) => (
-                <a
-                  key={item.id}
-                  href={`#${item.id}`}
-                  ref={(element) => {
-                    mobileLinkRefs.current[index] = element;
-                  }}
-                  onClick={(event) => handleNavClick(event, item.id, true)}
-                  className={`font-mono text-xl uppercase tracking-widest transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink lg:text-2xl ${activeSection === item.id ? "text-ink font-bold" : "text-ink-dim hover:text-ink"
-                    }`}
-                >
-                  {activeSection === item.id ? `[ ${item.label} ]` : item.label}
-                </a>
-              ))}
-            </div>
-          </nav>
-        </div>
-      ) : null}
+        <nav aria-label="Main navigation" className="flex h-full items-center justify-center">
+          <div className="flex flex-col items-center gap-8">
+            {MOBILE_NAV_ITEMS.map((item, index) => (
+              <a
+                key={item.id}
+                href={`#${item.id}`}
+                ref={(element) => {
+                  mobileLinkRefs.current[index] = element;
+                }}
+                tabIndex={isOpen ? 0 : -1}
+                onClick={(event) => handleNavClick(event, item.id, true)}
+                className={`font-mono text-xl uppercase tracking-widest transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink lg:text-2xl ${activeSection === item.id ? "text-ink font-bold" : "text-ink-dim hover:text-ink"
+                  }`}
+                aria-current={activeSection === item.id ? "page" : undefined}
+              >
+                {activeSection === item.id ? `[ ${item.label} ]` : item.label}
+              </a>
+            ))}
+          </div>
+        </nav>
+
+        <p className="pointer-events-none absolute bottom-8 left-1/2 -translate-x-1/2 font-mono text-[11px] uppercase tracking-[0.14em] text-ink-dim">
+          {`PAGE ${String(activePosition).padStart(2, "0")} / ${String(totalSections).padStart(2, "0")}`}
+        </p>
+      </div>
     </>
   );
 }

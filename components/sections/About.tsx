@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { capabilities, languageDistribution, profile } from "@/lib/data/profile";
 import { useGitHubPortfolioData } from "@/lib/hooks/useGitHubPortfolioData";
+import { MOTION } from "@/lib/motion/motionTokens";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -137,25 +138,25 @@ export function About() {
       }
 
       gsap.from(leftEl, {
-        x: -25,
+        x: -MOTION.translate.lg,
         opacity: 0,
-        duration: 1.0,
-        ease: "power2.out",
+        duration: MOTION.duration.slow,
+        ease: MOTION.ease.reveal,
         scrollTrigger: {
           trigger: sectionEl,
-          start: "top 75%",
+          start: MOTION.trigger.standard,
           once: true,
         },
       });
 
       gsap.from(rightEl, {
-        x: 25,
+        x: MOTION.translate.lg,
         opacity: 0,
-        duration: 1.0,
-        ease: "power2.out",
+        duration: MOTION.duration.slow,
+        ease: MOTION.ease.reveal,
         scrollTrigger: {
           trigger: sectionEl,
-          start: "top 75%",
+          start: MOTION.trigger.standard,
           once: true,
         },
       });
@@ -164,12 +165,12 @@ export function About() {
         gsap.from(barEls, {
           scaleX: 0,
           transformOrigin: "left",
-          stagger: 0.1,
-          duration: 1.0,
-          ease: "power3.out",
+          stagger: MOTION.stagger.bars,
+          duration: MOTION.duration.slow,
+          ease: MOTION.ease.indicator,
           scrollTrigger: {
             trigger: chartEl,
-            start: "top 80%",
+            start: MOTION.trigger.lazy,
             once: true,
           },
         });
@@ -184,13 +185,13 @@ export function About() {
 
           gsap.from(el, {
             textContent: 0,
-            duration: 1.5,
-            delay: index * 0.2,
+            duration: MOTION.duration.crawl,
+            delay: index * MOTION.stagger.stats,
             snap: { textContent: 1 },
-            ease: "power2.out",
+            ease: MOTION.ease.reveal,
             scrollTrigger: {
               trigger: statsEl,
-              start: "top 80%",
+              start: MOTION.trigger.lazy,
               once: true,
             },
             onUpdate: () => {
@@ -215,14 +216,18 @@ export function About() {
     <section
       ref={sectionRef}
       id="about"
-      className="relative z-10 py-[clamp(80px,7.6vw+50px,160px)]"
+      className="relative z-10 min-h-screen scroll-mt-24 py-[clamp(80px,7.6vw+50px,160px)]"
       aria-labelledby="about-heading"
     >
-      <div className="mx-auto w-full max-w-[1200px] px-4 lg:px-16">
+      {/* Dark vignette behind content for readability over particles */}
+      <div className="pointer-events-none absolute inset-0" aria-hidden="true"
+        style={{ background: "radial-gradient(ellipse 80% 60% at 50% 50%, rgba(0,0,0,0.55) 0%, transparent 70%)" }}
+      />
+      <div className="relative mx-auto w-full max-w-[1200px] px-4 lg:px-16">
         <div className="grid grid-cols-1 gap-20 lg:grid-cols-[1.5fr_1fr]">
           <div ref={leftRef}>
             <p className="terminal-cursor mb-3 font-mono text-xs uppercase tracking-[0.12em] text-ink-dim">
-              // IDENTITY
+              {"// IDENTITY"}
             </p>
             <h2 id="about-heading" className="mb-2 font-heading text-3xl font-semibold text-ink">
               ABOUT
@@ -297,7 +302,7 @@ export function About() {
                         }}
                       />
                     </div>
-                    <span className="min-w-[36px] font-mono text-sm text-ink-faint">
+                    <span className="min-w-[36px] font-mono text-sm text-ink-dim">
                       {language.percentage}%
                     </span>
                   </div>

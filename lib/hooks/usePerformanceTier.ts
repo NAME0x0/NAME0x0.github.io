@@ -6,6 +6,7 @@ export type PerfTier = "desktop" | "tablet" | "mobile" | "reduced";
 
 export interface TierConfig {
   dpr: number;
+  /** Reserved for future dot-matrix background density. */
   dotCount: number;
   particleCount: number;
   waveSegments: number;
@@ -18,6 +19,8 @@ const TIER_CONFIGS: Record<PerfTier, TierConfig> = {
   mobile: { dpr: 1, dotCount: 500, particleCount: 60, waveSegments: 32 },
   reduced: { dpr: 1, dotCount: 0, particleCount: 0, waveSegments: 0, disabled: true },
 };
+
+const RESIZE_DEBOUNCE_MS = 300;
 
 function detectTier(): PerfTier {
   if (typeof window === "undefined") {
@@ -60,23 +63,40 @@ export function usePerformanceTier(): { tier: PerfTier; config: TierConfig } {
   });
 
   useEffect(() => {
-    if (cachedTierRef.current !== null) {
+    const update = () => {
+      const detectedTier = detectTier();
+      cachedTierRef.current = detectedTier;
       setState({
-        tier: cachedTierRef.current,
-        config: resolveConfig(cachedTierRef.current),
+        tier: detectedTier,
+        config: resolveConfig(detectedTier),
       });
-      return;
-    }
+    };
 
-    const detectedTier = detectTier();
-    cachedTierRef.current = detectedTier;
+    update();
 
-    setState({
-      tier: detectedTier,
-      config: resolveConfig(detectedTier),
-    });
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+
+    const handleResize = () => {
+      if (timeoutId !== null) {
+        clearTimeout(timeoutId);
+      }
+      timeoutId = setTimeout(() => {
+        const newTier = detectTier();
+        if (newTier !== cachedTierRef.current) {
+          update();
+        }
+      }, RESIZE_DEBOUNCE_MS);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      if (timeoutId !== null) {
+        clearTimeout(timeoutId);
+      }
+    };
   }, []);
 
   return state;
 }
-

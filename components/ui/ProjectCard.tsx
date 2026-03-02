@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-
 export interface ProjectCardProps {
   name: string;
   description: string;
@@ -22,26 +20,14 @@ export function ProjectCard({
   repoUrl,
   featured,
 }: ProjectCardProps) {
-  const [isHovered, setIsHovered] = useState(false);
   const resolvedLanguage = language?.trim() || "Unknown";
   const resolvedLanguageColor = languageColor || "#6e7681";
   const topicLabel = topics.length > 0 ? topics.join(" \u00B7 ") : "No topics";
-  const cardStyle = {
-    transition:
-      "transform 0.3s cubic-bezier(0.22,1,0.36,1), box-shadow 0.3s cubic-bezier(0.22,1,0.36,1)",
-    transform: isHovered ? "translateY(-4px)" : "translateY(0)",
-    boxShadow: isHovered
-      ? "0 8px 32px rgba(0,0,0,0.4), 0 0 20px rgba(232,228,222,0.05)"
-      : "none",
-  };
 
   return (
-    <div
-      className={`glass-card flex flex-col gap-3 p-6 ${featured ? "glass-card--featured" : ""}`}
+    <article
+      className={`project-card group glass-card flex flex-col gap-3 p-6 ${featured ? "glass-card--featured" : ""}`}
       data-project-card
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      style={cardStyle}
     >
       <div className="flex items-start justify-between gap-3">
         <h3 className="font-heading text-xl font-semibold text-ink">{name}</h3>
@@ -54,11 +40,7 @@ export function ProjectCard({
 
       <p className="line-clamp-3 text-sm text-ink-dim">{description}</p>
 
-      <p
-        className={`truncate font-mono text-sm transition-colors duration-300 ${
-          isHovered ? "text-ink-dim" : "text-ink-faint"
-        }`}
-      >
+      <p className="truncate font-mono text-sm text-ink-faint transition-colors duration-300 group-hover:text-ink-dim group-focus-within:text-ink-dim">
         {topicLabel}
       </p>
 
@@ -77,7 +59,8 @@ export function ProjectCard({
             href={repoUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="group inline-flex items-center font-mono text-sm text-ink-dim transition-colors duration-200 hover:text-ink"
+            aria-label={`Open ${name} repository on GitHub`}
+            className="group inline-flex items-center font-mono text-sm text-ink-dim transition-colors duration-200 hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
           >
             GitHub
             <span
@@ -89,9 +72,8 @@ export function ProjectCard({
           </a>
         ) : null}
       </div>
-    </div>
+    </article>
   );
 }
 
 export default ProjectCard;
-

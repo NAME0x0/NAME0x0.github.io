@@ -41,16 +41,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Global SVG filter definition for Liquid Glass */
-body::before {
-  content: "";
-  display: block;
-  position: absolute;
-  width: 0;
-  height: 0;
-  overflow: hidden;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='liquidGlass'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.02 0.04' numOctaves='3' result='noise'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.5 0' in='noise' result='coloredNoise'/%3E%3CfeDisplacementMap in='SourceGraphic' in2='coloredNoise' scale='10' xChannelSelector='R' yChannelSelector='G'/%3E%3C/filter%3E%3C/svg%3E");
-}
 
 ::selection {
   background: #E8E4DE;
@@ -143,12 +133,9 @@ button,
   position: relative;
   overflow: hidden;
   background: rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(232, 228, 222, 0.05);
+  border: 1px solid rgba(232, 228, 222, 0.08);
   border-radius: 0;
-  /* Brutalist sharp edges */
-  backdrop-filter: blur(16px) saturate(120%);
-  filter: url('#liquidGlass');
-  /* Apply Liquid Glass Filter */
+  backdrop-filter: blur(12px) saturate(120%);
   transition:
     transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1),
@@ -163,6 +150,23 @@ button,
      Instead, we use a sharp structural transform. */
   transform: translateX(4px);
   box-shadow: -4px 0 0 rgba(232, 228, 222, 0.2);
+}
+
+.project-card {
+  will-change: transform;
+  transition:
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.3s ease;
+}
+
+.project-card:hover,
+.project-card:focus-within {
+  transform: translateY(-4px);
+  border-color: rgba(232, 228, 222, 0.32);
+  box-shadow:
+    0 10px 28px rgba(0, 0, 0, 0.35),
+    0 0 18px rgba(232, 228, 222, 0.08);
 }
 
 .glass-card--featured {
@@ -239,7 +243,37 @@ button,
 }
 
 canvas {
-  will-change: contents;
+  display: block;
+}
+
+/* Dark halo behind text for readability over animated 3D backgrounds.
+   Uses multiple text-shadows to create a soft black cushion without
+   changing the text color itself. */
+.text-halo {
+  text-shadow:
+    0 0 8px rgba(0, 0, 0, 0.9),
+    0 0 20px rgba(0, 0, 0, 0.6),
+    0 0 40px rgba(0, 0, 0, 0.3);
+}
+
+.text-halo-sm {
+  text-shadow:
+    0 0 6px rgba(0, 0, 0, 0.9),
+    0 0 14px rgba(0, 0, 0, 0.5);
+}
+
+/* Section content backdrop — subtle darkened region behind text areas */
+.section-backdrop {
+  position: relative;
+}
+
+.section-backdrop::before {
+  content: '';
+  position: absolute;
+  inset: -20px -40px;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.5) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: -1;
 }
 
 /* Kinetic wall CSS fallback for reduced-motion / no-WebGL */
@@ -283,7 +317,9 @@ canvas {
     transform: none !important;
   }
 
-  .terminal-cursor::after {
-    animation: cursor-blink 1s step-end infinite !important;
+  .project-card:hover,
+  .project-card:focus-within {
+    transform: none !important;
+    box-shadow: none !important;
   }
 }

@@ -73,7 +73,7 @@ const config: Config = {
         "bar-fill": `bar-fill 1.2s ${animations.easing.smooth} forwards`,
       },
       borderRadius: {
-        glass: "0.5rem",
+        glass: "0",
       },
       transitionTimingFunction: {
         smooth: animations.easing.smooth,
