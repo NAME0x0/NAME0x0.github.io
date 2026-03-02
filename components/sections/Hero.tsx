@@ -248,14 +248,14 @@ export function Hero() {
             onClick={(e) => handleScrollTo(e, "projects")}
             className="text-halo-sm inline-flex min-h-11 items-center border border-ink/40 bg-void/40 px-5 py-2.5 font-mono text-xs uppercase tracking-[0.12em] text-ink backdrop-blur-sm transition-colors duration-300 hover:bg-ink hover:text-void hover:[text-shadow:none] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
           >
-            "VIEW WORK"
+            &quot;VIEW WORK&quot;
           </a>
           <a
             href="#contact"
             onClick={(e) => handleScrollTo(e, "contact")}
             className="text-halo-sm inline-flex min-h-11 items-center border border-ink-faint/60 bg-void/40 px-5 py-2.5 font-mono text-xs uppercase tracking-[0.12em] text-ink-dim backdrop-blur-sm transition-colors duration-300 hover:border-ink hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
           >
-            "START CONVERSATION"
+            &quot;START CONVERSATION&quot;
           </a>
         </div>
       </div>
