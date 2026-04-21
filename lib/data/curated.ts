@@ -88,18 +88,24 @@ export const SOVEREIGN_STACK: {
 ];
 
 export const curatedFlagshipOrder = [
-  "OMNI",
-  "SMNTC",
+  "pane",
   "AVA",
   "MALD",
-  "MAVIS",
-  "Terminus",
+  "SMNTC",
+  "OMNI",
   "Tangled",
-  "WebDesk",
+  "MAVIS",
   "QuickTask",
+  "Terminus",
+  "WebDesk",
 ] as const;
 
 export const curatedProjectOverrides: CuratedProjectOverrides = {
+  pane: {
+    layer: "foundation",
+    featured: true,
+    topics: ["rust", "linux", "windows", "wsl", "desktop-environment"],
+  },
   OMNI: {
     layer: "intelligence",
     featured: true,

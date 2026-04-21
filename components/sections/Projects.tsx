@@ -40,8 +40,28 @@ interface ProjectCardViewModel extends ProjectCardProps {
   sourceIndex: number;
 }
 
+const FLAGSHIP_PROJECT_NAMES = new Set(
+  curatedFlagshipOrder.map((name) => name.toLowerCase())
+);
+
 function isFilterCategory(value: string): value is FilterCategory {
   return FILTER_CATEGORIES.includes(value as FilterCategory);
+}
+
+function hasGitHubDescription(description: string | undefined): boolean {
+  return Boolean(description && description.trim().length > 0);
+}
+
+function isFlagshipProject(repo: {
+  name: string;
+  description?: string;
+  archived?: boolean;
+}): boolean {
+  if (!hasGitHubDescription(repo.description) || repo.archived) {
+    return false;
+  }
+
+  return FLAGSHIP_PROJECT_NAMES.has(repo.name.toLowerCase());
 }
 
 export function Projects() {
@@ -53,7 +73,9 @@ export function Projects() {
   const [activeFilter, setActiveFilter] = useState<FilterCategory>("ALL");
 
   const projects = useMemo(() => {
-    const repositories = data?.repositories ?? [];
+    const repositories = (data?.repositories ?? []).filter((repo) =>
+      isFlagshipProject(repo)
+    );
     const orderIndex = new Map(
       curatedFlagshipOrder.map((name, index) => [name.toLowerCase(), index])
     );
@@ -65,7 +87,7 @@ export function Projects() {
 
       return {
         name: repo.name,
-        description: (override?.description ?? repo.description ?? "No description provided.").trim(),
+        description: repo.description.trim(),
         layer: override?.layer ?? repo.layer,
         topics,
         language,
