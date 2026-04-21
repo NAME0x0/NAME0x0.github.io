@@ -26,7 +26,11 @@ export const metadata: Metadata = {
     "I design sovereign computing systems across operating environments, AI workflows, and immersive interfaces.",
   metadataBase: new URL("https://name0x0.is-a.dev"),
   icons: {
-    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.svg", type: "image/svg+xml" },
+    ],
+    shortcut: ["/favicon.ico"],
   },
   openGraph: {
     title: "Muhammad Afsah Mumtaz \u2014 Systems Architect",

@@ -8,6 +8,7 @@ const username = process.env.GITHUB_USERNAME || "NAME0x0";
 const token = process.env.GITHUB_TOKEN || "";
 const outputPath = path.join(process.cwd(), "public", "data", "github-snapshot.json");
 const timeoutMs = 12000;
+const contributionLookbackDays = 365;
 
 const languageColors = {
   Rust: "#dea584",
@@ -43,6 +44,60 @@ async function requestJson(pathname) {
     }
 
     return response.json();
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
+async function requestText(url, headers = {}) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers,
+      signal: controller.signal,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Request failed ${response.status} ${url}`);
+    }
+
+    return response.text();
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
+async function requestGraphQL(query, variables) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    const response = await fetch("https://api.github.com/graphql", {
+      method: "POST",
+      headers: {
+        Accept: "application/vnd.github+json",
+        "Content-Type": "application/json",
+        "X-GitHub-Api-Version": "2022-11-28",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: JSON.stringify({ query, variables }),
+      signal: controller.signal,
+    });
+
+    if (!response.ok) {
+      throw new Error(`GitHub GraphQL request failed ${response.status}`);
+    }
+
+    const payload = await response.json();
+
+    if (payload.errors?.length) {
+      throw new Error(payload.errors.map((error) => error.message).join("; "));
+    }
+
+    return payload.data;
   } finally {
     clearTimeout(timeoutId);
   }
@@ -92,7 +147,71 @@ function cleanText(value) {
     .trim();
 }
 
-function normalizeSnapshot(user, repos) {
+function parseContributionText(input) {
+  const lastYearMatch = input.match(/([\d,]+)\s+contributions?\s+in\s+the\s+last\s+year/i);
+  if (lastYearMatch) {
+    return Number.parseInt(lastYearMatch[1].replace(/,/g, ""), 10);
+  }
+
+  const dataCountMatches = [...input.matchAll(/data-count="(\d+)"/g)];
+  if (dataCountMatches.length > 0) {
+    return dataCountMatches.reduce((sum, [, count]) => sum + Number.parseInt(count, 10), 0);
+  }
+
+  return null;
+}
+
+async function fetchContributionCount(login) {
+  const to = new Date();
+  const from = new Date(to);
+  from.setUTCDate(from.getUTCDate() - contributionLookbackDays);
+
+  if (token) {
+    try {
+      const data = await requestGraphQL(
+        `
+          query ContributionCalendar($login: String!, $from: DateTime!, $to: DateTime!) {
+            user(login: $login) {
+              contributionsCollection(from: $from, to: $to) {
+                contributionCalendar {
+                  totalContributions
+                }
+              }
+            }
+          }
+        `,
+        {
+          login,
+          from: from.toISOString(),
+          to: to.toISOString(),
+        }
+      );
+
+      const total = data?.user?.contributionsCollection?.contributionCalendar?.totalContributions;
+      if (Number.isFinite(total)) {
+        return total;
+      }
+    } catch (error) {
+      console.warn(`[snapshot] contribution GraphQL lookup failed: ${error.message}`);
+    }
+  }
+
+  try {
+    const contributionMarkup = await requestText(
+      `https://github.com/users/${encodeURIComponent(login)}/contributions`,
+      {
+        Accept: "image/svg+xml,text/html;q=0.9,*/*;q=0.8",
+      }
+    );
+
+    return parseContributionText(contributionMarkup);
+  } catch (error) {
+    console.warn(`[snapshot] contribution page lookup failed: ${error.message}`);
+    return null;
+  }
+}
+
+function normalizeSnapshot(user, repos, contributionCount = null) {
   const normalizedRepos = repos
     .filter((repo) => !repo.fork)
     .map((repo) => ({
@@ -121,6 +240,7 @@ function normalizeSnapshot(user, repos) {
       bio: user.bio || undefined,
       company: user.company || undefined,
       location: user.location || undefined,
+      ...(contributionCount !== null ? { contributions: contributionCount } : {}),
       publicRepos: user.public_repos,
       followers: user.followers,
       following: user.following,
@@ -227,6 +347,7 @@ async function createFallbackSnapshot() {
       username,
       displayName: username,
       bio: "Local fallback snapshot",
+      contributions: 0,
       publicRepos: 0,
       followers: 0,
       following: 0,
@@ -242,12 +363,13 @@ async function main() {
   const existing = await readExistingSnapshot();
 
   try {
-    const [user, repos] = await Promise.all([
+    const [user, repos, contributionCount] = await Promise.all([
       requestJson(`/users/${username}`),
       requestJson(`/users/${username}/repos?per_page=100&sort=updated&type=owner`),
+      fetchContributionCount(username),
     ]);
 
-    const snapshot = normalizeSnapshot(user, repos);
+    const snapshot = normalizeSnapshot(user, repos, contributionCount);
     await writeSnapshot(snapshot);
     console.log(`[snapshot] updated ${outputPath} (${snapshot.repositories.length} repos)`);
   } catch (error) {

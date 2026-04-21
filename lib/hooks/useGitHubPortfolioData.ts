@@ -1,5 +1,6 @@
 ﻿"use client";
 
+import { useMemo } from "react";
 import useSWR from "swr";
 import { GITHUB_USERNAME } from "@/lib/data/curated";
 import { fetchLiveDataset, fetchSnapshotDataset } from "@/lib/github/fetch";
@@ -31,7 +32,29 @@ export function useGitHubPortfolioData(
     }
   );
 
-  const data = live.data ?? snapshot.data ?? null;
+  const data = useMemo<PortfolioDataset | null>(() => {
+    if (!snapshot.data && !live.data) {
+      return null;
+    }
+
+    if (!snapshot.data) {
+      return live.data ?? null;
+    }
+
+    if (!live.data) {
+      return snapshot.data;
+    }
+
+    return {
+      ...live.data,
+      profile: {
+        ...snapshot.data.profile,
+        ...live.data.profile,
+        contributions:
+          live.data.profile.contributions ?? snapshot.data.profile.contributions,
+      },
+    };
+  }, [live.data, snapshot.data]);
   const isLoading = !snapshot.data && snapshot.isLoading;
   const error = data ? null : (live.error as Error | null) ?? (snapshot.error as Error | null) ?? null;
   const isStaleFallback = Boolean(snapshot.data) && !live.data;

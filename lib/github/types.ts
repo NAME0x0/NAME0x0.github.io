@@ -30,6 +30,7 @@ export interface GitHubProfile {
   bio?: string;
   company?: string;
   location?: string;
+  contributions?: number;
   publicRepos: number;
   followers: number;
   following: number;

@@ -93,7 +93,7 @@ export function About() {
   const stats = useMemo<StatItem[]>(
     () => [
       { label: "Repos", value: formatStatValue(reposValue) },
-      { label: "Contributions", value: formatStatValue(contributionCount) },
+      { label: "1Y Contributions", value: formatStatValue(contributionCount) },
       { label: "Stars", value: formatStatValue(starsValue) },
       { label: "Since", value: formatStatValue(sinceValue) },
     ],
