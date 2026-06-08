@@ -7,7 +7,7 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/private/"],
     },
-    sitemap: "https://name0x0.is-a.dev/sitemap.xml",
-    host: "https://name0x0.is-a.dev",
+    sitemap: "https://name0x0.vercel.app/sitemap.xml",
+    host: "https://name0x0.vercel.app",
   };
 }

@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   title: "Muhammad Afsah Mumtaz \u2014 Systems Architect",
   description:
     "I design sovereign computing systems across operating environments, AI workflows, and immersive interfaces.",
-  metadataBase: new URL("https://name0x0.is-a.dev"),
+  metadataBase: new URL("https://name0x0.vercel.app"),
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     title: "Muhammad Afsah Mumtaz \u2014 Systems Architect",
     description:
       "I design sovereign computing systems across operating environments, AI workflows, and immersive interfaces.",
-    url: "https://name0x0.is-a.dev",
+    url: "https://name0x0.vercel.app",
   },
 };
 

@@ -87,8 +87,13 @@ export const SOVEREIGN_STACK: {
   },
 ];
 
+// Pinned flagship leads, shown first in this exact order. Every other flagship
+// repo sorts after these by stars descending (see components/sections/Projects).
+export const pinnedFlagshipOrder = ["Pantheon-Trades", "AVA", "pane"] as const;
+
 export const curatedFlagshipOrder = [
   "pane",
+  "Pantheon-Trades",
   "AVA",
   "MALD",
   "SMNTC",
@@ -105,6 +110,14 @@ export const curatedProjectOverrides: CuratedProjectOverrides = {
     layer: "foundation",
     featured: true,
     topics: ["rust", "linux", "windows", "wsl", "desktop-environment"],
+  },
+  "Pantheon-Trades": {
+    layer: "intelligence",
+    featured: true,
+    description:
+      "A council of eleven AI agents deliberates every prediction-market trade, with restraint anchored on-chain. Polymarket CLOB and Arc testnet, half-Kelly sizing with hard caps, eleven LLM providers behind a single env var.",
+    topics: ["python", "multi-agent", "llm", "prediction-markets", "on-chain", "quant"],
+    homepage: "https://pantheon-trades.vercel.app",
   },
   OMNI: {
     layer: "intelligence",

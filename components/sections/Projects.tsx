@@ -7,6 +7,7 @@ import {
   curatedFlagshipOrder,
   curatedProjectOverrides,
   languageColors,
+  pinnedFlagshipOrder,
 } from "@/lib/data/curated";
 import { useGitHubPortfolioData } from "@/lib/hooks/useGitHubPortfolioData";
 import { FilterTabs } from "@/components/ui/FilterTabs";
@@ -38,6 +39,8 @@ const filterLayerMap: Record<FilterCategory, LayerFilter | null> = {
 
 interface ProjectCardViewModel extends ProjectCardProps {
   sourceIndex: number;
+  stars: number;
+  pushedAt: string;
 }
 
 const FLAGSHIP_PROJECT_NAMES = new Set(
@@ -76,9 +79,6 @@ export function Projects() {
     const repositories = (data?.repositories ?? []).filter((repo) =>
       isFlagshipProject(repo)
     );
-    const orderIndex = new Map(
-      curatedFlagshipOrder.map((name, index) => [name.toLowerCase(), index])
-    );
 
     const mergedProjects = repositories.map((repo, sourceIndex) => {
       const override = curatedProjectOverrides[repo.name];
@@ -95,23 +95,35 @@ export function Projects() {
         repoUrl: repo.url,
         featured: override?.featured ?? repo.featured,
         sourceIndex,
+        stars: repo.stars,
+        pushedAt: repo.pushedAt,
       } satisfies ProjectCardViewModel;
     });
 
+    // Pinned leads first (in their declared order), then the rest by stars desc,
+    // tie-broken on most recent push, then source order.
+    const pinIndex = new Map(
+      pinnedFlagshipOrder.map((name, index) => [name.toLowerCase(), index])
+    );
+
     mergedProjects.sort((a, b) => {
-      const aOrder = orderIndex.get(a.name.toLowerCase());
-      const bOrder = orderIndex.get(b.name.toLowerCase());
+      const aPin = pinIndex.get(a.name.toLowerCase());
+      const bPin = pinIndex.get(b.name.toLowerCase());
 
-      if (aOrder !== undefined && bOrder !== undefined) {
-        return aOrder - bOrder;
+      if (aPin !== undefined || bPin !== undefined) {
+        if (aPin !== undefined && bPin !== undefined) {
+          return aPin - bPin;
+        }
+        return aPin !== undefined ? -1 : 1;
       }
 
-      if (aOrder !== undefined) {
-        return -1;
+      if (a.stars !== b.stars) {
+        return b.stars - a.stars;
       }
 
-      if (bOrder !== undefined) {
-        return 1;
+      const pushDelta = Date.parse(b.pushedAt) - Date.parse(a.pushedAt);
+      if (pushDelta !== 0) {
+        return pushDelta;
       }
 
       return a.sourceIndex - b.sourceIndex;

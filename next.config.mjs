@@ -1,12 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export', // Enable static export for GitHub Pages
-  trailingSlash: true, // Required for GitHub Pages
+  // Deployed on Vercel: full Next.js (Route Handlers + ISR), no static export.
   images: {
-    unoptimized: true, // Required for static export
+    // Avatar is a remote githubusercontent URL; keep unoptimized to avoid
+    // configuring remotePatterns. Revisit to use Vercel image optimization.
+    unoptimized: true,
   },
-  basePath: process.env.NODE_ENV === 'production' ? '' : '', // Set to repo name if needed
-  assetPrefix: process.env.NODE_ENV === 'production' ? '' : '', // Set to repo name if needed
   reactStrictMode: true,
   experimental: {
     optimizePackageImports: ["gsap", "three"],

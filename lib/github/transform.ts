@@ -24,10 +24,6 @@ function cleanText(input: string): string {
     .trim();
 }
 
-function slug(value: string): string {
-  return value.toLowerCase();
-}
-
 function pickLayerFromContent(repo: GitHubRepository): ProjectLayer {
   const haystack = [repo.name, repo.description, repo.language, ...repo.topics]
     .join(" ")
@@ -168,25 +164,12 @@ export function getLayerCounts(repositories: PortfolioRepo[]): Record<ProjectLay
 }
 
 export function getFlagshipRepos(repositories: PortfolioRepo[]): PortfolioRepo[] {
-  const prioritized = repositories.filter((repo) => repo.featured);
-  const order = new Map(Object.keys(curatedProjectOverrides).map((name, index) => [slug(name), index]));
-
-  return prioritized.sort((a, b) => {
-    const aOrder = order.get(slug(a.name));
-    const bOrder = order.get(slug(b.name));
-
-    if (aOrder !== undefined && bOrder !== undefined) {
-      return aOrder - bOrder;
-    }
-
-    if (aOrder !== undefined) {
-      return -1;
-    }
-
-    if (bOrder !== undefined) {
-      return 1;
-    }
-
-    return Date.parse(b.updatedAt) - Date.parse(a.updatedAt);
-  });
+  return repositories
+    .filter((repo) => repo.featured)
+    .sort((a, b) => {
+      if (a.stars !== b.stars) {
+        return b.stars - a.stars;
+      }
+      return Date.parse(b.pushedAt) - Date.parse(a.pushedAt);
+    });
 }

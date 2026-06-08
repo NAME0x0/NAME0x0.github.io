@@ -11,9 +11,10 @@ export const profile = {
   email: profileIdentity.email,
   socials: profileIdentity.socials,
   stats: {
-    publicRepos: 0,
-    followers: 0,
-    following: 0,
+    // null (not 0) so missing data renders "--" instead of a frozen zero.
+    publicRepos: null,
+    followers: null,
+    following: null,
     memberSince: "2022",
   },
 } as const;

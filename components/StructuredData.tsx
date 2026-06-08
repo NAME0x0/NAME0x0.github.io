@@ -1,6 +1,6 @@
 const DESCRIPTION =
   "I design sovereign computing systems across operating environments, AI workflows, and immersive interfaces.";
-const SITE_URL = "https://name0x0.is-a.dev";
+const SITE_URL = "https://name0x0.vercel.app";
 
 export function StructuredData() {
   const person = {

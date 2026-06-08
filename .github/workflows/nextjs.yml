@@ -1,4 +1,8 @@
-name: CI and Deploy Next.js to Pages
+name: CI + Pages redirect stub
+
+# The portfolio is deployed on Vercel (name0x0.vercel.app). GitHub Pages now
+# only serves a redirect stub so the legacy https://NAME0x0.github.io link keeps
+# working and bounces to the Vercel deployment.
 
 on:
   pull_request:
@@ -39,55 +43,47 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
-  build:
-    name: Build static export
+  deploy-stub:
+    name: Deploy redirect stub to GitHub Pages
     needs: quality
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: "npm"
-
-      - name: Setup Pages
-        if: github.event_name != 'pull_request'
-        uses: actions/configure-pages@v5
-        with:
-          static_site_generator: next
-
-      - name: Restore Next.js cache
-        uses: actions/cache@v4
-        with:
-          path: .next/cache
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('package-lock.json') }}-${{ hashFiles('**/*.[jt]s', '**/*.[jt]sx') }}
-          restore-keys: |
-            ${{ runner.os }}-nextjs-${{ hashFiles('package-lock.json') }}-
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build with Next.js
-        run: npm run build
-
-      - name: Upload artifact
-        if: github.event_name != 'pull_request'
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./out
-
-  deploy:
-    name: Deploy to GitHub Pages
     if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
     steps:
+      - name: Build redirect stub
+        run: |
+          mkdir -p _site
+          touch _site/.nojekyll
+          cat > _site/index.html <<'HTML'
+          <!doctype html>
+          <html lang="en">
+          <head>
+            <meta charset="utf-8">
+            <title>Redirecting…</title>
+            <link rel="canonical" href="https://name0x0.vercel.app/">
+            <meta http-equiv="refresh" content="0; url=https://name0x0.vercel.app/">
+            <meta name="robots" content="noindex">
+            <style>html{background:#000;color:#E8E4DE;font-family:system-ui,sans-serif}</style>
+            <script>
+              location.replace("https://name0x0.vercel.app/" + location.search + location.hash);
+            </script>
+          </head>
+          <body>
+            Redirecting to <a href="https://name0x0.vercel.app/">name0x0.vercel.app</a>…
+          </body>
+          </html>
+          HTML
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./_site
+
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4

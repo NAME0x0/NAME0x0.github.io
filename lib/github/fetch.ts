@@ -1,9 +1,9 @@
 ﻿import { GITHUB_USERNAME } from "@/lib/data/curated";
-import { fetchGitHubSnapshot } from "@/lib/github/client";
 import { toPortfolioDataset } from "@/lib/github/transform";
 import type { GitHubSnapshot, PortfolioDataset } from "@/lib/github/types";
 
 const SNAPSHOT_PATH = "/data/github-snapshot.json";
+const LIVE_API_PATH = "/api/github";
 
 export async function fetchSnapshotDataset(
   username: string = GITHUB_USERNAME,
@@ -36,23 +36,34 @@ export async function fetchSnapshotDataset(
 }
 
 export async function fetchLiveDataset(
-  username: string = GITHUB_USERNAME,
+  _username: string = GITHUB_USERNAME,
   signal?: AbortSignal
 ): Promise<PortfolioDataset> {
-  const { snapshot, rateLimit } = await fetchGitHubSnapshot(username, {
+  // Hit our own server route (token-backed, edge-cached) instead of
+  // api.github.com directly. Keeps the token server-side and avoids the
+  // unauthenticated 60 req/hr/IP client rate limit.
+  const response = await fetch(LIVE_API_PATH, {
+    cache: "no-store",
     signal,
   });
 
-  return {
-    ...toPortfolioDataset(
-      {
-        generatedAt: snapshot.generatedAt,
-        profile: snapshot.profile,
-        repositories: snapshot.repositories,
-        languageDistribution: snapshot.languageDistribution,
-      },
-      "live"
-    ),
-    rateLimit,
-  };
+  if (!response.ok) {
+    throw new Error(`Live GitHub request failed (${response.status})`);
+  }
+
+  const snapshot = (await response.json()) as GitHubSnapshot;
+
+  if (!snapshot || !Array.isArray(snapshot.repositories)) {
+    throw new Error("Live payload is invalid");
+  }
+
+  return toPortfolioDataset(
+    {
+      generatedAt: snapshot.generatedAt,
+      profile: snapshot.profile,
+      repositories: snapshot.repositories,
+      languageDistribution: snapshot.languageDistribution,
+    },
+    "live"
+  );
 }

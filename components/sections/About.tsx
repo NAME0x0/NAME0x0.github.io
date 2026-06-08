@@ -15,6 +15,7 @@ const STAR_KEYS = ["stars", "totalStars", "githubStars"] as const;
 interface StatItem {
   label: string;
   value: string;
+  target: number | null;
 }
 
 function parseStatNumber(value: number | string | null | undefined): number | null {
@@ -92,10 +93,14 @@ export function About() {
 
   const stats = useMemo<StatItem[]>(
     () => [
-      { label: "Repos", value: formatStatValue(reposValue) },
-      { label: "1Y Contributions", value: formatStatValue(contributionCount) },
-      { label: "Stars", value: formatStatValue(starsValue) },
-      { label: "Since", value: formatStatValue(sinceValue) },
+      { label: "Repos", value: formatStatValue(reposValue), target: parseStatNumber(reposValue) },
+      {
+        label: "1Y Contributions",
+        value: formatStatValue(contributionCount),
+        target: parseStatNumber(contributionCount),
+      },
+      { label: "Stars", value: formatStatValue(starsValue), target: parseStatNumber(starsValue) },
+      { label: "Since", value: formatStatValue(sinceValue), target: parseStatNumber(sinceValue) },
     ],
     [contributionCount, reposValue, sinceValue, starsValue]
   );
@@ -126,7 +131,6 @@ export function About() {
 
     const ctx = gsap.context(() => {
       const barEls = chartEl.querySelectorAll<HTMLElement>("[data-lang-bar]");
-      const statEls = statsEl.querySelectorAll<HTMLElement>("[data-stat-value]");
       const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
       if (prefersReducedMotion) {
@@ -175,34 +179,6 @@ export function About() {
           },
         });
       }
-
-      if (statEls.length > 0) {
-        statEls.forEach((el, index) => {
-          const target = Number.parseInt(el.textContent ?? "0", 10);
-          if (Number.isNaN(target)) {
-            return;
-          }
-
-          gsap.from(el, {
-            textContent: 0,
-            duration: MOTION.duration.crawl,
-            delay: index * MOTION.stagger.stats,
-            snap: { textContent: 1 },
-            ease: MOTION.ease.reveal,
-            scrollTrigger: {
-              trigger: statsEl,
-              start: MOTION.trigger.lazy,
-              once: true,
-            },
-            onUpdate: () => {
-              const current = Number.parseInt(el.textContent ?? "0", 10);
-              if (!Number.isNaN(current)) {
-                el.textContent = `${current}`;
-              }
-            },
-          });
-        });
-      }
     }, sectionEl);
 
     return () => ctx.revert();
@@ -210,7 +186,54 @@ export function About() {
 
   useEffect(() => {
     return setupAnimations();
-  }, [setupAnimations, stats]);
+  }, [setupAnimations]);
+
+  // Stat counters are data-driven: targets come from `data-stat-target`, which
+  // updates when SWR data arrives. Re-running on `stats` change means the
+  // count-up animates to the real value (e.g. repo count) instead of freezing
+  // on the pre-data fallback. Skips non-numeric ("--") values.
+  useEffect(() => {
+    const statsEl = statsRef.current;
+    if (!statsEl) {
+      return;
+    }
+
+    const ctx = gsap.context(() => {
+      const statEls = statsEl.querySelectorAll<HTMLElement>("[data-stat-value]");
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      statEls.forEach((el, index) => {
+        const target = Number.parseInt(el.dataset.statTarget ?? "", 10);
+        if (Number.isNaN(target)) {
+          return;
+        }
+
+        if (prefersReducedMotion) {
+          el.textContent = `${target}`;
+          return;
+        }
+
+        const counter = { value: 0 };
+        gsap.to(counter, {
+          value: target,
+          duration: MOTION.duration.crawl,
+          delay: index * MOTION.stagger.stats,
+          snap: { value: 1 },
+          ease: MOTION.ease.reveal,
+          scrollTrigger: {
+            trigger: statsEl,
+            start: MOTION.trigger.lazy,
+            once: true,
+          },
+          onUpdate: () => {
+            el.textContent = `${Math.round(counter.value)}`;
+          },
+        });
+      });
+    }, statsEl);
+
+    return () => ctx.revert();
+  }, [stats]);
 
   return (
     <section
@@ -269,7 +292,11 @@ export function About() {
                   <p className="mb-1 font-mono text-xs uppercase tracking-wide text-ink-dim">
                     {item.label}
                   </p>
-                  <p data-stat-value className="font-heading text-xl font-semibold text-ink">
+                  <p
+                    data-stat-value
+                    data-stat-target={item.target ?? ""}
+                    className="font-heading text-xl font-semibold text-ink"
+                  >
                     {item.value}
                   </p>
                 </div>
