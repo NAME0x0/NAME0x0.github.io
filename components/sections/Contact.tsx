@@ -13,6 +13,13 @@ const FALLBACK_GITHUB = "https://github.com/NAME0x0";
 const FALLBACK_LINKEDIN = "https://linkedin.com/in/afsah-mumtaz";
 const FALLBACK_TWITTER = "https://x.com/NAME0x0";
 
+const CV_LINKS = [
+  { label: "General", href: "/cv/muhammad-afsah-cv.pdf" },
+  { label: "ATS", href: "/cv/muhammad-afsah-cv-ats.pdf" },
+  { label: "AI Engineer", href: "/cv/muhammad-afsah-ai-engineer.pdf" },
+  { label: "Fintech", href: "/cv/muhammad-afsah-fintech.pdf" },
+] as const;
+
 function resolveValue(value: string | undefined, fallback: string): string {
   return value && value.trim().length > 0 ? value : fallback;
 }
@@ -95,7 +102,7 @@ export function Contact() {
       ref={sectionRef}
       id="contact"
       role="contentinfo"
-      className="relative z-10 flex min-h-screen scroll-mt-24 flex-col items-center justify-center px-6 py-[clamp(80px,7.6vw+50px,180px)] text-center"
+      className="relative z-10 flex min-h-svh scroll-mt-24 flex-col items-center justify-center px-6 py-[clamp(80px,7.6vw+50px,180px)] text-center"
       aria-labelledby="contact-heading"
     >
       {/* Dark vignette behind content for readability over wave surface */}
@@ -151,6 +158,26 @@ export function Contact() {
             Twitter
           </a>
         </p>
+
+        <div className="mb-12 flex flex-col items-center gap-3">
+          <p className="text-halo-sm font-mono text-xs uppercase tracking-[0.12em] text-ink-dim">
+            {'// "RÉSUMÉ"'}
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            {CV_LINKS.map((cv) => (
+              <a
+                key={cv.href}
+                href={cv.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-halo-sm inline-flex min-h-11 items-center border border-ink-faint/60 bg-void/40 px-4 py-2 font-mono text-xs uppercase tracking-[0.1em] text-ink-dim backdrop-blur-sm transition-colors duration-300 hover:border-ink hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+                aria-label={`Open ${cv.label} résumé (PDF, opens in new tab)`}
+              >
+                {cv.label}
+              </a>
+            ))}
+          </div>
+        </div>
 
         <div ref={dividerRef} className="mx-auto mb-6 h-px w-[200px] bg-ink-dim/40" />
         <p className="text-halo-sm font-mono text-sm text-ink-dim/80">&copy; 2026 Muhammad Afsah Mumtaz</p>

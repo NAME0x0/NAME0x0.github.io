@@ -8,6 +8,7 @@ export interface ProjectCardProps {
   language?: string;
   languageColor?: string;
   repoUrl?: string;
+  liveUrl?: string;
   featured?: boolean;
 }
 
@@ -18,6 +19,7 @@ export function ProjectCard({
   language,
   languageColor,
   repoUrl,
+  liveUrl,
   featured,
 }: ProjectCardProps) {
   const resolvedLanguage = language?.trim() || "Unknown";
@@ -44,7 +46,7 @@ export function ProjectCard({
         {topicLabel}
       </p>
 
-      <div className="mt-auto flex items-center justify-between pt-2">
+      <div className="mt-auto flex items-center justify-between gap-3 pt-2">
         <span className="flex items-center gap-2 font-mono text-sm text-ink-dim">
           <span
             aria-hidden="true"
@@ -54,23 +56,43 @@ export function ProjectCard({
           {resolvedLanguage}
         </span>
 
-        {repoUrl ? (
-          <a
-            href={repoUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`Open ${name} repository on GitHub`}
-            className="group inline-flex min-h-11 items-center px-2 font-mono text-sm text-ink-dim transition-colors duration-200 hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
-          >
-            GitHub
-            <span
-              aria-hidden="true"
-              className="ml-1 inline-block transition-transform duration-200 group-hover:translate-x-1"
+        <span className="flex items-center gap-3">
+          {liveUrl ? (
+            <a
+              href={liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Open the live demo of ${name}`}
+              className="group inline-flex min-h-11 items-center px-2 font-mono text-sm text-accent transition-colors duration-200 hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
             >
-              &rarr;
-            </span>
-          </a>
-        ) : null}
+              Live
+              <span
+                aria-hidden="true"
+                className="ml-1 inline-block transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+              >
+                &#8599;
+              </span>
+            </a>
+          ) : null}
+
+          {repoUrl ? (
+            <a
+              href={repoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Open ${name} repository on GitHub`}
+              className="group inline-flex min-h-11 items-center px-2 font-mono text-sm text-ink-dim transition-colors duration-200 hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+            >
+              GitHub
+              <span
+                aria-hidden="true"
+                className="ml-1 inline-block transition-transform duration-200 group-hover:translate-x-1"
+              >
+                &rarr;
+              </span>
+            </a>
+          ) : null}
+        </span>
       </div>
     </article>
   );

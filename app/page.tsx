@@ -37,7 +37,7 @@ export default function Page() {
   const mousePosRef = useRef<[number, number]>([0, 0]);
   const [activeSection, setActiveSection] = useState<SectionId>("hero");
 
-  const handleMouseMove = useCallback((event: MouseEvent) => {
+  const handlePointerMove = useCallback((event: PointerEvent) => {
     mousePosRef.current = [
       (event.clientX / window.innerWidth) * 2 - 1,
       -(event.clientY / window.innerHeight) * 2 + 1,
@@ -57,16 +57,16 @@ export default function Page() {
       }
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("pointermove", handlePointerMove, { passive: true });
     window.addEventListener("portfolio-scroll-progress", onProgress);
     window.addEventListener("portfolio-section-active", onSection);
 
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("portfolio-scroll-progress", onProgress);
       window.removeEventListener("portfolio-section-active", onSection);
     };
-  }, [handleMouseMove]);
+  }, [handlePointerMove]);
 
   return (
     <>

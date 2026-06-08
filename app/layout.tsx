@@ -31,6 +31,7 @@ export const metadata: Metadata = {
       { url: "/icon.svg", type: "image/svg+xml" },
     ],
     shortcut: ["/favicon.ico"],
+    apple: [{ url: "/logo.png", sizes: "180x180" }],
   },
   openGraph: {
     title: "Muhammad Afsah Mumtaz \u2014 Systems Architect",

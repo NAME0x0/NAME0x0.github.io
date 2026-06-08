@@ -153,6 +153,7 @@ export const curatedProjectOverrides: CuratedProjectOverrides = {
     description:
       "Local-first personal assistant with retrieval pipelines and controllable orchestration.",
     topics: ["python", "assistant", "llm", "ollama", "automation"],
+    homepage: "https://name0x0.github.io/AVA/",
   },
   SMNTC: {
     layer: "visualization",

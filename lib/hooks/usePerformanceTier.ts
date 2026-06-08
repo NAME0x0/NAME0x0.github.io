@@ -31,6 +31,23 @@ function detectTier(): PerfTier {
     return "reduced";
   }
 
+  // Respect Data Saver and low-memory devices: skip WebGL entirely and fall
+  // back to the lightweight CSS scene to conserve battery and bandwidth.
+  const nav = navigator as Navigator & {
+    connection?: { saveData?: boolean };
+    deviceMemory?: number;
+  };
+  if (nav.connection?.saveData) {
+    return "reduced";
+  }
+  if (
+    typeof nav.deviceMemory === "number" &&
+    nav.deviceMemory > 0 &&
+    nav.deviceMemory < 4
+  ) {
+    return "reduced";
+  }
+
   if (window.innerWidth >= 1024) {
     return "desktop";
   }

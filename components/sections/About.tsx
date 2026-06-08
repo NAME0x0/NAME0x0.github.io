@@ -239,7 +239,7 @@ export function About() {
     <section
       ref={sectionRef}
       id="about"
-      className="relative z-10 min-h-screen scroll-mt-24 py-[clamp(80px,7.6vw+50px,180px)]"
+      className="relative z-10 min-h-svh scroll-mt-24 py-[clamp(80px,7.6vw+50px,180px)]"
       aria-labelledby="about-heading"
     >
       {/* Dark vignette behind content for readability over particles */}

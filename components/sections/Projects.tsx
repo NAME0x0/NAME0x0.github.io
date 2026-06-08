@@ -85,6 +85,14 @@ export function Projects() {
       const language = override?.language ?? repo.language ?? "Unknown";
       const topics = [...new Set([...(repo.topics ?? []), ...(override?.topics ?? [])])];
 
+      // A homepage counts as a live demo only when it isn't just a github.com
+      // link (e.g. a repo README), so cards surface real deployed sites.
+      const homepage = repo.homepage?.trim();
+      const liveUrl =
+        homepage && !/^https?:\/\/(www\.)?github\.com\//i.test(homepage)
+          ? homepage
+          : undefined;
+
       return {
         name: repo.name,
         description: repo.description.trim(),
@@ -93,6 +101,7 @@ export function Projects() {
         language,
         languageColor: languageColors[language] ?? languageColors.Unknown,
         repoUrl: repo.url,
+        liveUrl,
         featured: override?.featured ?? repo.featured,
         sourceIndex,
         stars: repo.stars,
@@ -270,7 +279,7 @@ export function Projects() {
     <section
       ref={sectionRef}
       id="projects"
-      className="relative z-10 min-h-screen scroll-mt-24 py-[clamp(80px,7.6vw+50px,180px)]"
+      className="relative z-10 min-h-svh scroll-mt-24 py-[clamp(80px,7.6vw+50px,180px)]"
       aria-labelledby="projects-heading"
     >
       <div className="mx-auto w-full max-w-[1280px] px-4 lg:px-16">
@@ -309,6 +318,7 @@ export function Projects() {
               language={project.language}
               languageColor={project.languageColor}
               repoUrl={project.repoUrl}
+              liveUrl={project.liveUrl}
               featured={project.featured}
             />
           ))}

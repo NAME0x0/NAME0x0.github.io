@@ -143,7 +143,7 @@ export function SovereignStack() {
     <section
       ref={sectionRef}
       id="stack"
-      className="relative z-10 min-h-screen scroll-mt-24 py-[clamp(80px,7.6vw+50px,180px)]"
+      className="relative z-10 min-h-svh scroll-mt-24 py-[clamp(80px,7.6vw+50px,180px)]"
       aria-labelledby="stack-heading"
     >
       <div aria-hidden="true" className="bg-dotmatrix pointer-events-none absolute inset-0" />

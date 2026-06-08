@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/private/"],
+      disallow: ["/private/", "/cv/"],
     },
     sitemap: "https://name0x0.vercel.app/sitemap.xml",
     host: "https://name0x0.vercel.app",

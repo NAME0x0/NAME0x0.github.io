@@ -15,6 +15,11 @@ body {
   width: 100%;
   min-height: 100%;
   position: relative;
+  /* Guard against any element (e.g. the oversized hero name) forcing
+     horizontal scroll on narrow viewports. */
+  overflow-x: hidden;
+  /* Prevent scroll chaining / pull-to-refresh bounce on mobile. */
+  overscroll-behavior-y: none;
 }
 
 body::after {
@@ -75,6 +80,8 @@ a,
 button,
 [role="button"] {
   cursor: pointer;
+  /* Kill the grey/blue flash on tap (iOS/Android). */
+  -webkit-tap-highlight-color: transparent;
 }
 
 :focus-visible {

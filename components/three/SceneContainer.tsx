@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, type RefObject } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { KineticWall } from "@/components/three/KineticWall";
 import { VoidParticles } from "@/components/three/VoidParticles";
@@ -100,6 +100,16 @@ export function SceneContainer({
   mousePosRef,
 }: SceneContainerProps) {
   const { tier, config } = usePerformanceTier();
+  const [renderActive, setRenderActive] = useState(true);
+
+  // Stop the render loop when the tab is hidden — no point burning GPU/battery
+  // animating a scene nobody can see (matters most on mobile).
+  useEffect(() => {
+    const handleVisibility = () => setRenderActive(!document.hidden);
+    handleVisibility();
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () => document.removeEventListener("visibilitychange", handleVisibility);
+  }, []);
 
   if (tier === "reduced" || config.disabled) {
     return (
@@ -132,6 +142,7 @@ export function SceneContainer({
         }}
         camera={{ position: [0, 0, 5], fov: 50, near: 0.1, far: 100 }}
         dpr={config.dpr}
+        frameloop={renderActive ? "always" : "never"}
         style={{ background: "transparent" }}
         resize={{ scroll: false }}
       >

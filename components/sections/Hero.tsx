@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { Fragment, useCallback, useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { profile } from "@/lib/data/profile";
@@ -202,7 +202,7 @@ export function Hero() {
       ref={sectionRef}
       id="hero"
       aria-label="Introduction"
-      className="relative z-10 flex h-screen min-h-[600px] scroll-mt-24 flex-col items-center justify-center bg-transparent px-6"
+      className="relative z-10 flex h-svh min-h-[600px] scroll-mt-24 flex-col items-center justify-center bg-transparent px-6"
     >
       {/* HUD Background Details */}
       <div className="pointer-events-none absolute inset-4 border border-ink-faint/30 m-4 sm:m-8 lg:m-12">
@@ -222,15 +222,33 @@ export function Hero() {
         {/* Kinetic Wall renders behind via SceneContainer — text floats above */}
         <h1
           ref={nameRef}
-          className="font-heading text-display font-bold tracking-[-0.05em] text-ink"
+          className="max-w-full text-balance font-heading text-[clamp(2rem,8.5vw,4.5rem)] font-bold leading-[1.05] tracking-[-0.05em] text-ink"
           aria-label={displayName}
         >
-          {displayName.split("").map((char, index) => (
-            <span key={`${char}-${index}`} className="inline-block overflow-hidden align-top">
-              <span data-hero-char data-original={char === " " ? "\u00A0" : char} aria-hidden="true" className="inline-block">
-                {char === " " ? "\u00A0" : ""}
+          {displayName.split(" ").map((word, wordIndex, words) => (
+            <Fragment key={`word-${wordIndex}`}>
+              {/* Keep each word intact; allow line breaks only between words so
+                  the long name wraps cleanly on narrow viewports instead of
+                  overflowing horizontally. */}
+              <span className="inline-block whitespace-nowrap">
+                {word.split("").map((char, charIndex) => (
+                  <span
+                    key={`${wordIndex}-${charIndex}`}
+                    className="inline-block overflow-hidden align-top"
+                  >
+                    <span
+                      data-hero-char
+                      data-original={char}
+                      aria-hidden="true"
+                      className="inline-block"
+                    >
+                      {char}
+                    </span>
+                  </span>
+                ))}
               </span>
-            </span>
+              {wordIndex < words.length - 1 ? " " : null}
+            </Fragment>
           ))}
         </h1>
         <p
