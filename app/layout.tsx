@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Manrope, Space_Grotesk } from "next/font/google";
 import { GeistMono } from "geist/font/mono";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { StructuredData } from "@/components/StructuredData";
 
@@ -56,6 +57,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="bg-void text-ink font-body antialiased">
         <StructuredData />
         {children}
+        <Analytics />
       </body>
     </html>
   );
