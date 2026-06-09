@@ -15,11 +15,11 @@ body {
   width: 100%;
   min-height: 100%;
   position: relative;
-  /* Guard against any element (e.g. the oversized hero name) forcing
-     horizontal scroll on narrow viewports. */
-  overflow-x: hidden;
-  /* Prevent scroll chaining / pull-to-refresh bounce on mobile. */
-  overscroll-behavior-y: none;
+  /* Clip stray horizontal overflow WITHOUT creating a scroll container.
+     `clip` (unlike `hidden`) does not coerce overflow-y to `auto`, so the
+     viewport keeps scrolling vertically via wheel / keyboard / touch.
+     Falls back to `visible` on very old browsers (vertical scroll unaffected). */
+  overflow-x: clip;
 }
 
 body::after {
@@ -44,6 +44,9 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Soften pull-to-refresh / scroll-chaining bounce on mobile. Does not block
+     normal scrolling. */
+  overscroll-behavior-y: none;
 }
 
 
