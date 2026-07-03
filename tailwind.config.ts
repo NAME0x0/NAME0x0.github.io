@@ -17,12 +17,19 @@ const config: Config = {
     },
     extend: {
       colors: {
-        void: colors.void,
+        void: "#000000",
         ink: {
-          DEFAULT: colors.ink.DEFAULT,
-          dim: colors.ink.dim,
-          faint: colors.ink.faint,
+          DEFAULT: "#E8E4DE",
+          dim: "#8A8578",
+          faint: "#3A3832",
         },
+        dim: "#8A8578",
+        faint: "#3A3832",
+        bone: "#C4B5A0",
+        ember: "#D08C5A",
+        signal: "#E3B341",
+        paper: "#F2EDE4",
+        soot: "#1C1A17",
         accent: {
           DEFAULT: colors.accent.DEFAULT,
         },
@@ -36,9 +43,10 @@ const config: Config = {
         },
       },
       fontFamily: {
-        heading: [...typography.fontFamily.heading],
-        body: [...typography.fontFamily.body],
-        mono: [...typography.fontFamily.mono],
+        display: ["var(--font-space-grotesk)", "system-ui", "sans-serif"],
+        heading: ["var(--font-space-grotesk)", "system-ui", "sans-serif"],
+        body: ["var(--font-manrope)", "system-ui", "sans-serif"],
+        mono: ["var(--font-geist-mono)", "ui-monospace", "SFMono-Regular", "monospace"],
       },
       fontSize: {
         xs: [typography.fontSize.xs[0], { ...typography.fontSize.xs[1] }],
