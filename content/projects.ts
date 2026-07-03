@@ -33,7 +33,11 @@ export const projects = z.array(ProjectSchema).parse([
       "RTX A2000 laptop with 4 GB VRAM; training peaked at 1.81 GB. Maximum 384 training tokens, so long reasoning chains were never seen in training. Windows 11 toolchain, which meant making Triton, Flash-Linear-Attention, and BitsAndBytes coexist — every workaround is published. Every number is reproducible end-to-end on the same laptop.",
     architecture:
       "A 42 MB QLoRA adapter on Qwen 3.5 2B, trained in about 100 minutes, released on HuggingFace with GGUF builds that run via Ollama. Custom Triton kernel work, verifier-RL, external memory. Evaluated on a 17-benchmark, 16,872-task harness with 95% Wilson confidence intervals. The weak spots are stated in the repo, not hidden: math, tool routing, narrative commonsense — all targeted by v3.",
-    warStories: [],
+    warStories: [
+      "The hardest bug wasn't in the code. Training drew power faster than the charger could supply it, so runs had to stop for the laptop to recharge — and early versions had no checkpoint resume, so every pause threw away all progress. Building checkpointing turned training from an endurance contest into something manageable.",
+      "Every intervention shipped at once — corpus mix, QLoRA config, base model choice. On hardware this slow, ablating one variable at a time wasn't affordable, and the laptop was also my daily machine for university. One shot, hoping for a drastic change; got one.",
+      "What v2 should have had: real tool calling — the corpus had ~55 tool examples against 20K math ones, and the model invokes tools in 0.6% of agentic runs — plus YaRN to push context past the 384-token training window. Both are v3 targets.",
+    ],
   },
   {
     slug: "pantheon-trades",
