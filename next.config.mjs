@@ -1,12 +1,15 @@
 /** @type {import('next').NextConfig} */
 // 'unsafe-inline' for script-src is a documented compromise: SSG pages cannot carry per-request nonces, and hashing Next's own inline RSC scripts is not maintainable.
+// 'wasm-unsafe-eval' permits WebAssembly ONLY (not JS eval) — required by the
+// meshopt decoder that unpacks the compressed GLB; blob: in connect-src/img-src
+// covers GLTFLoader's same-document object URLs for embedded textures.
 const contentSecurityPolicy = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com",
+  "script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://va.vercel-scripts.com",
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: https://avatars.githubusercontent.com",
+  "img-src 'self' data: blob: https://avatars.githubusercontent.com",
   "font-src 'self'",
-  "connect-src 'self' https://api.github.com https://va.vercel-scripts.com",
+  "connect-src 'self' blob: https://api.github.com https://va.vercel-scripts.com",
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",

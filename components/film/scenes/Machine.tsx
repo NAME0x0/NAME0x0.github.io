@@ -2,7 +2,7 @@
 
 import { ContactShadows } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
-import { useEffect, useMemo, useRef } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import {
   AdditiveBlending,
   AmbientLight,
@@ -28,8 +28,11 @@ import {
   Vector3,
 } from "three";
 import { filmProgressStore, useFilmProgress } from "@/lib/film/progress";
+import { FilmErrorBoundary } from "../FilmErrorBoundary";
+import { Card } from "./Card";
 import { Council } from "./Council";
 import { Torus } from "./Torus";
+import { sampleRail, narrowRail, wideRail, type RailSample } from "./rail";
 import { layerPresence, smoothstep, smoothstepRange } from "./staging";
 
 const SIGNAL = "#E3B341";
@@ -252,6 +255,7 @@ function createMoteField() {
 
 export function Machine() {
   const groupRef = useRef<Group>(null);
+  const cardGroupRef = useRef<Group>(null);
   const dieGroupRef = useRef<Group>(null);
   const shadowRef = useRef<Group>(null);
   const substrateMaterialRef = useRef<MeshPhysicalMaterial>(null);
@@ -259,6 +263,7 @@ export function Machine() {
   const circuitMaterialRef = useRef<MeshPhysicalMaterial>(null);
   const engravingMaterialRef = useRef<MeshPhysicalMaterial>(null);
   const padsRef = useRef<InstancedMesh>(null);
+  const padsMaterialRef = useRef<MeshPhysicalMaterial>(null);
   const padsReadyRef = useRef(false);
   const ambientLightRef = useRef<AmbientLight>(null);
   const keyLightRef = useRef<DirectionalLight>(null);
@@ -272,6 +277,9 @@ export function Machine() {
   const motesRef = useRef<Points>(null);
   const motesMaterialRef = useRef<PointsMaterial>(null);
   const progressRef = useRef(filmProgressStore.getSnapshot());
+  const cardDimmingRef = useRef(0);
+  const proceduralOpacityRef = useRef(1);
+  const [cardLoaded, setCardLoaded] = useState(false);
   const store = useFilmProgress();
   const gl = useThree((state) => state.gl);
   const camera = useThree((state) => state.camera);
@@ -283,6 +291,13 @@ export function Machine() {
   const wideStage = useMemo(() => new Vector3(2.5, 0, 0), []);
   const narrowStage = useMemo(() => new Vector3(0, -1.6, 0), []);
   const stageOffset = useMemo(() => new Vector3(), []);
+  const railSample = useMemo<RailSample>(() => ({
+    cameraPosition: new Vector3(),
+    lookAt: new Vector3(),
+    cardPosition: new Vector3(),
+    cardScale: 1,
+    cardDimming: 0,
+  }), []);
   const padDummy = useMemo(() => new Object3D(), []);
   const baseColor = useMemo(() => new Color("#141210"), []);
   const circuitTexture = useMemo(
@@ -319,6 +334,7 @@ export function Machine() {
 
   useFrame(({ clock }, delta) => {
     const group = groupRef.current;
+    const cardGroup = cardGroupRef.current;
     const dieGroup = dieGroupRef.current;
     const shadow = shadowRef.current;
     const substrateMaterial = substrateMaterialRef.current;
@@ -326,6 +342,7 @@ export function Machine() {
     const circuitMaterial = circuitMaterialRef.current;
     const engravingMaterial = engravingMaterialRef.current;
     const pads = padsRef.current;
+    const padsMaterial = padsMaterialRef.current;
     const ambientLight = ambientLightRef.current;
     const keyLight = keyLightRef.current;
     const fillLight = fillLightRef.current;
@@ -336,6 +353,7 @@ export function Machine() {
 
     if (
       !group ||
+      !cardGroup ||
       !dieGroup ||
       !shadow ||
       !substrateMaterial ||
@@ -343,6 +361,7 @@ export function Machine() {
       !circuitMaterial ||
       !engravingMaterial ||
       !pads ||
+      !padsMaterial ||
       !ambientLight ||
       !keyLight ||
       !fillLight ||
@@ -368,12 +387,17 @@ export function Machine() {
     const activeStage = isNarrow ? narrowStage : wideStage;
     const distanceScale = isNarrow ? 1.3 : 1;
     const azimuthScale = isNarrow ? 0.5 : 1;
-    const framingBias = isNarrow ? 0 : chapter === 5 ? -1.8 : -1.4;
     const time = clock.elapsedTime;
     const damping = 1 - Math.pow(0.001, delta);
+    const track = isNarrow ? narrowRail : wideRail;
+
+    sampleRail(track, chapter, local, railSample);
+    cardDimmingRef.current += (railSample.cardDimming - cardDimmingRef.current) * damping;
 
     targetPosition.copy(activeStage);
     group.position.lerp(targetPosition, damping);
+    cardGroup.position.lerp(railSample.cardPosition, damping);
+    cardGroup.scale.setScalar(cardGroup.scale.x + (railSample.cardScale - cardGroup.scale.x) * damping);
     dieGroup.position.y = Math.sin(time * 0.42) * 0.02;
     dieGroup.rotation.x = -0.035 + Math.sin(time * 0.3) * 0.008;
     dieGroup.rotation.y = -0.16 + Math.sin(time * 0.24) * 0.018;
@@ -410,7 +434,9 @@ export function Machine() {
     rimLight.intensity = 2 * lightScale;
     cyanLight.intensity = 1.2 * lightScale;
 
-    substrateMaterial.opacity = 1;
+    proceduralOpacityRef.current += ((cardLoaded ? 0 : 1) - proceduralOpacityRef.current) * damping;
+    substrateMaterial.opacity = proceduralOpacityRef.current;
+    padsMaterial.opacity = proceduralOpacityRef.current;
     substrateMaterial.roughness = 0.5 + chapter0 * 0.12;
     substrateMaterial.color.copy(baseColor);
     dieMaterial.opacity = 1;
@@ -427,48 +453,18 @@ export function Machine() {
     shadow.position.lerp(shadowTargetPosition, damping);
     shadow.scale.setScalar(1.05);
 
-    if (chapter === 0) {
-      stageOffset.set(-1.5 + chapter0 * 2.5, 4.5 - chapter0 * 1.5, 8 - chapter0 * 3);
-    } else if (chapter === 1) {
-      const t = smoothstep(local);
-
-      stageOffset.set(-2 + t * 1.5, 1.2 + t * 0.6, 4.2 - t * 0.8);
-    } else if (chapter === 2) {
-      stageOffset.set(0.5 + Math.sin(time * 0.08) * 0.05, 1 + Math.sin(time * 0.05) * 0.03, 4.8);
-    } else if (chapter === 3) {
-      const t = smoothstep(local);
-
-      stageOffset.set(4.5 - t * 1.3, 1.4 + t * 0.6, 4.6 - t * 0.8);
-    } else if (chapter === 4) {
-      const orbitHold = local < 0.7 ? smoothstep(local / 0.7) : 1;
-      const sealPush = smoothstep((local - 0.85) / 0.15);
-      const angle = -0.42 + orbitHold * 0.7;
-
-      stageOffset.set(4.8 - orbitHold * 3.6 - sealPush * 0.25, 3.4 + orbitHold * 0.4 - sealPush * 0.6, 3.2 + orbitHold * 1.4);
-      stageOffset.x += Math.sin(angle) * 0.22;
-    } else if (chapter === 5) {
-      const drift = smoothstep(local) * 0.44;
-
-      stageOffset.set(3 + Math.sin(drift) * 0.45, 6.2, 9.2 - Math.cos(drift) * 0.22);
-    } else if (chapter === 6) {
-      stageOffset.set(0.5, 6, 9.5);
-    } else {
-      stageOffset.set(0.5, 0.4, 5.5);
-    }
-
+    stageOffset.copy(railSample.cameraPosition);
     cameraPosition.set(
       group.position.x + stageOffset.x * azimuthScale * distanceScale,
       group.position.y + stageOffset.y,
       group.position.z + stageOffset.z * distanceScale,
     );
     camera.position.lerp(cameraPosition, damping);
-    if (chapter === 5 || chapter === 6) {
-      cameraTarget.set(group.position.x + framingBias, group.position.y + 1.25, group.position.z);
-    } else if (chapter === 4) {
-      cameraTarget.set(group.position.x + framingBias, group.position.y + 1.12, group.position.z);
-    } else {
-      cameraTarget.set(group.position.x + framingBias, group.position.y + (chapter >= 3 ? 0.55 : 0), group.position.z);
-    }
+    cameraTarget.set(
+      group.position.x + railSample.lookAt.x,
+      group.position.y + railSample.lookAt.y,
+      group.position.z + railSample.lookAt.z,
+    );
     camera.lookAt(cameraTarget);
 
     for (let index = 0; index < BENCHMARKS.length; index += 1) {
@@ -533,75 +529,89 @@ export function Machine() {
       <pointLight ref={rimLightRef} position={[4.4, 1.8, -2.2]} intensity={2} color={EMBER} />
       <pointLight ref={cyanLightRef} position={[3.4, 2.3, 2.8]} intensity={1.2} color="#5bb9d2" />
       <group ref={groupRef} position={[2.5, 0, 0]}>
-        <group ref={dieGroupRef}>
-          <mesh castShadow receiveShadow>
-            <boxGeometry args={[2.6, 0.06, 2.6, 1, 1, 1]} />
-            <meshPhysicalMaterial
-              ref={substrateMaterialRef}
-              color="#141210"
-              emissive="#030302"
-              emissiveIntensity={0.02}
-              metalness={0.18}
-              opacity={1}
-              roughness={0.82}
-              transparent
-            />
-          </mesh>
-          <mesh position={[0, 0.055, 0]} castShadow receiveShadow>
-            <boxGeometry args={[1.6, 0.05, 1.6, 10, 1, 10]} />
-            <meshPhysicalMaterial
-              ref={dieMaterialRef}
-              color="#171717"
-              emissive="#050606"
-              emissiveIntensity={0.04}
-              metalness={0.46}
-              roughness={0.46}
-              transparent
-              opacity={1}
-              clearcoat={0.34}
-              clearcoatRoughness={0.32}
-            />
-          </mesh>
-          <mesh position={[0, 0.083, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-            <planeGeometry args={[1.56, 1.56, 1, 1]} />
-            <meshPhysicalMaterial
-              ref={circuitMaterialRef}
-              map={circuitTexture}
-              roughnessMap={circuitTexture}
-              emissiveMap={circuitTexture}
-              color="#c8c0b4"
-              emissive="#4aa8bd"
-              emissiveIntensity={0.18}
-              metalness={0.36}
-              roughness={0.5}
-              transparent
-              opacity={1}
-              depthWrite={false}
-              clearcoat={0.52}
-              clearcoatRoughness={0.2}
-            />
-          </mesh>
-          <mesh position={[0, 0.086, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-            <planeGeometry args={[1.52, 1.52, 1, 1]} />
-            <meshPhysicalMaterial
-              ref={engravingMaterialRef}
-              map={engravingTexture}
-              color="#e8e4de"
-              metalness={0.1}
-              roughness={0.82}
-              transparent
-              opacity={0.72}
-              depthWrite={false}
-            />
-          </mesh>
-          <mesh position={[0, 0.034, 1.18]} rotation={[-Math.PI / 2, 0, 0]}>
-            <planeGeometry args={[1.05, 0.14, 1, 1]} />
-            <meshBasicMaterial map={silkscreenTexture} transparent opacity={0.72} depthWrite={false} />
-          </mesh>
-          <instancedMesh ref={padsRef} args={[undefined, undefined, PAD_COUNT]}>
-            <boxGeometry args={[1, 1, 1]} />
-            <meshPhysicalMaterial color={BONE} metalness={0.62} roughness={0.38} />
-          </instancedMesh>
+        <group ref={cardGroupRef}>
+          <group ref={dieGroupRef}>
+            <mesh castShadow receiveShadow>
+              <boxGeometry args={[2.6, 0.06, 2.6, 1, 1, 1]} />
+              <meshPhysicalMaterial
+                ref={substrateMaterialRef}
+                color="#141210"
+                emissive="#030302"
+                emissiveIntensity={0.02}
+                metalness={0.18}
+                opacity={1}
+                roughness={0.82}
+                transparent
+              />
+            </mesh>
+            <mesh position={[0, 0.055, 0]} castShadow receiveShadow>
+              <boxGeometry args={[1.6, 0.05, 1.6, 10, 1, 10]} />
+              <meshPhysicalMaterial
+                ref={dieMaterialRef}
+                color="#171717"
+                emissive="#050606"
+                emissiveIntensity={0.04}
+                metalness={0.46}
+                roughness={0.46}
+                transparent
+                opacity={1}
+                clearcoat={0.34}
+                clearcoatRoughness={0.32}
+              />
+            </mesh>
+            <mesh position={[0, 0.083, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+              <planeGeometry args={[1.56, 1.56, 1, 1]} />
+              <meshPhysicalMaterial
+                ref={circuitMaterialRef}
+                map={circuitTexture}
+                roughnessMap={circuitTexture}
+                emissiveMap={circuitTexture}
+                color="#c8c0b4"
+                emissive="#4aa8bd"
+                emissiveIntensity={0.18}
+                metalness={0.36}
+                roughness={0.5}
+                transparent
+                opacity={1}
+                depthWrite={false}
+                clearcoat={0.52}
+                clearcoatRoughness={0.2}
+              />
+            </mesh>
+            <mesh position={[0, 0.086, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+              <planeGeometry args={[1.52, 1.52, 1, 1]} />
+              <meshPhysicalMaterial
+                ref={engravingMaterialRef}
+                map={engravingTexture}
+                color="#e8e4de"
+                metalness={0.1}
+                roughness={0.82}
+                transparent
+                opacity={0.72}
+                depthWrite={false}
+              />
+            </mesh>
+            <mesh position={[0, 0.034, 1.18]} rotation={[-Math.PI / 2, 0, 0]}>
+              <planeGeometry args={[1.05, 0.14, 1, 1]} />
+              <meshBasicMaterial map={silkscreenTexture} transparent opacity={0.72} depthWrite={false} />
+            </mesh>
+            <instancedMesh ref={padsRef} args={[undefined, undefined, PAD_COUNT]}>
+              <boxGeometry args={[1, 1, 1]} />
+              <meshPhysicalMaterial
+                ref={padsMaterialRef}
+                color={BONE}
+                metalness={0.62}
+                opacity={1}
+                roughness={0.38}
+                transparent
+              />
+            </instancedMesh>
+          </group>
+          <FilmErrorBoundary>
+            <Suspense fallback={null}>
+              <Card progressRef={progressRef} cardDimmingRef={cardDimmingRef} onLoaded={() => setCardLoaded(true)} />
+            </Suspense>
+          </FilmErrorBoundary>
         </group>
         <points ref={motesRef} geometry={moteField.geometry}>
           <pointsMaterial
