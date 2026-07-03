@@ -1,0 +1,182 @@
+# Design & Build Brief — "The Machine"
+
+**Project:** Ground-up rebuild of NAME0x0.github.io → the personal portfolio of
+**Muhammad Afsah Mumtaz — NAME0x0**
+**Status:** DRAFT — awaiting owner sign-off (Phase A gate)
+**Date:** 2026-07-03
+
+---
+
+## 1. Agreed Scope (from consultation, 2026-07-03)
+
+| Decision | Outcome |
+|---|---|
+| Timeline | No hard deadline; each phase timeboxed and shipped as a deployable milestone |
+| Chapter order | Proof → Product → Ambition confirmed: AVA → Pantheon → OMNI |
+| Case-study pages, v1 launch gate | 4 Tier 1 pages: `/work/ava`, `/work/pantheon-trades`, `/work/agi-ledger`, `/work/omni` |
+| Case-study pages, post-v1 content drops | MALD, WebDesk, pane (each gated on owner-supplied war stories) |
+| /writing at launch | Triton-on-Windows post (migrated from existing gist) |
+| /writing post-launch | QLoRA-on-4GB post; OMNI bandwidth-model essay |
+| Domain | No custom domain in v1. Canonical: `name0x0.vercel.app`. `name0x0.github.io` 301s to it. **Line item: buy custom domain (name0x0.dev already in package.json metadata) before any public launch campaign** — redirect equity transfers cleanly |
+| Hosting | Vercel primary; GitHub Pages repo becomes redirect stub |
+| Scroll/animation | Lenis + Framer Motion; port AGI-Ledger particle-morph patterns (verified in source: MeshSurfaceSampler → single particle buffer, custom point shader dissolve, canvas glow sprite, `frameloop="never"` when inactive, DPR capped 1.25–1.5 via PerformanceMonitor) |
+| Analytics | Vercel Analytics only; funnel events per §7 of master prompt; documented in `docs/ANALYTICS.md` |
+| Perf budget | Master-prompt §6 defaults; GPU floor raised to **iPhone 13-class** — older devices get the designed static/editorial experience |
+| Voice | Derived from AGI-Ledger README + Triton gist (owner's published writing) |
+| Palette | Evolve existing void-black/warm-ink system; per-chapter accent temperature; Human chapter deliberately inverts |
+| War stories | Owner interviewed per project during Phase C; 3 bullets each; never fabricated |
+| "Now" widget | `content/now.md`, zod-validated frontmatter, honest "last updated" date shown |
+| Numbers | Trust current READMEs; snapshot script cross-checks claims at build; mismatch fails the build loudly |
+| Easter eggs | `whoami`, `help`, konami, `ls`/`cat <project>`, `sudo` joke, `rm -rf /` refusal, `trackmania`. **Discoverability requirement:** `help` lists everything + idle terminal cycles hint suggestions ("try: whoami") so no visitor needs prior knowledge |
+
+**Banned vocabulary (site-wide, CI-greppable):** "sovereign architect", "secure enclave", "SYS.INIT", any seniority-implying title. OMNI never "runs" — always "targeting / designed to".
+
+---
+
+## 2. Sitemap
+
+```
+/                     The Machine (scroll film + full server-rendered content fallback)
+/work                 Index: 4 Tier 1 cards + Tier 2 rows (one line + repo link each)
+/work/ava             MEASURED   — case study
+/work/pantheon-trades LIVE       — case study
+/work/omni            SPEC / IN PROGRESS — case study
+/work/agi-ledger      LIVE       — case study
+/work/mald            (post-v1)  SHIPPED
+/work/webdesk         (post-v1)  SHIPPED
+/work/pane            (post-v1)  SHIPPED (MVP)
+/writing              Index + RSS
+/writing/triton-fla-bitsandbytes-windows   (launch)
+/writing/qlora-4gb                          (post-v1)
+/writing/omni-bandwidth-model               (post-v1)
+/about                Identity, roles, affiliations, open-to lines
+/now                  Rendered content/now.md
+/cv                   Single public "General" CV PDF (four-variant wall removed)
+/404                  In-voice ("this route was never trained on")
+sitemap.xml, robots.txt, /writing/rss.xml, per-route OG images (generated)
+```
+
+Every route SSG. Every route complete with JS disabled (3D excepted). Case-study pages are the SEO surface; the film deep-links into them.
+
+---
+
+## 3. Design Tokens
+
+### Palette (evolved, not restarted)
+
+| Token | Hex | Role |
+|---|---|---|
+| `void` | `#000000` | Background, chapters 0–6 |
+| `ink` | `#E8E4DE` | Primary text on void |
+| `dim` | `#8A8578` | Secondary text, captions |
+| `faint` | `#3A3832` | Rules, borders, dormant machine parts |
+| `bone` | `#C4B5A0` | Base accent: active machine parts, links, focus rings |
+| `ember` | `#D08C5A` | Ignition heat, Council veto flash, warnings |
+| `signal` | `#E3B341` | Measured numbers ONLY — benchmark bars, test counts. If it glows signal-gold, it's a verified fact |
+| `paper` | `#F2EDE4` | Human chapter background (the inversion) |
+| `soot` | `#1C1A17` | Text on paper |
+
+Rule: `signal` is reserved for verified data. Decorative use is a review-blocking defect. This makes honesty a *visual* system, not just labels.
+
+### Typography
+- **Display:** Space Grotesk (2 weights: 500, 700)
+- **Body:** Manrope (2 weights: 400, 600)
+- **Data/terminal:** Geist Mono (400)
+- `next/font`, subset latin, ≤4 total weight files. Section overlines in Geist Mono, terminal-style: `// PROOF`, `// COUNCIL`, `// BLUEPRINT`… (the old `// INIT` grammar survives; "SYS.INIT" the phrase does not).
+
+### Layout concept
+12-col grid, generous void. Content column max ~68ch. Marginalia asides (dry, first-person: "yes, I benchmarked this at 3 a.m.") set in Geist Mono `dim`, hanging in the outer margin on desktop, inline-collapsed on mobile.
+
+### The signature element: **no cuts**
+One particle system, one continuous object, zero hard transitions for the entire film. Every chapter change is an on-screen dissolve of the same ~30–60k particles (single buffer, 8 target-position attribute sets, per-particle randomized lerp — the AGI-Ledger shader pattern generalized). If a visitor scrolls the whole film, they never see the machine replaced — only *become*. This is the thing no template can copy.
+
+---
+
+## 4. Chapter Storyboard
+
+Scroll progress `p ∈ [0,1]` split into 8 windows with dissolve bands between. Each chapter's copy also exists in the server-rendered content flow below/behind the canvas.
+
+| # | Chapter | Object state (particle target) | Camera | Copy + data | Transition out |
+|---|---|---|---|---|---|
+| 0 | **Ignition** | Bare silicon die, edge-lit `bone`; particles resolve name lockup first | Slow push-in from void | Name lockup; positioning line; CTAs "See the proof" → /work/ava, "Start a conversation" → contact. Loader ≤2s fast-4G; only ch-0 assets preloaded | Die fractures outward |
+| 1 | **Metal** | Exploded machine: die at center; MALD, pane as `bone` components; MAVIS, Terminus as `faint` wireframe parts labeled SPEC | Slow orbit | One honest line per component; SHIPPED vs SPEC visually distinct (solid vs wireframe) | Components fold inward into a slab |
+| 2 | **Voice** | Slab becomes terminal; particles form scanline plane | Settle to head-on | Interface-layer story. Terminal is REAL (focusable input): `whoami` → photo + dry line, `help` → full command list, `ls`/`cat` navigate projects, `sudo`/`rm -rf /` refusals, `trackmania`, konami. Idle hint carousel cycles suggestions — discoverability guaranteed | Terminal characters scatter into graph nodes |
+| 3 | **Mind — AVA (proof)** | Neural graph; benchmark bars grow *inside the scene* in `signal`: ARC-C 82.0 / ARC-E 92.0 vs Llama 3.2 3B 78.6; 42 MB adapter mass vs base-model mass; Triton before/after throughput | Slow dolly along graph | Status: MEASURED. 17-benchmark / 16,872-task harness cited. Deep-link → /work/ava | Graph splits into eleven clusters |
+| 4 | **The Council — Pantheon (product)** | Eleven distinct agent nodes in a chamber; arguments as light exchanges; Eris flares `ember` on minority side; veto flash; refused trade seals on-chain (Proof of Restraint) | Orbit chamber, pause on veto | Status: LIVE badge → pantheon-trades.vercel.app. Brier 0.149 / 200-market backtest in `signal`; 714 Py + 65 Sol tests. Framed as deliberation + calibration + on-chain accountability — never "trading bot" | Chamber unfolds into lattice |
+| 5 | **The Blueprint — OMNI (ambition)** | 8×4×4 expert lattice on 3D torus; top-1 routing as light on manifold; ternary weights as 3-state particles. Wireframe/schematic language | Slow reveal of torus topology | Persistent label: **RESEARCH IN PROGRESS — projections, not measurements**. 243 tests (verified). Always "targeting", never "runs" | Torus explodes outward into stars |
+| 6 | **Light — AGI-Ledger** | Star cosmos — visual quote of AGI-Ledger itself | Drift among stars | Status: LIVE. ~22 seeded takes; "what would change my mind?" premise. → /work/agi-ledger | Stars dim; machine powers down |
+| 7 | **The Human** | Particles settle to dust; **background inverts to `paper`** | Static, editorial | Warm break: real photos, Tangled playable toy, Now widget (`content/now.md`), contact block (email lightly obfuscated, GitHub, LinkedIn, X, one CV). Structured grid, casual interruptions | — |
+
+**Fallbacks (designed, not degraded):** `prefers-reduced-motion`, no-WebGL, and below-floor GPUs all get the same editorial version — full copy, designed poster image per chapter, chapter jump-list nav. This version is reviewed to the same standard as the film. Mobile below iPhone 13-class: same editorial version. Heavy chapters (4, 5) may additionally use pre-baked video on mid-tier mobile — decided per chapter at Phase E with measurements.
+
+---
+
+## 5. Technical Architecture
+
+- Next.js 14+ App Router, TypeScript strict, Tailwind. R3F + drei + three. Lenis (scroll) + Framer Motion (DOM) + custom shader morphs (canvas).
+- Content layer: `content/` — typed TS/MDX with zod-validated frontmatter. No copy hardcoded in JSX.
+- Snapshot pipeline: extend `scripts/fetch-github-snapshot.mjs` — build-time fetch (token env-only, CI-only), committed JSON fallback, **claim cross-check step** (numbers in content vs live README; mismatch = build fails), sanitize all GitHub-originated strings.
+- 3D budget: ≤3 MB total film payload, lazy per chapter; Draco/meshopt GLB + KTX2; no postprocessing (glow via sprite texture, proven in AGI-Ledger); adaptive DPR ≤1.5; `frameloop="never"` off-screen/hidden tab.
+- CI gates (GitHub Actions): lint, typecheck, Lighthouse CI (mobile: Perf ≥85 / A11y ≥95 / BP ≥95 / SEO ≥95), gitleaks secret scan, `npm audit`, banned-vocabulary grep.
+- Security headers via Vercel config: CSP (no unsafe-eval; nonce'd inline; allowlist Vercel Analytics + api.github.com), HSTS, nosniff, Referrer-Policy strict-origin-when-cross-origin, Permissions-Policy deny camera/mic/geo, frame-ancestors 'none'.
+- JSON-LD: `Person` (alternateName NAME0x0, sameAs GitHub/LinkedIn/X/HuggingFace) sitewide; `SoftwareSourceCode` per case study; `Article` per post.
+- Analytics funnel: `chapter_reached(0–7)`, `case_study_opened(slug)`, `demo_clicked`, `cv_downloaded`, `email_clicked`, `github_clicked`, `writing_read_50pct`.
+
+---
+
+## 6. Asset List
+
+| Asset | Owner | Status |
+|---|---|---|
+| Headshot | Owner | EXISTS — needs EXIF strip + crop pass |
+| 3–6 casual photos (Human ch.) | Owner | EXISTS — EXIF strip, curation with me |
+| Project screenshots/recordings | Owner | EXISTS — per-page selection at Phase C |
+| Logo/monogram | Owner | EXISTS — needs SVG/favicon derivation |
+| GLB morph targets ×8 (die, machine, terminal, graph, chamber, torus, cosmos, dust) | Me | To model/generate — low-poly sources, sampled to particles |
+| Chapter poster images (fallback + OG) | Me | Generated from 3D scenes at build |
+| War stories (3 bullets × 7 projects) | Owner (interviewed) | Phase C per page |
+| Triton gist → MDX | Me (owner reviews) | Phase C |
+| QLoRA post, OMNI essay | Owner drafts, I edit | Post-v1 |
+| General CV PDF | Owner | Confirm current version at Phase C |
+
+---
+
+## 7. Build Phases & Milestone Gates
+
+- **B — Skeleton:** restructure, routes, typed content layer, snapshot+cross-check, CI gates, headers, analytics, redirects. *Gate: content-only site already beats current portfolio.*
+- **C — Case studies & writing:** 4 Tier 1 pages (war-story interviews happen here), Tier 2 index rows, /writing + Triton post, OG generation. *Gate: deployable, crawlable, recruiter-complete.*
+- **D — Film, hook-proof-human:** chapters 0, 3, 7 + full fallback system. *Gate: 30-second test passes on mid-range phone.*
+- **E — Remaining chapters:** 1, 2, 6 then 4, 5 (heaviest last), each perf-checked individually.
+- **F — Polish & launch:** easter eggs complete, 404, QA matrix, budget re-verification, `docs/LAUNCH.md`.
+- **Post-v1 content drops:** MALD/WebDesk/pane pages; QLoRA + OMNI posts; custom domain purchase + canonical migration.
+
+Each milestone: demo state shown, deviations listed, owner approval before next phase.
+
+---
+
+## 8. Acceptance Checklist (verified + reported at launch)
+
+1. `curl` of every route returns full text content — no empty sections, no "--" placeholders.
+2. All §6 budgets pass in CI on final build; achieved Lighthouse score published in footer.
+3. JS disabled: every page readable/navigable. Reduced-motion: designed editorial experience.
+4. Every factual claim matches ground truth / live repo data; status labels present; OMNI never "runs".
+5. Banned vocabulary absent (CI grep); lockup "Muhammad Afsah Mumtaz — NAME0x0" in title, header/footer, OG, JSON-LD.
+6. One canonical domain; others 301; sitemap + RSS valid; OG images verified in link-preview test.
+7. securityheaders.com A (or documented platform limits); no secrets in history; secret-scan green.
+8. Full keyboard pass (film chapter jump-list included); a11y ≥95; contrast AA verified over 3D.
+9. All funnel events verified firing in dashboard; `docs/ANALYTICS.md` + `docs/LAUNCH.md` exist.
+10. Stranger, mid-range phone, 30 seconds: name + one hard number + reach a case study.
+
+---
+
+## 9. Self-Critique (anti-genericness pass)
+
+- **"Particles morphing on scroll" is 2024-template-adjacent.** Survives because: single persistent buffer across 8 semantically-motivated states (not decorative morphs), benchmarks rendered inside the scene, and the no-cuts rule. The defense isn't the technique — it's that every state is a real project's real shape.
+- **Terminal easter eggs are a portfolio cliché.** Kept because Voice is an actual chapter of the story (interface layer = what he builds), the terminal navigates for real, and discoverability is designed in. Cut if it tests as gimmick in Phase E.
+- **`signal`-gold = verified-data-only is the least generic idea in this brief** — honesty as a color system. Protect it in review.
+- **Human-chapter paper inversion** risks "quirky about page". Mitigation: same grid discipline, casual only in content, not in craft.
+- **Dropped from consideration:** cream+serif+terracotta, black+acid-green, broadsheet hairlines (explicitly banned generic looks); loading-percentage counters; skill bars; "passionate" copy — all absent by design.
+
+---
+
+*Sign-off line: approved by owner → Phase B begins.*
