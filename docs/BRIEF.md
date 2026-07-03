@@ -87,25 +87,31 @@ Rule: `signal` is reserved for verified data. Decorative use is a review-blockin
 ### Layout concept
 12-col grid, generous void. Content column max ~68ch. Marginalia asides (dry, first-person: "yes, I benchmarked this at 3 a.m.") set in Geist Mono `dim`, hanging in the outer margin on desktop, inline-collapsed on mobile.
 
-### The signature element: **no cuts**
-One particle system, one continuous object, zero hard transitions for the entire film. Every chapter change is an on-screen dissolve of the same ~30–60k particles (single buffer, 8 target-position attribute sets, per-particle randomized lerp — the AGI-Ledger shader pattern generalized). If a visitor scrolls the whole film, they never see the machine replaced — only *become*. This is the thing no template can copy.
+### The signature element: **no cuts** — REVISED 2026-07-03 (owner direction)
+The Machine is a **GPU being forged, then awakened**. One continuous object, zero hard transitions.
+
+- **Act I — Forged (ch 0–2):** solid geometry. Bare silicon die → PCB rises → VRAM/VRM/heatsink assemble in exploded-view keynote choreography. Photoreal PBR materials (procedural in-code: metalness/roughness/normal maps + environment lighting — no multi-MB downloaded model), lit in our palette: bone key light, ember heat, void background. Specs engrave as parts attach; the die is marked **"4 GB"** — the constraint is the character. Custom card, no NVIDIA trademarks.
+- **Act II — Awakened (ch 3–6):** the card boots; computation becomes visible as light/particles rising off the die (AVA benchmarks, the council, the torus, the cosmos). Particles are what the silicon is *doing*, not decoration.
+- **Ch 7:** power-down — light settles to dust, page inverts to paper.
+
+Matter → thought → human: the film enacts the positioning line. The GPU never leaves frame; a visitor scrolling the whole film never sees the machine replaced — only forged, then thinking.
 
 ---
 
-## 4. Chapter Storyboard
+## 4. Chapter Storyboard — v2, REVISED 2026-07-03 (GPU forge → awaken)
 
-Scroll progress `p ∈ [0,1]` split into 8 windows with dissolve bands between. Each chapter's copy also exists in the server-rendered content flow below/behind the canvas.
+Scroll progress `p ∈ [0,1]` split into 8 windows with transition bands. Each chapter's copy also exists in the server-rendered content flow (the current editorial page is the film's DOM layer and its complete fallback).
 
-| # | Chapter | Object state (particle target) | Camera | Copy + data | Transition out |
+| # | Chapter | GPU state | Camera | Copy + data | Transition out |
 |---|---|---|---|---|---|
-| 0 | **Ignition** | Bare silicon die, edge-lit `bone`; particles resolve name lockup first | Slow push-in from void | Name lockup; positioning line; CTAs "See the proof" → /work/ava, "Start a conversation" → contact. Loader ≤2s fast-4G; only ch-0 assets preloaded | Die fractures outward |
-| 1 | **Metal** | Exploded machine: die at center; MALD, pane as `bone` components; MAVIS, Terminus as `faint` wireframe parts labeled SPEC | Slow orbit | One honest line per component; SHIPPED vs SPEC visually distinct (solid vs wireframe) | Components fold inward into a slab |
-| 2 | **Voice** | Slab becomes terminal; particles form scanline plane | Settle to head-on | Interface-layer story. Terminal is REAL (focusable input): `whoami` → photo + dry line, `help` → full command list, `ls`/`cat` navigate projects, `sudo`/`rm -rf /` refusals, `trackmania`, konami. Idle hint carousel cycles suggestions — discoverability guaranteed | Terminal characters scatter into graph nodes |
-| 3 | **Mind — AVA (proof)** | Neural graph; benchmark bars grow *inside the scene* in `signal`: ARC-C 82.0 / ARC-E 92.0 vs Llama 3.2 3B 78.6; 42 MB adapter mass vs base-model mass; Triton before/after throughput | Slow dolly along graph | Status: MEASURED. 17-benchmark / 16,872-task harness cited. Deep-link → /work/ava | Graph splits into eleven clusters |
-| 4 | **The Council — Pantheon (product)** | Eleven distinct agent nodes in a chamber; arguments as light exchanges; Eris flares `ember` on minority side; veto flash; refused trade seals on-chain (Proof of Restraint) | Orbit chamber, pause on veto | Status: LIVE badge → pantheon-trades.vercel.app. Brier 0.149 / 200-market backtest in `signal`; 714 Py + 65 Sol tests. Framed as deliberation + calibration + on-chain accountability — never "trading bot" | Chamber unfolds into lattice |
-| 5 | **The Blueprint — OMNI (ambition)** | 8×4×4 expert lattice on 3D torus; top-1 routing as light on manifold; ternary weights as 3-state particles. Wireframe/schematic language | Slow reveal of torus topology | Persistent label: **RESEARCH IN PROGRESS — projections, not measurements**. 243 tests (verified). Always "targeting", never "runs" | Torus explodes outward into stars |
-| 6 | **Light — AGI-Ledger** | Star cosmos — visual quote of AGI-Ledger itself | Drift among stars | Status: LIVE. ~22 seeded takes; "what would change my mind?" premise. → /work/agi-ledger | Stars dim; machine powers down |
-| 7 | **The Human** | Particles settle to dust; **background inverts to `paper`** | Static, editorial | Warm break: real photos, Tangled playable toy, Now widget (`content/now.md`), contact block (email lightly obfuscated, GitHub, LinkedIn, X, one CV). Structured grid, casual interruptions | — |
+| 0 | **Ignition** | Bare silicon die alone in void, edge-lit `bone`, **"4 GB" engraved**; name lockup resolves above it | Slow push-in from void | Lockup; positioning line; CTAs → /work/ava, contact. Loader ≤2s fast-4G; ch-0 assets only | PCB rises from darkness to meet the die |
+| 1 | **Metal — forged** | Exploded-view assembly: VRAM modules, VRM stages, heatsink fins fly in and seat (keynote grammar). Board components carry project labels: MALD, pane solid `bone`; MAVIS, Terminus `faint` wireframe SPEC parts | Slow orbit through the exploded board | One honest line per component; SHIPPED solid vs SPEC wireframe | Shroud closes; card complete |
+| 2 | **Voice — interface** | Card's I/O edge faces camera; terminal projects above the display connector (real focusable input: `whoami`, `help`, `ls`/`cat`, `sudo`/`rm -rf /` refusal, `trackmania`, konami; idle hint carousel for discoverability) | Settle head-on to I/O edge | Interface-layer story, one sentence | Power connector seats; fans spin up — **boot** |
+| 3 | **Mind — AVA (proof)** | **Awakened.** Light rises off the die: benchmark columns in `signal` over the VRAM — ARC-C 82.0 / ARC-E 92.0 vs 78.6 baseline; 42 MB adapter mass vs base-model mass | Slow dolly along the board at die height | MEASURED; 17-benchmark / 16,872-task harness. → /work/ava | Light columns split into eleven nodes |
+| 4 | **The Council — Pantheon** | Eleven agent lights deliberate above the card; arguments as light exchanges; Eris flares `ember` on the minority side; veto flash; a refused trade seals (Proof of Restraint) | Orbit the chamber of lights, pause on veto | LIVE → demo + /work/pantheon-trades. Brier 0.149 in `signal`; never "trading bot" | Nodes snap into a lattice |
+| 5 | **The Blueprint — OMNI** | 8×4×4 torus lattice hologram over the card, wireframe/schematic; top-1 routing as travelling light; ternary particles in 3 states | Slow reveal of torus topology | Persistent ember label: **RESEARCH IN PROGRESS — projections, not measurements**; 243 tests. → /work/omni | Torus expands into stars |
+| 6 | **Light — AGI-Ledger** | Star cosmos above the card — visual quote of AGI-Ledger | Drift among stars, card dim below | LIVE; ~22 takes; falsifier rule. → /work/agi-ledger | Stars dim; fans slow |
+| 7 | **The Human** | **Power-down:** light settles to dust on the board; background inverts to `paper` | Static, editorial | Warm break: photos, Tangled, Now widget, contact block, one CV. Marginalia asides live in this voice | — |
 
 **Fallbacks (designed, not degraded):** `prefers-reduced-motion`, no-WebGL, and below-floor GPUs all get the same editorial version — full copy, designed poster image per chapter, chapter jump-list nav. This version is reviewed to the same standard as the film. Mobile below iPhone 13-class: same editorial version. Heavy chapters (4, 5) may additionally use pre-baked video on mid-tier mobile — decided per chapter at Phase E with measurements.
 
