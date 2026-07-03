@@ -1,0 +1,53 @@
+{
+  "claims": [
+    {
+      "id": "ava-arc-challenge",
+      "value": "82.0",
+      "repo": "NAME0x0/AVA",
+      "pattern": "82\\.0\\s*%?",
+      "where": "readme"
+    },
+    {
+      "id": "ava-arc-easy",
+      "value": "92.0",
+      "repo": "NAME0x0/AVA",
+      "pattern": "92\\.0\\s*%?",
+      "where": "readme"
+    },
+    {
+      "id": "ava-adapter-42mb",
+      "value": "42 MB",
+      "repo": "NAME0x0/AVA",
+      "pattern": "42\\s?MB",
+      "where": "readme"
+    },
+    {
+      "id": "pantheon-brier",
+      "value": "0.149",
+      "repo": "NAME0x0/Pantheon-Trades",
+      "pattern": "0\\.149",
+      "where": "readme"
+    },
+    {
+      "id": "pantheon-tests-python",
+      "value": "714",
+      "repo": "NAME0x0/Pantheon-Trades",
+      "pattern": "714",
+      "where": "readme"
+    },
+    {
+      "id": "pantheon-tests-solidity",
+      "value": "65",
+      "repo": "NAME0x0/Pantheon-Trades",
+      "pattern": "65",
+      "where": "readme"
+    },
+    {
+      "id": "omni-tests",
+      "value": "243",
+      "repo": "NAME0x0/OMNI",
+      "pattern": "243",
+      "where": "readme"
+    }
+  ]
+}

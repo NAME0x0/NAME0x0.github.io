@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "next dev",
     "snapshot": "node scripts/fetch-github-snapshot.mjs",
-    "prebuild": "node scripts/fetch-github-snapshot.mjs",
+    "verify-claims": "node scripts/verify-claims.mjs",
+    "prebuild": "node scripts/fetch-github-snapshot.mjs && npm run verify-claims",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

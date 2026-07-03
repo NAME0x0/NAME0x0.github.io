@@ -1,0 +1,55 @@
+{
+  "verifiedAt": "2026-07-03T14:13:32.279Z",
+  "status": "verified",
+  "results": [
+    {
+      "id": "ava-arc-challenge",
+      "repo": "NAME0x0/AVA",
+      "expected": "82.0",
+      "where": "readme",
+      "status": "PASS"
+    },
+    {
+      "id": "ava-arc-easy",
+      "repo": "NAME0x0/AVA",
+      "expected": "92.0",
+      "where": "readme",
+      "status": "PASS"
+    },
+    {
+      "id": "ava-adapter-42mb",
+      "repo": "NAME0x0/AVA",
+      "expected": "42 MB",
+      "where": "readme",
+      "status": "PASS"
+    },
+    {
+      "id": "pantheon-brier",
+      "repo": "NAME0x0/Pantheon-Trades",
+      "expected": "0.149",
+      "where": "readme",
+      "status": "PASS"
+    },
+    {
+      "id": "pantheon-tests-python",
+      "repo": "NAME0x0/Pantheon-Trades",
+      "expected": "714",
+      "where": "readme",
+      "status": "PASS"
+    },
+    {
+      "id": "pantheon-tests-solidity",
+      "repo": "NAME0x0/Pantheon-Trades",
+      "expected": "65",
+      "where": "readme",
+      "status": "PASS"
+    },
+    {
+      "id": "omni-tests",
+      "repo": "NAME0x0/OMNI",
+      "expected": "243",
+      "where": "readme",
+      "status": "PASS"
+    }
+  ]
+}
