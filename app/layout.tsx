@@ -107,6 +107,9 @@ const websiteJsonLd = {
   author: { "@type": "Person", name: "Muhammad Afsah Mumtaz", alternateName: "NAME0x0" },
 } as const;
 
+const personJsonLdText = JSON.stringify(personJsonLd).replace(/</g, "\\u003c");
+const websiteJsonLdText = JSON.stringify(websiteJsonLd).replace(/</g, "\\u003c");
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
@@ -115,17 +118,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${spaceGrotesk.variable} ${manrope.variable} ${monoFont.variable}`}
     >
       <body className="bg-void text-ink font-body antialiased">
-        {/* JSON-LD must be raw text inside <script>: React-escaped children render
-            &quot; entities that crawlers do not decode, invalidating the JSON. Content
-            is JSON.stringify of build-time constants — no user input reaches this. */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd).replace(/</g, "\\u003c") }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd).replace(/</g, "\\u003c") }}
-        />
+        {/* Exception to the no-dangerouslySetInnerHTML rule: JSON-LD must be raw text
+            inside <script> — React-escaped children render &quot; entities crawlers
+            do not decode, invalidating the JSON. Input is JSON.stringify of
+            build-time constants with < escaped; no user input reaches this. */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: personJsonLdText }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: websiteJsonLdText }} />
         <Header />
         {children}
         <Footer />
