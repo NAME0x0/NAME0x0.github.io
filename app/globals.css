@@ -43,6 +43,47 @@ body::after {
   mix-blend-mode: overlay;
 }
 
+.film-canvas-wrapper {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+body[data-film="on"] #main {
+  position: relative;
+  z-index: 1;
+}
+
+body[data-film="on"] #ignition,
+body[data-film="on"] #metal,
+body[data-film="on"] #voice,
+body[data-film="on"] #mind,
+body[data-film="on"] #council,
+body[data-film="on"] #blueprint,
+body[data-film="on"] #light {
+  background: transparent;
+}
+
+body[data-film="on"] #human {
+  background: #F2EDE4;
+}
+
+body[data-film="on"] #ignition > div,
+body[data-film="on"] #metal > div,
+body[data-film="on"] #voice > div,
+body[data-film="on"] #mind > div,
+body[data-film="on"] #council > div,
+body[data-film="on"] #blueprint > div,
+body[data-film="on"] #light > div {
+  position: relative;
+  border-radius: 2px;
+  background:
+    radial-gradient(circle at 18% 24%, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.48) 42%, rgba(0, 0, 0, 0) 78%),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.58), rgba(0, 0, 0, 0.16) 68%, rgba(0, 0, 0, 0));
+  padding: clamp(1rem, 3vw, 2.5rem);
+}
+
 ::selection {
   background: #E8E4DE;
   color: #000000;

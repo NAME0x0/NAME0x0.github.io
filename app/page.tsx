@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { identity } from "@/content/identity";
+import { FilmMount } from "@/components/film/FilmMount";
+import { ChapterTracker } from "@/components/site/ChapterTracker";
 import { EmailLink } from "@/components/site/EmailLink";
 import { MetricsTable } from "@/components/site/MetricsTable";
 import { StatusBadge } from "@/components/site/StatusBadge";
@@ -69,6 +71,8 @@ const chapterOneProjects = getProjectByChapter(1);
 export default function HomePage() {
   return (
     <main id="main">
+      <FilmMount />
+      <ChapterTracker />
       <section id="ignition" className="px-6 py-section-y">
         <div className="mx-auto max-w-6xl">
           <Overline>{"// IDENTITY"}</Overline>

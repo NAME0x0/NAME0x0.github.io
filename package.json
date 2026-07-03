@@ -37,6 +37,7 @@
     "@react-three/drei": "^9.122.0",
     "@react-three/fiber": "^8.18.0",
     "@vercel/analytics": "^2.0.1",
+    "detect-gpu": "^5.0.70",
     "framer-motion": "^12.42.2",
     "geist": "^1.7.0",
     "gray-matter": "^4.0.3",
