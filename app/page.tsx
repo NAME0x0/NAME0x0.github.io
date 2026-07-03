@@ -1,10 +1,13 @@
 import Link from "next/link";
 import { identity } from "@/content/identity";
+import { projects } from "@/content/projects";
 import { FilmMount } from "@/components/film/FilmMount";
 import { ChapterTracker } from "@/components/site/ChapterTracker";
 import { EmailLink } from "@/components/site/EmailLink";
+import { Konami } from "@/components/site/Konami";
 import { MetricsTable } from "@/components/site/MetricsTable";
 import { StatusBadge } from "@/components/site/StatusBadge";
+import { Terminal } from "@/components/site/Terminal";
 import { TrackedLink } from "@/components/site/TrackedLink";
 import { now } from "@/lib/content/now";
 import { getProjectByChapter, getProjectRequired } from "@/lib/content/projects";
@@ -67,12 +70,28 @@ const neuralNets = getProjectRequired("neural-nets");
 const webdesk = getProjectRequired("webdesk");
 const tangled = getProjectRequired("tangled");
 const chapterOneProjects = getProjectByChapter(1);
+const terminalIdentity = {
+  name: identity.name,
+  handle: identity.handle,
+  role: identity.role,
+  location: identity.location,
+};
+const terminalProjects = projects.map(({ slug, name, status, tagline, tier, links, metrics }) => ({
+  slug,
+  name,
+  status,
+  tagline,
+  tier,
+  links,
+  metrics,
+}));
 
 export default function HomePage() {
   return (
     <main id="main">
       <FilmMount />
       <ChapterTracker />
+      <Konami />
       <section id="ignition" className="px-6 py-section-y">
         <div className="mx-auto max-w-6xl">
           <Overline>{"// IDENTITY"}</Overline>
@@ -112,6 +131,7 @@ export default function HomePage() {
           <Overline>{"// VOICE"}</Overline>
           <p className="mb-8 max-w-[68ch] text-dim">The interface layer is where machines meet people.</p>
           <ProjectRow project={webdesk} />
+          <Terminal identity={terminalIdentity} projects={terminalProjects} />
         </div>
       </section>
 

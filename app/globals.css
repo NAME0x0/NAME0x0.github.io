@@ -94,6 +94,16 @@ body[data-film="on"] #light > div {
   padding: clamp(1rem, 3vw, 2.5rem);
 }
 
+html:has(body[data-konami="on"]) {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    transition: filter 300ms ease;
+  }
+}
+
 ::selection {
   background: #E8E4DE;
   color: #000000;
