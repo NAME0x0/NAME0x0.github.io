@@ -139,3 +139,6 @@ gsap/
 # Playwright MCP artifacts
 .playwright-mcp/
 .gstack/
+
+# GLB source downloads (compressed copies live in public/models/)
+assets/source/
