@@ -67,6 +67,16 @@ body[data-film="on"] #light {
 
 body[data-film="on"] #human {
   background: #F2EDE4;
+  /* The fixed canvas is an earlier positioned sibling; opaque sections must
+     stack above it or the film renders over the paper chapter and footer. */
+  position: relative;
+  z-index: 1;
+}
+
+body[data-film="on"] footer {
+  position: relative;
+  z-index: 1;
+  background: #000000;
 }
 
 body[data-film="on"] #ignition > div,

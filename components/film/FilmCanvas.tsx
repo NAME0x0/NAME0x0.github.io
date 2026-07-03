@@ -5,8 +5,8 @@ import { Canvas, useThree } from "@react-three/fiber";
 import { useEffect, useState } from "react";
 import { PMREMGenerator } from "three";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
-import { useFilmProgressEngine } from "@/lib/film/progress";
-import { Die } from "./scenes/Die";
+import { filmProgressStore, useFilmProgressEngine } from "@/lib/film/progress";
+import { Machine } from "./scenes/Machine";
 
 function Environment() {
   const gl = useThree((state) => state.gl);
@@ -32,15 +32,17 @@ function Environment() {
 
 export function FilmCanvas() {
   const [dpr, setDpr] = useState<number | [number, number]>([1, 1.5]);
-  const [frameloop, setFrameloop] = useState<"always" | "never">(
-    typeof document !== "undefined" && document.hidden ? "never" : "always",
+  const [documentHidden, setDocumentHidden] = useState(
+    typeof document !== "undefined" && document.hidden,
   );
+  const [coveredByPaper, setCoveredByPaper] = useState(false);
+  const frameloop = documentHidden || coveredByPaper ? "never" : "always";
 
   useFilmProgressEngine();
 
   useEffect(() => {
     const onVisibilityChange = () => {
-      setFrameloop(document.hidden ? "never" : "always");
+      setDocumentHidden(document.hidden);
     };
 
     document.addEventListener("visibilitychange", onVisibilityChange);
@@ -49,6 +51,12 @@ export function FilmCanvas() {
       document.removeEventListener("visibilitychange", onVisibilityChange);
     };
   }, []);
+
+  useEffect(() => filmProgressStore.subscribe((progress) => {
+    const nextCovered = progress.chapter === 7 && progress.chapterLocal > 0.6;
+
+    setCoveredByPaper((current) => current === nextCovered ? current : nextCovered);
+  }), []);
 
   return (
     <div className="film-canvas-wrapper" aria-hidden="true">
@@ -60,7 +68,7 @@ export function FilmCanvas() {
       >
         <PerformanceMonitor onDecline={() => setDpr(1)} />
         <Environment />
-        <Die />
+        <Machine />
       </Canvas>
     </div>
   );
