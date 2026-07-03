@@ -135,7 +135,11 @@ export const projects = z.array(ProjectSchema).parse([
       "One rule keeps the slop out: every take must answer \"what would change my mind?\" with one specific, realistic falsifier — no falsifier, no merge. Contribution deliberately requires a pull request; that friction is the cost of putting your name on the permanent record. Seeded takes from named AI figures are faithful summaries of documented views with source links, never verbatim quotes.",
     architecture:
       "Takes are structured markdown answering five axes plus a timeline and a risk percentage, validated against a public schema. The site renders them as a 3D observatory: each take a star positioned in belief-space, like-minded takes forming visible faction clusters, entered through a bust-dissolve GPU particle morph. Next.js App Router, React Three Fiber, Tailwind v4, Lenis, Framer Motion — tuned for 60fps with no postprocessing, adaptive DPR, and a render loop that pauses outside the cinematic section.",
-    warStories: [],
+    warStories: [
+      "The bust-dissolve morph was the fight: one GPU particle system carrying a sculpted head into a cosmos of beliefs, at 60fps, with postprocessing off the table.",
+      "The \"what would change my mind?\" rule was there from day one. It isn't moderation — it's the merge gate. A position without a falsifier doesn't get in.",
+      "Starting over: non-git contributors come first — the web form ships before the polish — and it gets advertised everywhere. The Ledger is for the community, not for people who know YAML.",
+    ],
   },
   {
     slug: "mald",
