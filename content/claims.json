@@ -48,6 +48,55 @@
       "repo": "NAME0x0/OMNI",
       "pattern": "243",
       "where": "readme"
+    },
+    {
+      "id": "ava-mmlu",
+      "value": "59.2",
+      "repo": "NAME0x0/AVA",
+      "pattern": "59\\.2\\s*%?",
+      "where": "readme"
+    },
+    {
+      "id": "ava-gsm8k",
+      "value": "35.3 / 44.0",
+      "repo": "NAME0x0/AVA",
+      "pattern": "35\\.3%\\s*/\\s*44\\.0%",
+      "where": "readme"
+    },
+    {
+      "id": "ava-train-peak-vram",
+      "value": "1.81 GB",
+      "repo": "NAME0x0/AVA",
+      "pattern": "1\\.81\\s?GB",
+      "where": "readme"
+    },
+    {
+      "id": "pantheon-human-brier",
+      "value": "0.126",
+      "repo": "NAME0x0/Pantheon-Trades",
+      "pattern": "0\\.126",
+      "where": "readme"
+    },
+    {
+      "id": "pantheon-llm-brier",
+      "value": "0.260",
+      "repo": "NAME0x0/Pantheon-Trades",
+      "pattern": "0\\.260",
+      "where": "readme"
+    },
+    {
+      "id": "omni-active-params",
+      "value": "14.95B",
+      "repo": "NAME0x0/OMNI",
+      "pattern": "14\\.95B",
+      "where": "readme"
+    },
+    {
+      "id": "omni-projected-throughput",
+      "value": "~10-11 tok/s",
+      "repo": "NAME0x0/OMNI",
+      "pattern": "10-11 tok/s",
+      "where": "readme"
     }
   ]
 }

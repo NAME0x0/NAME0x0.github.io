@@ -1,5 +1,5 @@
 {
-  "verifiedAt": "2026-07-03T14:38:17.189Z",
+  "verifiedAt": "2026-07-03T14:45:50.602Z",
   "status": "verified",
   "results": [
     {
@@ -48,6 +48,55 @@
       "id": "omni-tests",
       "repo": "NAME0x0/OMNI",
       "expected": "243",
+      "where": "readme",
+      "status": "PASS"
+    },
+    {
+      "id": "ava-mmlu",
+      "repo": "NAME0x0/AVA",
+      "expected": "59.2",
+      "where": "readme",
+      "status": "PASS"
+    },
+    {
+      "id": "ava-gsm8k",
+      "repo": "NAME0x0/AVA",
+      "expected": "35.3 / 44.0",
+      "where": "readme",
+      "status": "PASS"
+    },
+    {
+      "id": "ava-train-peak-vram",
+      "repo": "NAME0x0/AVA",
+      "expected": "1.81 GB",
+      "where": "readme",
+      "status": "PASS"
+    },
+    {
+      "id": "pantheon-human-brier",
+      "repo": "NAME0x0/Pantheon-Trades",
+      "expected": "0.126",
+      "where": "readme",
+      "status": "PASS"
+    },
+    {
+      "id": "pantheon-llm-brier",
+      "repo": "NAME0x0/Pantheon-Trades",
+      "expected": "0.260",
+      "where": "readme",
+      "status": "PASS"
+    },
+    {
+      "id": "omni-active-params",
+      "repo": "NAME0x0/OMNI",
+      "expected": "14.95B",
+      "where": "readme",
+      "status": "PASS"
+    },
+    {
+      "id": "omni-projected-throughput",
+      "repo": "NAME0x0/OMNI",
+      "expected": "~10-11 tok/s",
       "where": "readme",
       "status": "PASS"
     }
