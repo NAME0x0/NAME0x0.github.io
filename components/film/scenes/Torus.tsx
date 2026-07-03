@@ -19,6 +19,7 @@ import {
   Vector3,
 } from "three";
 import type { FilmProgress } from "@/lib/film/progress";
+import { layerPresence, smoothstep, smoothstepRange } from "./staging";
 
 const SIGNAL = "#E3B341";
 const DIM = "#8A8578";
@@ -26,24 +27,14 @@ const EMBER = "#D08C5A";
 const BONE = "#C4B5A0";
 const NODE_COUNT = 128;
 const TERNARY_COUNT = 300;
-const TORUS_MAJOR = 1.5;
-const TORUS_Y = 1.55;
-const TORUS_SHELLS = [0.4, 0.5, 0.6, 0.7] as const;
+const TORUS_MAJOR = 1.2;
+const TORUS_Y = 1.28;
+const TORUS_SHELLS = [0.24, 0.3, 0.36, 0.42] as const;
 const RESERVED_COUNT = 11;
 
 const routePath = [
   0, 17, 34, 51, 68, 85, 102, 119, 8, 25, 42, 59, 76, 93, 110, 127, 14, 31, 48, 65, 82, 99, 116, 5,
 ] as const;
-
-function clamp01(value: number) {
-  return Math.min(1, Math.max(0, value));
-}
-
-function smoothstep(value: number) {
-  const x = clamp01(value);
-
-  return x * x * (3 - 2 * x);
-}
 
 function writeTorusPoint(index: number, target: Float32Array, offset: number) {
   const major = index % 8;
@@ -109,7 +100,7 @@ function createTernaryMotes() {
     const seedOffset = index * 4;
     const angle = ((index * 97.31) % 360) * (Math.PI / 180);
     const tube = ((index * 41) % 100) / 100 * Math.PI * 2;
-    const radius = 1.05 + ((index * 19) % 100) / 100 * 1.08;
+    const radius = 0.28 + ((index * 19) % 100) / 100 * 0.88;
 
     seeds[seedOffset] = angle;
     seeds[seedOffset + 1] = tube;
@@ -179,7 +170,9 @@ export function Torus({ progressRef, glowTexture }: TorusProps) {
     }
 
     const { chapter, chapterLocal } = progressRef.current;
-    const visible = chapter === 5 || chapter === 6;
+    const torusPresence = layerPresence(chapter, chapterLocal, 5);
+    const chapter6Fade = chapter === 6 ? 1 - smoothstepRange(0.18, 1, chapterLocal) : 0;
+    const visible = torusPresence > 0.001 || chapter6Fade > 0.001;
 
     group.visible = visible;
 
@@ -188,10 +181,10 @@ export function Torus({ progressRef, glowTexture }: TorusProps) {
     }
 
     const time = clock.elapsedTime;
-    const entry = chapter === 5 ? smoothstep(chapterLocal / 0.22) : 1;
-    const routePresence = chapter === 5 ? smoothstep((chapterLocal - 0.12) / 0.22) : 1;
-    const exit = chapter === 6 ? smoothstep(chapterLocal) : 0;
-    const opacity = (1 - exit) * entry;
+    const entry = chapter === 5 ? torusPresence : 1;
+    const routePresence = chapter === 5 ? torusPresence : 0;
+    const exit = chapter === 6 ? smoothstepRange(0.18, 1, chapterLocal) : 0;
+    const opacity = chapter === 6 ? chapter6Fade : torusPresence;
     const routeStep = Math.floor(time / 1.2) % routePath.length;
     const nextStep = (routeStep + 1) % routePath.length;
     const routeT = (time % 1.2) / 1.2;
@@ -283,7 +276,7 @@ export function Torus({ progressRef, glowTexture }: TorusProps) {
   return (
     <group ref={groupRef} visible={false}>
       <mesh>
-        <torusGeometry args={[TORUS_MAJOR, 0.55, 12, 64]} />
+        <torusGeometry args={[TORUS_MAJOR, 0.42, 12, 64]} />
         <meshBasicMaterial
           ref={wireMaterialRef}
           color={BONE}

@@ -70,20 +70,17 @@ export function FilmMount() {
     let cancelled = false;
 
     async function checkGate() {
-      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      const saveData = (navigator as NavigatorWithConnection).connection?.saveData === true;
-
-      if (prefersReducedMotion || saveData || !supportsWebGL2()) {
-        return;
-      }
-
-      // QA override: bypasses the GPU-tier check only (WebGL2 + reduced-motion +
-      // saveData still gate). Headless test browsers report SwiftShader and would
-      // otherwise never exercise the film; also used for cross-device QA.
       if (new URLSearchParams(window.location.search).get("film") === "force") {
         if (!cancelled) {
           setEnabled(true);
         }
+        return;
+      }
+
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const saveData = (navigator as NavigatorWithConnection).connection?.saveData === true;
+
+      if (prefersReducedMotion || saveData || !supportsWebGL2()) {
         return;
       }
 

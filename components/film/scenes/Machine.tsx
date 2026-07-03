@@ -17,6 +17,8 @@ import {
   Mesh,
   MeshBasicMaterial,
   MeshPhysicalMaterial,
+  Object3D,
+  InstancedMesh,
   PointLight,
   Points,
   PointsMaterial,
@@ -28,28 +30,20 @@ import {
 import { filmProgressStore, useFilmProgress } from "@/lib/film/progress";
 import { Council } from "./Council";
 import { Torus } from "./Torus";
+import { layerPresence, smoothstep, smoothstepRange } from "./staging";
 
 const SIGNAL = "#E3B341";
 const DIM = "#8A8578";
 const EMBER = "#D08C5A";
 const BONE = "#C4B5A0";
-const MOTE_COUNT = 400;
+const MOTE_COUNT = 320;
+const PAD_COUNT = 48;
 
 const BENCHMARKS = [
   { label: "ARC-C 82.0", value: 0.82, z: -0.58, width: 0.13, color: SIGNAL },
   { label: "ARC-E 92.0", value: 0.92, z: 0, width: 0.15, color: SIGNAL },
   { label: "Llama 3.2 78.6", value: 0.786, z: 0.58, width: 0.08, color: DIM },
 ] as const;
-
-function clamp01(value: number) {
-  return Math.min(1, Math.max(0, value));
-}
-
-function smoothstep(value: number) {
-  const x = clamp01(value);
-
-  return x * x * (3 - 2 * x);
-}
 
 function createCircuitTexture(anisotropy: number) {
   const canvas = document.createElement("canvas");
@@ -137,13 +131,11 @@ function createEngravingTexture(anisotropy: number) {
   }
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = "rgba(232, 228, 222, 0.62)";
-  ctx.textAlign = "center";
+  ctx.fillStyle = "rgba(232, 228, 222, 0.46)";
+  ctx.textAlign = "left";
   ctx.textBaseline = "middle";
-  ctx.font = "700 96px Arial, sans-serif";
-  ctx.fillText("4 GB", 512, 454);
-  ctx.font = "700 54px Arial, sans-serif";
-  ctx.fillText("NAME0x0", 512, 536);
+  ctx.font = "700 58px Arial, sans-serif";
+  ctx.fillText("4 GB", 146, 164);
 
   const texture = new CanvasTexture(canvas);
   texture.anisotropy = anisotropy;
@@ -152,6 +144,33 @@ function createEngravingTexture(anisotropy: number) {
   texture.minFilter = LinearFilter;
   texture.wrapS = ClampToEdgeWrapping;
   texture.wrapT = ClampToEdgeWrapping;
+
+  return texture;
+}
+
+function createSilkscreenTexture(anisotropy: number) {
+  const canvas = document.createElement("canvas");
+  canvas.width = 1024;
+  canvas.height = 128;
+
+  const ctx = canvas.getContext("2d");
+
+  if (!ctx) {
+    return new CanvasTexture(canvas);
+  }
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "rgba(196, 181, 160, 0.2)";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.font = "700 34px Arial, sans-serif";
+  ctx.fillText("NAME0x0", 512, 64);
+
+  const texture = new CanvasTexture(canvas);
+  texture.anisotropy = anisotropy;
+  texture.colorSpace = SRGBColorSpace;
+  texture.magFilter = LinearFilter;
+  texture.minFilter = LinearFilter;
 
   return texture;
 }
@@ -233,10 +252,14 @@ function createMoteField() {
 
 export function Machine() {
   const groupRef = useRef<Group>(null);
+  const dieGroupRef = useRef<Group>(null);
   const shadowRef = useRef<Group>(null);
   const substrateMaterialRef = useRef<MeshPhysicalMaterial>(null);
+  const dieMaterialRef = useRef<MeshPhysicalMaterial>(null);
   const circuitMaterialRef = useRef<MeshPhysicalMaterial>(null);
   const engravingMaterialRef = useRef<MeshPhysicalMaterial>(null);
+  const padsRef = useRef<InstancedMesh>(null);
+  const padsReadyRef = useRef(false);
   const ambientLightRef = useRef<AmbientLight>(null);
   const keyLightRef = useRef<DirectionalLight>(null);
   const fillLightRef = useRef<DirectionalLight>(null);
@@ -257,13 +280,21 @@ export function Machine() {
   const shadowTargetPosition = useMemo(() => new Vector3(), []);
   const cameraPosition = useMemo(() => new Vector3(), []);
   const cameraTarget = useMemo(() => new Vector3(0, 0, 0), []);
-  const baseColor = useMemo(() => new Color("#161616"), []);
+  const wideStage = useMemo(() => new Vector3(2.5, 0, 0), []);
+  const narrowStage = useMemo(() => new Vector3(0, -1.6, 0), []);
+  const stageOffset = useMemo(() => new Vector3(), []);
+  const padDummy = useMemo(() => new Object3D(), []);
+  const baseColor = useMemo(() => new Color("#141210"), []);
   const circuitTexture = useMemo(
     () => createCircuitTexture(gl.capabilities.getMaxAnisotropy()),
     [gl],
   );
   const engravingTexture = useMemo(
     () => createEngravingTexture(gl.capabilities.getMaxAnisotropy()),
+    [gl],
+  );
+  const silkscreenTexture = useMemo(
+    () => createSilkscreenTexture(gl.capabilities.getMaxAnisotropy()),
     [gl],
   );
   const glowTexture = useMemo(() => createGlowTexture(), []);
@@ -280,17 +311,21 @@ export function Machine() {
   useEffect(() => () => {
     circuitTexture.dispose();
     engravingTexture.dispose();
+    silkscreenTexture.dispose();
     glowTexture.dispose();
     labelTextures.forEach((texture) => texture.dispose());
     moteField.geometry.dispose();
-  }, [circuitTexture, engravingTexture, glowTexture, labelTextures, moteField]);
+  }, [circuitTexture, engravingTexture, silkscreenTexture, glowTexture, labelTextures, moteField]);
 
   useFrame(({ clock }, delta) => {
     const group = groupRef.current;
+    const dieGroup = dieGroupRef.current;
     const shadow = shadowRef.current;
     const substrateMaterial = substrateMaterialRef.current;
+    const dieMaterial = dieMaterialRef.current;
     const circuitMaterial = circuitMaterialRef.current;
     const engravingMaterial = engravingMaterialRef.current;
+    const pads = padsRef.current;
     const ambientLight = ambientLightRef.current;
     const keyLight = keyLightRef.current;
     const fillLight = fillLightRef.current;
@@ -301,10 +336,13 @@ export function Machine() {
 
     if (
       !group ||
+      !dieGroup ||
       !shadow ||
       !substrateMaterial ||
+      !dieMaterial ||
       !circuitMaterial ||
       !engravingMaterial ||
+      !pads ||
       !ambientLight ||
       !keyLight ||
       !fillLight ||
@@ -320,22 +358,51 @@ export function Machine() {
     const chapter = progress.chapter;
     const local = progress.chapterLocal;
     const chapter0 = chapter === 0 ? smoothstep(local) : chapter > 0 ? 1 : 0;
-    const chapter3 = chapter === 3 ? smoothstep(local) : chapter > 3 ? 1 : 0;
-    const activeColumns = chapter === 3 ? 1 : chapter === 4 ? 1 - smoothstep(local / 0.25) : 0;
+    const mindPresence = layerPresence(chapter, local, 3);
+    const councilPresence = layerPresence(chapter, local, 4);
+    const activeColumns = mindPresence;
     const powerDown = chapter === 7 ? smoothstep(local / 0.5) : 0;
     const lightScale = 1 - powerDown * 0.85;
     const aspect = viewport.width / Math.max(viewport.height, 0.001);
-    const restX = aspect < 1 ? 0 : 2.4;
-    const restY = aspect < 1 ? -1.4 : 0.2;
+    const isNarrow = aspect < 1.05;
+    const activeStage = isNarrow ? narrowStage : wideStage;
+    const distanceScale = isNarrow ? 1.3 : 1;
+    const azimuthScale = isNarrow ? 0.5 : 1;
+    const framingBias = isNarrow ? 0 : chapter === 5 ? -1.8 : -1.4;
     const time = clock.elapsedTime;
     const damping = 1 - Math.pow(0.001, delta);
 
-    targetPosition.set(restX + chapter0 * 0.22, restY - chapter0 * 0.08, 0);
+    targetPosition.copy(activeStage);
     group.position.lerp(targetPosition, damping);
-    group.rotation.x = -0.08 + Math.sin(time * 0.42) * 0.012 - chapter0 * 0.03;
-    group.rotation.y = -0.28 + Math.sin(time * 0.32) * 0.025 + chapter0 * 0.22;
-    group.rotation.z = Math.sin(time * 0.28) * 0.008;
-    group.scale.setScalar(1.12 - chapter0 * 0.12);
+    dieGroup.position.y = Math.sin(time * 0.42) * 0.02;
+    dieGroup.rotation.x = -0.035 + Math.sin(time * 0.3) * 0.008;
+    dieGroup.rotation.y = -0.16 + Math.sin(time * 0.24) * 0.018;
+    dieGroup.rotation.z = Math.sin(time * 0.22) * 0.006;
+
+    if (!padsReadyRef.current) {
+      for (let index = 0; index < PAD_COUNT; index += 1) {
+        const side = Math.floor(index / 12);
+        const slot = index % 12;
+        const offset = -1.1 + slot * 0.2;
+
+        if (side === 0) {
+          padDummy.position.set(offset, 0.045, -1.05);
+        } else if (side === 1) {
+          padDummy.position.set(1.05, 0.045, offset);
+        } else if (side === 2) {
+          padDummy.position.set(-offset, 0.045, 1.05);
+        } else {
+          padDummy.position.set(-1.05, 0.045, -offset);
+        }
+
+        padDummy.scale.set(0.055, 0.014, 0.055);
+        padDummy.updateMatrix();
+        pads.setMatrixAt(index, padDummy.matrix);
+      }
+
+      pads.instanceMatrix.needsUpdate = true;
+      padsReadyRef.current = true;
+    }
 
     ambientLight.intensity = 0.18 * lightScale;
     keyLight.intensity = 3.2 * lightScale;
@@ -345,10 +412,12 @@ export function Machine() {
 
     substrateMaterial.opacity = 1;
     substrateMaterial.roughness = 0.5 + chapter0 * 0.12;
-    substrateMaterial.color.copy(baseColor).multiplyScalar(1.08);
+    substrateMaterial.color.copy(baseColor);
+    dieMaterial.opacity = 1;
+    dieMaterial.roughness = 0.46;
 
     const bootFlash = chapter === 3 && local < 0.6 ? Math.sin((local / 0.6) * Math.PI) : 0;
-    const circuitIntensity = 0.18 + chapter3 * 0.17 + bootFlash * 0.25;
+    const circuitIntensity = 0.18 + mindPresence * 0.17 + bootFlash * 0.25;
     circuitMaterial.opacity = 1 - powerDown * 0.75;
     circuitMaterial.emissiveIntensity = circuitIntensity * (1 - powerDown) + 0.02 * powerDown;
     engravingMaterial.opacity = 0.9 * (1 - powerDown * 0.75);
@@ -356,57 +425,49 @@ export function Machine() {
 
     shadowTargetPosition.set(group.position.x, -0.18, group.position.z);
     shadow.position.lerp(shadowTargetPosition, damping);
-    shadow.scale.setScalar(1.3 - chapter0 * 0.2);
+    shadow.scale.setScalar(1.05);
 
     if (chapter === 0) {
-      cameraPosition.set(1.2 + chapter0 * 0.8, 4.2 - chapter0 * 1.6, 7 - chapter0 * 3.2);
-    } else if (chapter < 3) {
-      cameraPosition.set(
-        2 + Math.sin(time * 0.08) * 0.14,
-        2.6 + Math.sin(time * 0.05) * 0.05,
-        3.8 + Math.cos(time * 0.07) * 0.12,
-      );
+      stageOffset.set(-1.5 + chapter0 * 2.5, 4.5 - chapter0 * 1.5, 8 - chapter0 * 3);
+    } else if (chapter === 1) {
+      const t = smoothstep(local);
+
+      stageOffset.set(-2 + t * 1.5, 1.2 + t * 0.6, 4.2 - t * 0.8);
+    } else if (chapter === 2) {
+      stageOffset.set(0.5 + Math.sin(time * 0.08) * 0.05, 1 + Math.sin(time * 0.05) * 0.03, 4.8);
     } else if (chapter === 3) {
-      cameraPosition.set(1.6 - chapter3 * 0.8, 2.2 - chapter3 * 0.4, 4.6 - chapter3 * 1);
+      const t = smoothstep(local);
+
+      stageOffset.set(4.5 - t * 1.3, 1.4 + t * 0.6, 4.6 - t * 0.8);
     } else if (chapter === 4) {
-      const orbitHold = local < 0.7 ? smoothstep(local / 0.7) : local < 0.85 ? 1 : 1;
+      const orbitHold = local < 0.7 ? smoothstep(local / 0.7) : 1;
       const sealPush = smoothstep((local - 0.85) / 0.15);
-      const angle = -0.34 + orbitHold * 0.52;
+      const angle = -0.42 + orbitHold * 0.7;
 
-      cameraPosition.set(
-        group.position.x + Math.sin(angle) * 2.8 - sealPush * 0.2,
-        2.24 - sealPush * 0.42,
-        3.72 + Math.cos(angle) * 0.5 - sealPush * 0.22,
-      );
+      stageOffset.set(4.8 - orbitHold * 3.6 - sealPush * 0.25, 3.4 + orbitHold * 0.4 - sealPush * 0.6, 3.2 + orbitHold * 1.4);
+      stageOffset.x += Math.sin(angle) * 0.22;
     } else if (chapter === 5) {
-      const reveal = smoothstep(local);
+      const drift = smoothstep(local) * 0.44;
 
-      cameraPosition.set(
-        Math.sin(time * 0.08) * 0.18,
-        3.2 + reveal * 0.18,
-        5.2 - reveal * 0.38,
-      );
+      stageOffset.set(3 + Math.sin(drift) * 0.45, 6.2, 9.2 - Math.cos(drift) * 0.22);
     } else if (chapter === 6) {
-      cameraPosition.set(
-        Math.sin(time * 0.05) * 0.22,
-        3.34 + local * 0.2,
-        5.08 + local * 0.42,
-      );
+      stageOffset.set(0.5, 6, 9.5);
     } else {
-      cameraPosition.set(
-        0.8 + Math.sin(time * 0.06) * 0.06,
-        1.8 + Math.sin(time * 0.04) * 0.04,
-        3.6 + Math.cos(time * 0.05) * 0.08,
-      );
+      stageOffset.set(0.5, 0.4, 5.5);
     }
 
+    cameraPosition.set(
+      group.position.x + stageOffset.x * azimuthScale * distanceScale,
+      group.position.y + stageOffset.y,
+      group.position.z + stageOffset.z * distanceScale,
+    );
     camera.position.lerp(cameraPosition, damping);
     if (chapter === 5 || chapter === 6) {
-      cameraTarget.set(group.position.x, group.position.y + 1.55, group.position.z);
+      cameraTarget.set(group.position.x + framingBias, group.position.y + 1.25, group.position.z);
     } else if (chapter === 4) {
-      cameraTarget.set(group.position.x, group.position.y + 1.12, group.position.z);
+      cameraTarget.set(group.position.x + framingBias, group.position.y + 1.12, group.position.z);
     } else {
-      cameraTarget.set(group.position.x, group.position.y + (chapter >= 3 ? 0.55 : 0), group.position.z);
+      cameraTarget.set(group.position.x + framingBias, group.position.y + (chapter >= 3 ? 0.55 : 0), group.position.z);
     }
     camera.lookAt(cameraTarget);
 
@@ -416,10 +477,9 @@ export function Machine() {
       const core = coresRef.current[index];
       const base = basesRef.current[index];
       const label = labelsRef.current[index];
-      const grow = smoothstep((chapter3 - index * 0.1) / 0.72);
-      const shimmer = chapter >= 4 && chapter <= 6 ? 0.9 + Math.sin(time * 1.2 + index) * 0.08 : 1;
-      const height = benchmark.value * 2.15 * grow;
-      const opacity = 0.55 * grow * activeColumns * shimmer;
+      const grow = smoothstep((mindPresence - index * 0.1) / 0.72);
+      const height = benchmark.value * 1.75 * grow;
+      const opacity = 0.55 * grow * activeColumns;
 
       if (column) {
         column.position.y = 0.1 + height * 0.5;
@@ -443,10 +503,11 @@ export function Machine() {
       }
     }
 
-    const motePresence = chapter >= 3 && chapter <= 6 ? chapter3 : chapter === 7 ? 1 - powerDown : 0;
+    const motePresence = Math.max(mindPresence, councilPresence);
     const positionAttribute = moteField.geometry.getAttribute("position") as BufferAttribute;
     const positions = moteField.positions;
     const seeds = moteField.seeds;
+    const moteColor = mindPresence >= councilPresence ? SIGNAL : BONE;
 
     for (let index = 0; index < MOTE_COUNT; index += 1) {
       const positionIndex = index * 3;
@@ -454,13 +515,14 @@ export function Machine() {
       const rise = (seeds[seedIndex + 2] + time * 0.045 * seeds[seedIndex + 3]) % 1;
       const sway = Math.sin(time * 0.52 + seeds[seedIndex + 2] * 6.283) * 0.035;
 
-      positions[positionIndex] = 0.45 + seeds[seedIndex] * 0.58 + sway;
-      positions[positionIndex + 1] = 0.12 + rise * 1.95;
-      positions[positionIndex + 2] = seeds[seedIndex + 1] * 0.88;
+      positions[positionIndex] = seeds[seedIndex] * 0.62 + sway;
+      positions[positionIndex + 1] = 0.16 + rise * 1.72;
+      positions[positionIndex + 2] = seeds[seedIndex + 1] * 0.62;
     }
 
     positionAttribute.needsUpdate = true;
-    motesMaterial.opacity = 0.38 * motePresence * lightScale;
+    motesMaterial.color.set(moteColor);
+    motesMaterial.opacity = 0.32 * motePresence * lightScale;
   });
 
   return (
@@ -470,56 +532,77 @@ export function Machine() {
       <directionalLight ref={fillLightRef} position={[0, 2.4, 5.2]} intensity={0.35} color="#e8e4de" />
       <pointLight ref={rimLightRef} position={[4.4, 1.8, -2.2]} intensity={2} color={EMBER} />
       <pointLight ref={cyanLightRef} position={[3.4, 2.3, 2.8]} intensity={1.2} color="#5bb9d2" />
-      <group ref={groupRef} position={[2.4, 0.2, 0]} rotation={[-0.08, -0.28, 0]}>
-        <mesh castShadow receiveShadow>
-          <boxGeometry args={[2.2, 0.12, 2.2, 18, 2, 18]} />
-          <meshPhysicalMaterial
-            ref={substrateMaterialRef}
-            color="#161616"
-            emissive="#050505"
-            emissiveIntensity={0.03}
-            metalness={0.48}
-            opacity={1}
-            roughness={0.5}
-            transparent
-            clearcoat={0.42}
-            clearcoatRoughness={0.28}
-          />
-        </mesh>
-        <mesh position={[0, 0.066, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <planeGeometry args={[2.08, 2.08, 1, 1]} />
-          <meshPhysicalMaterial
-            ref={circuitMaterialRef}
-            map={circuitTexture}
-            roughnessMap={circuitTexture}
-            emissiveMap={circuitTexture}
-            color="#c8c0b4"
-            emissive="#4aa8bd"
-            emissiveIntensity={0.18}
-            metalness={0.36}
-            roughness={0.5}
-            transparent
-            opacity={1}
-            depthWrite={false}
-            clearcoat={0.52}
-            clearcoatRoughness={0.2}
-          />
-        </mesh>
-        <mesh position={[0, 0.069, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <planeGeometry args={[2.02, 2.02, 1, 1]} />
-          <meshPhysicalMaterial
-            ref={engravingMaterialRef}
-            map={engravingTexture}
-            color="#e8e4de"
-            emissive="#e8e4de"
-            emissiveIntensity={0.08}
-            metalness={0.2}
-            roughness={0.72}
-            transparent
-            opacity={0.9}
-            depthWrite={false}
-          />
-        </mesh>
+      <group ref={groupRef} position={[2.5, 0, 0]}>
+        <group ref={dieGroupRef}>
+          <mesh castShadow receiveShadow>
+            <boxGeometry args={[2.6, 0.06, 2.6, 1, 1, 1]} />
+            <meshPhysicalMaterial
+              ref={substrateMaterialRef}
+              color="#141210"
+              emissive="#030302"
+              emissiveIntensity={0.02}
+              metalness={0.18}
+              opacity={1}
+              roughness={0.82}
+              transparent
+            />
+          </mesh>
+          <mesh position={[0, 0.055, 0]} castShadow receiveShadow>
+            <boxGeometry args={[1.6, 0.05, 1.6, 10, 1, 10]} />
+            <meshPhysicalMaterial
+              ref={dieMaterialRef}
+              color="#171717"
+              emissive="#050606"
+              emissiveIntensity={0.04}
+              metalness={0.46}
+              roughness={0.46}
+              transparent
+              opacity={1}
+              clearcoat={0.34}
+              clearcoatRoughness={0.32}
+            />
+          </mesh>
+          <mesh position={[0, 0.083, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+            <planeGeometry args={[1.56, 1.56, 1, 1]} />
+            <meshPhysicalMaterial
+              ref={circuitMaterialRef}
+              map={circuitTexture}
+              roughnessMap={circuitTexture}
+              emissiveMap={circuitTexture}
+              color="#c8c0b4"
+              emissive="#4aa8bd"
+              emissiveIntensity={0.18}
+              metalness={0.36}
+              roughness={0.5}
+              transparent
+              opacity={1}
+              depthWrite={false}
+              clearcoat={0.52}
+              clearcoatRoughness={0.2}
+            />
+          </mesh>
+          <mesh position={[0, 0.086, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+            <planeGeometry args={[1.52, 1.52, 1, 1]} />
+            <meshPhysicalMaterial
+              ref={engravingMaterialRef}
+              map={engravingTexture}
+              color="#e8e4de"
+              metalness={0.1}
+              roughness={0.82}
+              transparent
+              opacity={0.72}
+              depthWrite={false}
+            />
+          </mesh>
+          <mesh position={[0, 0.034, 1.18]} rotation={[-Math.PI / 2, 0, 0]}>
+            <planeGeometry args={[1.05, 0.14, 1, 1]} />
+            <meshBasicMaterial map={silkscreenTexture} transparent opacity={0.72} depthWrite={false} />
+          </mesh>
+          <instancedMesh ref={padsRef} args={[undefined, undefined, PAD_COUNT]}>
+            <boxGeometry args={[1, 1, 1]} />
+            <meshPhysicalMaterial color={BONE} metalness={0.62} roughness={0.38} />
+          </instancedMesh>
+        </group>
         <points ref={motesRef} geometry={moteField.geometry}>
           <pointsMaterial
             ref={motesMaterialRef}
@@ -578,7 +661,7 @@ export function Machine() {
         <Council progressRef={progressRef} glowTexture={glowTexture} />
         <Torus progressRef={progressRef} glowTexture={glowTexture} />
       </group>
-      <group ref={shadowRef} position={[2.4, -0.18, 0]}>
+      <group ref={shadowRef} position={[2.5, -0.18, 0]}>
         <ContactShadows
           position={[0, 0, 0]}
           opacity={0.34}

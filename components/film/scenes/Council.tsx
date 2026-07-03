@@ -19,6 +19,7 @@ import {
   Vector3,
 } from "three";
 import type { FilmProgress } from "@/lib/film/progress";
+import { layerPresence, smoothstep, smoothstepRange } from "./staging";
 
 const SIGNAL = "#E3B341";
 const DIM = "#8A8578";
@@ -27,11 +28,11 @@ const BONE = "#C4B5A0";
 const NODE_COUNT = 11;
 const ARC_COUNT = 8;
 const ARC_POINTS = 18;
-const RING_RADIUS = 1.6;
-const RING_Y = 1.58;
-const TORUS_MAJOR = 1.5;
+const RING_RADIUS = 1.28;
+const RING_Y = 1.34;
+const TORUS_MAJOR = 1.2;
 const TORUS_Y = 1.55;
-const TORUS_SHELLS = [0.4, 0.5, 0.6, 0.7] as const;
+const TORUS_SHELLS = [0.24, 0.3, 0.36, 0.42] as const;
 
 const arcPairs = [
   [0, 4],
@@ -51,16 +52,6 @@ const erisPairs = [
   [10, 0],
   [10, 8],
 ] as const;
-
-function clamp01(value: number) {
-  return Math.min(1, Math.max(0, value));
-}
-
-function smoothstep(value: number) {
-  const x = clamp01(value);
-
-  return x * x * (3 - 2 * x);
-}
 
 function torusPoint(index: number, target: Vector3) {
   const major = index % 8;
@@ -183,7 +174,8 @@ export function Council({ progressRef, glowTexture }: CouncilProps) {
 
     const { chapter, chapterLocal } = progressRef.current;
     const local = chapterLocal;
-    const visible = chapter === 4 || (chapter === 5 && local < 0.22);
+    const councilPresence = layerPresence(chapter, local, 4);
+    const visible = councilPresence > 0.001;
 
     group.visible = visible;
 
@@ -192,13 +184,13 @@ export function Council({ progressRef, glowTexture }: CouncilProps) {
     }
 
     const time = clock.elapsedTime;
-    const entry = chapter === 4 ? local : 1;
-    const snapToLattice = chapter === 5 ? smoothstep(local / 0.22) : 0;
-    const openings = chapter === 4 ? 1 - smoothstep((local - 0.25) / 0.08) : 0;
-    const exchanges = chapter === 4 ? smoothstep((local - 0.25) / 0.08) * (1 - smoothstep((local - 0.55) / 0.08)) : 0;
-    const eris = chapter === 4 ? smoothstep((local - 0.55) / 0.05) * (1 - smoothstep((local - 0.7) / 0.05)) : 0;
-    const veto = chapter === 4 ? smoothstep((local - 0.7) / 0.03) * (1 - smoothstep((local - 0.85) / 0.03)) : 0;
-    const restraint = chapter === 4 ? smoothstep((local - 0.85) / 0.15) : 0;
+    const entry = councilPresence;
+    const snapToLattice = 0;
+    const openings = (1 - smoothstepRange(0.25, 0.33, local)) * councilPresence;
+    const exchanges = smoothstepRange(0.25, 0.33, local) * (1 - smoothstepRange(0.55, 0.63, local)) * councilPresence;
+    const eris = smoothstepRange(0.55, 0.6, local) * (1 - smoothstepRange(0.7, 0.76, local)) * councilPresence;
+    const veto = smoothstepRange(0.7, 0.73, local) * (1 - smoothstepRange(0.85, 0.88, local)) * councilPresence;
+    const restraint = smoothstepRange(0.85, 1, local) * councilPresence;
 
     group.rotation.x = -0.16;
     group.rotation.z = Math.sin(time * 0.28) * 0.015;
@@ -208,7 +200,7 @@ export function Council({ progressRef, glowTexture }: CouncilProps) {
       const stagger = smoothstep((entry - index * 0.025) / 0.25);
       const pulse = 1 + Math.sin(time * 1.4 + index) * 0.08;
       const flare = index === 10 ? eris * 0.42 : 0;
-      const vetoPulse = index === 0 ? veto * Math.sin(clamp01((local - 0.7) / 0.15) * Math.PI) : 0;
+      const vetoPulse = index === 0 ? veto * Math.sin(smoothstep((local - 0.7) / 0.15) * Math.PI) : 0;
       const scale = (0.085 + flare + vetoPulse * 0.22) * pulse * Math.max(stagger, snapToLattice);
       const ringX = councilGeometry.ringPositions[positionIndex];
       const ringY = councilGeometry.ringPositions[positionIndex + 1];
