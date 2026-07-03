@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { TrackedLink } from "@/components/site/TrackedLink";
 
 export const metadata: Metadata = {
   title: "CV",
@@ -13,12 +14,13 @@ export default function CvPage() {
           <h1 className="font-display text-4xl font-bold text-ink">CV</h1>
         </header>
         <div className="max-w-[68ch] space-y-4 border-t border-faint pt-8">
-          <a
+          <TrackedLink
             href="/cv/muhammad-afsah-cv.pdf"
+            event={{ name: "cv_downloaded" }}
             className="text-bone underline decoration-bone/40 underline-offset-4 transition-colors hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bone"
           >
             General CV — PDF
-          </a>
+          </TrackedLink>
           <p className="text-dim">Role-specific variants are available on request.</p>
         </div>
       </div>

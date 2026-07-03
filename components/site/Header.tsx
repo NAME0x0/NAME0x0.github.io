@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { identity } from "@/content/identity";
+import { TrackedLink } from "@/components/site/TrackedLink";
 
 const navItems = [
   { href: "/work", label: "Work" },
   { href: "/writing", label: "Writing" },
   { href: "/about", label: "About" },
   { href: "/now", label: "Now" },
-  { href: "/cv", label: "CV" },
+  { href: "/cv", label: "CV", event: { name: "cv_downloaded" } },
 ] as const;
 
 const linkClass =
@@ -31,10 +32,24 @@ export function Header() {
           </Link>
           <div className="flex flex-wrap gap-x-5 gap-y-3">
             {navItems.map((item) => (
-              <Link key={item.href} href={item.href} className={linkClass}>
-                {item.label}
-              </Link>
+              "event" in item ? (
+                <TrackedLink key={item.href} href={item.href} event={item.event} className={linkClass}>
+                  {item.label}
+                </TrackedLink>
+              ) : (
+                <Link key={item.href} href={item.href} className={linkClass}>
+                  {item.label}
+                </Link>
+              )
             ))}
+            <TrackedLink
+              href={identity.socials.github}
+              event={{ name: "github_clicked" }}
+              className={linkClass}
+              external
+            >
+              GitHub
+            </TrackedLink>
           </div>
         </nav>
       </header>

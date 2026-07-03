@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { StatusBadge } from "@/components/site/StatusBadge";
+import { TrackedLink } from "@/components/site/TrackedLink";
 import { tierOneProjects, tierTwoProjects } from "@/lib/content/projects";
 
 export const metadata: Metadata = {
@@ -39,9 +39,13 @@ export default function WorkPage() {
                   ))}
                 </div>
               </div>
-              <Link href={`/work/${project.slug}`} className={`mt-8 ${linkClass}`}>
+              <TrackedLink
+                href={`/work/${project.slug}`}
+                event={{ name: "case_study_opened", properties: { slug: project.slug } }}
+                className={`mt-8 ${linkClass}`}
+              >
                 /work/{project.slug}
-              </Link>
+              </TrackedLink>
             </article>
           ))}
         </section>

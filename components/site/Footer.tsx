@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { identity } from "@/content/identity";
 import { EmailLink } from "@/components/site/EmailLink";
+import { TrackedLink } from "@/components/site/TrackedLink";
 
 const socialLinks = [
   { label: "GitHub", href: identity.socials.github },
@@ -27,9 +28,21 @@ export function Footer() {
         </div>
         <div className="flex flex-wrap gap-x-5 gap-y-3 font-mono text-xs uppercase tracking-[0.12em]">
           {socialLinks.map((link) => (
-            <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer" className={focusClass}>
-              {link.label}
-            </a>
+            link.label === "GitHub" ? (
+              <TrackedLink
+                key={link.href}
+                href={link.href}
+                event={{ name: "github_clicked" }}
+                className={focusClass}
+                external
+              >
+                {link.label}
+              </TrackedLink>
+            ) : (
+              <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer" className={focusClass}>
+                {link.label}
+              </a>
+            )
           ))}
         </div>
       </div>

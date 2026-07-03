@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { identity } from "@/content/identity";
+import { TrackedLink } from "@/components/site/TrackedLink";
 
 type EmailLinkProps = {
   children?: ReactNode;
@@ -11,12 +12,12 @@ export function EmailLink({ children, className }: EmailLinkProps) {
   const emailHref = `mailto:${localPart}@${domainPart}`;
 
   return (
-    <a href={emailHref} className={className}>
+    <TrackedLink href={emailHref} event={{ name: "email_clicked" }} className={className} external>
       {children ?? (
         <>
           {localPart} [at] {domainPart}
         </>
       )}
-    </a>
+    </TrackedLink>
   );
 }

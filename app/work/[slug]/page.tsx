@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { MetricsTable } from "@/components/site/MetricsTable";
 import { StatusBadge } from "@/components/site/StatusBadge";
+import { TrackedLink } from "@/components/site/TrackedLink";
 import { getTierOneProjectBySlug, tierOneProjects } from "@/lib/content/projects";
 
 type WorkDetailPageProps = {
@@ -66,9 +67,21 @@ export default function WorkDetailPage({ params }: WorkDetailPageProps) {
           <p className="text-xl text-bone">{project.tagline}</p>
           <div className="flex flex-wrap gap-4 font-mono text-xs uppercase tracking-[0.12em]">
             {links.map((link) => (
-              <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer" className={linkClass}>
-                {link.label}
-              </a>
+              link.label === "demo" ? (
+                <TrackedLink
+                  key={link.href}
+                  href={link.href}
+                  event={{ name: "demo_clicked", properties: { slug: project.slug } }}
+                  className={linkClass}
+                  external
+                >
+                  {link.label}
+                </TrackedLink>
+              ) : (
+                <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer" className={linkClass}>
+                  {link.label}
+                </a>
+              )
             ))}
           </div>
         </header>

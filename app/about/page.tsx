@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { identity } from "@/content/identity";
+import { TrackedLink } from "@/components/site/TrackedLink";
 
 export const metadata: Metadata = {
   title: "About",
@@ -31,9 +32,9 @@ export default function AboutPage() {
         <section className="max-w-[68ch] border-t border-faint pt-8">
           <h2 className="mb-4 font-mono text-xs uppercase tracking-[0.18em] text-dim">{"// SOCIALS"}</h2>
           <div className="flex flex-wrap gap-4 font-mono text-xs uppercase tracking-[0.12em]">
-            <a href={identity.socials.github} target="_blank" rel="noopener noreferrer" className={linkClass}>
+            <TrackedLink href={identity.socials.github} event={{ name: "github_clicked" }} className={linkClass} external>
               GitHub
-            </a>
+            </TrackedLink>
             <a href={identity.socials.linkedin} target="_blank" rel="noopener noreferrer" className={linkClass}>
               LinkedIn
             </a>

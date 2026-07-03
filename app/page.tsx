@@ -3,6 +3,7 @@ import { identity } from "@/content/identity";
 import { EmailLink } from "@/components/site/EmailLink";
 import { MetricsTable } from "@/components/site/MetricsTable";
 import { StatusBadge } from "@/components/site/StatusBadge";
+import { TrackedLink } from "@/components/site/TrackedLink";
 import { now } from "@/lib/content/now";
 import { getProjectByChapter, getProjectRequired } from "@/lib/content/projects";
 import type { TierOneProject } from "@/lib/content/projects";
@@ -78,12 +79,13 @@ export default function HomePage() {
               {identity.location} · {identity.visa}
             </p>
             <div className="flex flex-wrap gap-4">
-              <Link
+              <TrackedLink
                 href="/work/ava"
+                event={{ name: "case_study_opened", properties: { slug: "ava" } }}
                 className="border border-bone px-5 py-3 font-mono text-xs uppercase tracking-[0.14em] text-bone transition-colors hover:bg-bone hover:text-void focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bone"
               >
                 See the proof
-              </Link>
+              </TrackedLink>
               <EmailLink className="border border-faint px-5 py-3 font-mono text-xs uppercase tracking-[0.14em] text-ink transition-colors hover:border-bone hover:text-bone focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bone">
                 Start a conversation
               </EmailLink>
@@ -118,9 +120,13 @@ export default function HomePage() {
               <p className="text-xl text-bone">{ava.tagline}</p>
               <p className="text-dim">{ava.summary}</p>
               <MetricsTable metrics={ava.metrics} />
-              <Link href="/work/ava" className={linkClass}>
+              <TrackedLink
+                href="/work/ava"
+                event={{ name: "case_study_opened", properties: { slug: "ava" } }}
+                className={linkClass}
+              >
                 /work/ava
-              </Link>
+              </TrackedLink>
             </article>
           ) : null}
           <ProjectRow project={neuralNets} />
@@ -140,13 +146,22 @@ export default function HomePage() {
               <p className="text-dim">{pantheon.summary}</p>
               <MetricsTable metrics={pantheon.metrics} />
               <div className="flex flex-wrap gap-4">
-                <Link href="/work/pantheon-trades" className={linkClass}>
+                <TrackedLink
+                  href="/work/pantheon-trades"
+                  event={{ name: "case_study_opened", properties: { slug: "pantheon-trades" } }}
+                  className={linkClass}
+                >
                   /work/pantheon-trades
-                </Link>
+                </TrackedLink>
                 {pantheon.links.demo ? (
-                  <a href={pantheon.links.demo} target="_blank" rel="noopener noreferrer" className={linkClass}>
+                  <TrackedLink
+                    href={pantheon.links.demo}
+                    event={{ name: "demo_clicked", properties: { slug: "pantheon-trades" } }}
+                    className={linkClass}
+                    external
+                  >
                     demo
-                  </a>
+                  </TrackedLink>
                 ) : null}
               </div>
             </article>
@@ -164,9 +179,13 @@ export default function HomePage() {
               <p className="text-xl text-bone">{omni.tagline}</p>
               <p className="text-dim">{omni.summary}</p>
               <MetricsTable metrics={omni.metrics} />
-              <Link href="/work/omni" className={linkClass}>
+              <TrackedLink
+                href="/work/omni"
+                event={{ name: "case_study_opened", properties: { slug: "omni" } }}
+                className={linkClass}
+              >
                 /work/omni
-              </Link>
+              </TrackedLink>
             </article>
           ) : null}
         </div>
@@ -181,13 +200,22 @@ export default function HomePage() {
               <p className="text-xl text-bone">{agiLedger.tagline}</p>
               <p className="text-dim">{agiLedger.summary}</p>
               <div className="flex flex-wrap gap-4">
-                <Link href="/work/agi-ledger" className={linkClass}>
+                <TrackedLink
+                  href="/work/agi-ledger"
+                  event={{ name: "case_study_opened", properties: { slug: "agi-ledger" } }}
+                  className={linkClass}
+                >
                   /work/agi-ledger
-                </Link>
+                </TrackedLink>
                 {agiLedger.links.demo ? (
-                  <a href={agiLedger.links.demo} target="_blank" rel="noopener noreferrer" className={linkClass}>
+                  <TrackedLink
+                    href={agiLedger.links.demo}
+                    event={{ name: "demo_clicked", properties: { slug: "agi-ledger" } }}
+                    className={linkClass}
+                    external
+                  >
                     demo
-                  </a>
+                  </TrackedLink>
                 ) : null}
               </div>
             </article>
@@ -220,9 +248,9 @@ export default function HomePage() {
             <div className="space-y-4 border-t border-soot/20 pt-6">
               <EmailLink className="block text-soot underline decoration-soot/30 underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bone" />
               <div className="flex flex-wrap gap-4 font-mono text-xs uppercase tracking-[0.12em]">
-                <a href={identity.socials.github} target="_blank" rel="noopener noreferrer" className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bone">
+                <TrackedLink href={identity.socials.github} event={{ name: "github_clicked" }} className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bone" external>
                   GitHub
-                </a>
+                </TrackedLink>
                 <a href={identity.socials.linkedin} target="_blank" rel="noopener noreferrer" className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bone">
                   LinkedIn
                 </a>
@@ -232,9 +260,9 @@ export default function HomePage() {
                 <a href={identity.socials.huggingface} target="_blank" rel="noopener noreferrer" className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bone">
                   HuggingFace
                 </a>
-                <Link href="/cv" className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bone">
+                <TrackedLink href="/cv" event={{ name: "cv_downloaded" }} className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bone">
                   CV
-                </Link>
+                </TrackedLink>
               </div>
             </div>
           </div>
