@@ -122,7 +122,11 @@ Scroll progress `p ∈ [0,1]` split into 8 windows with transition bands. Each c
 - Next.js 14+ App Router, TypeScript strict, Tailwind. R3F + drei + three. Lenis (scroll) + Framer Motion (DOM) + custom shader morphs (canvas).
 - Content layer: `content/` — typed TS/MDX with zod-validated frontmatter. No copy hardcoded in JSX.
 - Snapshot pipeline: extend `scripts/fetch-github-snapshot.mjs` — build-time fetch (token env-only, CI-only), committed JSON fallback, **claim cross-check step** (numbers in content vs live README; mismatch = build fails), sanitize all GitHub-originated strings.
-- 3D budget: ≤3 MB total film payload, lazy per chapter; Draco/meshopt GLB + KTX2; no postprocessing (glow via sprite texture, proven in AGI-Ledger); adaptive DPR ≤1.5; `frameloop="never"` off-screen/hidden tab.
+- 3D budget — REVISED 2026-07-03 (owner direction): three tiers on the FilmMount gate.
+  - **high** (desktop detect-gpu tier 3): hero GLB card (CC-BY, re-skinned in-engine: brand stripped, palette materials, "4 GB / NAME0x0" decals, ATTRIBUTION.md credit) + self-hosted HDRI; payload ≤ 20 MB compressed (gltf-transform: Draco/meshopt + KTX2), lazy-loaded after first paint while chapter 0 plays procedurally; DPR ≤ 2.
+  - **base** (desktop tier 2 / mobile tier 3): fully procedural film (kilobytes), DPR ≤ 1.5 — unchanged.
+  - **off**: editorial page.
+  - CSP stays strict — all assets self-hosted under /public ('self'). No postprocessing in either tier (additive glow sprites); `frameloop="never"` off-screen/hidden/paper-covered.
 - CI gates (GitHub Actions): lint, typecheck, Lighthouse CI (mobile: Perf ≥85 / A11y ≥95 / BP ≥95 / SEO ≥95), gitleaks secret scan, `npm audit`, banned-vocabulary grep.
 - Security headers via Vercel config: CSP (no unsafe-eval; nonce'd inline; allowlist Vercel Analytics + api.github.com), HSTS, nosniff, Referrer-Policy strict-origin-when-cross-origin, Permissions-Policy deny camera/mic/geo, frame-ancestors 'none'.
 - JSON-LD: `Person` (alternateName NAME0x0, sameAs GitHub/LinkedIn/X/HuggingFace) sitewide; `SoftwareSourceCode` per case study; `Article` per post.
