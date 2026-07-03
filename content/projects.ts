@@ -104,7 +104,11 @@ export const projects = z.array(ProjectSchema).parse([
       "The target envelope is consumer hardware: 4 GB VRAM plus 32 GB RAM, with roughly 208 GB of ternary expert weights streamed from NVMe (~253 GB with deltas). Decode throughput of ~10\u201311 tok/s is projected by a bandwidth model, not measured. The inference pipeline is intentionally fail-fast: process_token returns an error by design until the real execution path exists.",
     architecture:
       "128 ternary {-1,0,+1} experts arranged on an 8\u00d74\u00d74 lattice over a 3D torus, top-1 routed \u2014 14.95B active parameters per token out of 1.05T total. 80 layers: 60 of O(1) perspective-decay recurrence plus 20 of windowed grouped-query attention. Layer-streamed execution with double-buffered load/compute overlap, holographic distributed memory, forward-mode adaptation without backprop graph storage, and a safety polytope that hard-projects outputs into a convex safe region. 243 tests pass; the runtime is honest about what doesn't run yet.",
-    warStories: [],
+    warStories: [
+      "Everything about it is hard, including the math. That's the cost of a path others haven't fully taken \u2014 it's still an idea, despite the engineering around it, and every step is a challenge because nobody has walked this exact route to completion.",
+      "Designing for 4 GB before proving anything can train was deliberate: 4 GB is the machine I own. Ternary weights, streaming, the whole architecture \u2014 every aspect is shaped around my current hardware and current capability. The next machine will be better, and the design scales with it. It only goes up from here.",
+      "What would I do differently? Nothing yet. OMNI isn't real right now \u2014 the repo says so \u2014 and I'm still learning; every step is something new. Ask again when process_token stops returning an error by design.",
+    ],
     framingRules: [
       "Always 'targeting' / 'designed to', never 'runs'",
       "Persistent label: RESEARCH IN PROGRESS \u2014 projections, not measurements",
