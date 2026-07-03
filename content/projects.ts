@@ -68,7 +68,11 @@ export const projects = z.array(ProjectSchema).parse([
       "Costs $0 to try: Arc Testnet only, gas dripped free by Circle's faucet. Live Polymarket execution is blocked (the operator is geo-blocked), so every result is paper — the site says so. The constitution caps single positions at 5% of NAV and categories at 2–5%, pauses new positions for 30 days after a 50% drawdown, and an expected-value gate refuses any trade whose net-EV t-stat is below 2.0 after fees, spread, slippage, and gas.",
     architecture:
       "Thirteen Python services behind a FastAPI gateway, each with its own uv environment. The council runs four rounds — openings, challenges, Athena's synthesis, blind vote — with Zeus and Solon holding unilateral vetoes and Eris forced to argue the minority side against groupthink. Areopagus sizes accepted trades at half-Kelly and writes refused ones to an immutable Solidity contract (12 Halmos symbolic checks). Agent weights drift on realised Brier; Platt and isotonic regression recalibrate the council from outcomes. On the 200-market backtest it beats a single-shot LLM by a wide margin (0.149 vs 0.260) and does not beat the human consensus (0.126) — that comparison stays on the site on purpose.",
-    warStories: [],
+    warStories: [
+      "The 11-provider fallback chain and the session-key/x402 wallet plumbing were both pain, but the hardest part was Arc itself — recording anything on-chain was a completely foreign concept going in. Integrating it meant learning the whole model from zero, mid-build.",
+      "Built for the Agora hackathon, but the want was older: a personal risk-management system for trading. Instead of chasing a system that covers every horizon, the design collapsed to denying trades — refusal was the unique alpha, and explicit constitutional rules handed to specific agents in the debate made it actually buildable.",
+      "I wouldn't unwind any of it; the lesson was the value. Starting over: better data, a live orchestrator running the full debate end-to-end, sharper per-agent system prompts, cleaner scripts. The backtest already says where the ceiling is — the room for improvement is on the record.",
+    ],
     framingRules: [
       "Never describe as a trading bot",
       "Frame as deliberation + calibration + on-chain accountability infrastructure",
