@@ -6,11 +6,10 @@ export const profileIdentity = {
   name: "Muhammad Afsah Mumtaz",
   alias: "AFSAH",
   handle: "NAME0x0",
-  role: "Systems Architect · AI Engineer · OS Developer",
+  role: "Systems & ML engineer",
   location: "Dubai, UAE",
   email: "m.afsah.279@gmail.com",
-  summary:
-    "I design sovereign computing systems across operating environments, AI workflows, and immersive interfaces.",
+  summary: "I build machines that think, on hardware that shouldn't be able to.",
   socials: {
     github: "https://github.com/NAME0x0",
     linkedin: "https://www.linkedin.com/in/muhammad-afsah-mumtaz/",
@@ -49,7 +48,7 @@ export const coreTools = [
   "GitHub Actions",
 ] as const;
 
-export const SOVEREIGN_STACK: {
+export const projectLayerDefinitions: {
   layer: ProjectLayer;
   label: string;
   description: string;
@@ -58,7 +57,7 @@ export const SOVEREIGN_STACK: {
   {
     layer: "foundation",
     label: "Foundation",
-    description: "Secure local-first systems and dependable execution layers.",
+    description: "Local-first systems and dependable execution layers.",
     tech: "Rust · Linux · LUKS · s6",
   },
   {
@@ -87,8 +86,7 @@ export const SOVEREIGN_STACK: {
   },
 ];
 
-// Pinned flagship leads, shown first in this exact order. Every other flagship
-// repo sorts after these by stars descending (see components/sections/Projects).
+// Pinned flagship leads, shown first in this exact order.
 export const pinnedFlagshipOrder = ["Pantheon-Trades", "AVA", "pane"] as const;
 
 export const curatedFlagshipOrder = [
@@ -123,7 +121,7 @@ export const curatedProjectOverrides: CuratedProjectOverrides = {
     layer: "intelligence",
     featured: true,
     description:
-      "Sparse Mixture-of-Experts 1.05T parameter language model engineered for 4 GB VRAM execution via layer streaming, ternary inference, and geometry-based routing.",
+      "Sparse Mixture-of-Experts 1.05T parameter language model design target for 4 GB VRAM via layer streaming, ternary inference, and geometry-based routing.",
     topics: ["rust", "llm", "sparse-moe", "ternary-inference", "local-ai", "agi-architecture"],
   },
   MALD: {

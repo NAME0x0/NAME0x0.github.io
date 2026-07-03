@@ -2,7 +2,7 @@
   curatedProjectOverrides,
   languageColors,
   layerKeywords,
-  SOVEREIGN_STACK,
+  projectLayerDefinitions,
 } from "@/lib/data/curated";
 import type {
   GitHubRepository,
@@ -29,7 +29,7 @@ function pickLayerFromContent(repo: GitHubRepository): ProjectLayer {
     .join(" ")
     .toLowerCase();
 
-  for (const layer of SOVEREIGN_STACK.map((entry) => entry.layer)) {
+  for (const layer of projectLayerDefinitions.map((entry) => entry.layer)) {
     const keywords = layerKeywords[layer] ?? [];
     if (keywords.some((token) => haystack.includes(token))) {
       return layer;

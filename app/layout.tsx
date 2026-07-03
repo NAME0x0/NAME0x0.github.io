@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Manrope, Space_Grotesk } from "next/font/google";
 import { GeistMono } from "geist/font/mono";
 import { Analytics } from "@vercel/analytics/next";
+import { Footer } from "@/components/site/Footer";
+import { Header } from "@/components/site/Header";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -113,15 +115,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${spaceGrotesk.variable} ${manrope.variable} ${monoFont.variable}`}
     >
       <body className="bg-void text-ink font-body antialiased">
+        {/* JSON-LD must be raw text inside <script>: React-escaped children render
+            &quot; entities that crawlers do not decode, invalidating the JSON. Content
+            is JSON.stringify of build-time constants — no user input reaches this. */}
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd).replace(/</g, "\\u003c") }}
         />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd).replace(/</g, "\\u003c") }}
         />
+        <Header />
         {children}
+        <Footer />
         <Analytics />
       </body>
     </html>

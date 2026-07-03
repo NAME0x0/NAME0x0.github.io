@@ -1,0 +1,117 @@
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { MetricsTable } from "@/components/site/MetricsTable";
+import { StatusBadge } from "@/components/site/StatusBadge";
+import { getTierOneProjectBySlug, tierOneProjects } from "@/lib/content/projects";
+
+type WorkDetailPageProps = {
+  params: {
+    slug: string;
+  };
+};
+
+const linkClass =
+  "text-bone underline decoration-bone/40 underline-offset-4 transition-colors hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bone";
+
+export function generateStaticParams() {
+  return tierOneProjects.map((project) => ({ slug: project.slug }));
+}
+
+export function generateMetadata({ params }: WorkDetailPageProps): Metadata {
+  const project = getTierOneProjectBySlug(params.slug);
+
+  if (!project) {
+    return {};
+  }
+
+  return {
+    title: project.name,
+    description: project.tagline,
+  };
+}
+
+function ResearchLabel({ slug }: { slug: string }) {
+  const project = getTierOneProjectBySlug(slug);
+  const label = project?.framingRules?.find((rule) => rule.startsWith("Persistent label: "))?.replace(
+    "Persistent label: ",
+    "",
+  );
+
+  return label ? <p className="font-mono text-xs uppercase tracking-[0.16em] text-ember">{label}</p> : null;
+}
+
+export default function WorkDetailPage({ params }: WorkDetailPageProps) {
+  const project = getTierOneProjectBySlug(params.slug);
+
+  if (!project) {
+    notFound();
+  }
+
+  const links = [
+    { label: "repo", href: project.links.repo },
+    project.links.demo ? { label: "demo", href: project.links.demo } : null,
+    project.links.adapter ? { label: "adapter", href: project.links.adapter } : null,
+  ].filter((link): link is { label: string; href: string } => link !== null);
+
+  return (
+    <main id="main" className="px-6 py-section-y">
+      <article className="mx-auto max-w-6xl space-y-12">
+        <header className="max-w-[68ch] space-y-5">
+          <p className="font-mono text-xs uppercase tracking-[0.18em] text-dim">{"// WORK"}</p>
+          <div className="flex flex-wrap items-center gap-3">
+            <h1 className="font-display text-4xl font-bold text-ink">{project.name}</h1>
+            <StatusBadge status={project.status} />
+          </div>
+          {project.slug === "omni" ? <ResearchLabel slug={project.slug} /> : null}
+          <p className="text-xl text-bone">{project.tagline}</p>
+          <div className="flex flex-wrap gap-4 font-mono text-xs uppercase tracking-[0.12em]">
+            {links.map((link) => (
+              <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer" className={linkClass}>
+                {link.label}
+              </a>
+            ))}
+          </div>
+        </header>
+
+        {project.problem ? <TextSection title="Problem" body={project.problem} /> : null}
+        {project.constraints ? <TextSection title="Constraints" body={project.constraints} /> : null}
+        {project.architecture ? <TextSection title="Architecture" body={project.architecture} /> : null}
+        {project.warStories.length > 0 ? (
+          <section className="max-w-[68ch] border-t border-faint pt-8">
+            <h2 className="mb-4 font-mono text-xs uppercase tracking-[0.18em] text-dim">{"// WAR STORIES"}</h2>
+            <ul className="space-y-3 text-dim">
+              {project.warStories.map((story) => (
+                <li key={story}>{story}</li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
+
+        <section className="max-w-[68ch] border-t border-faint pt-8">
+          <h2 className="mb-4 font-mono text-xs uppercase tracking-[0.18em] text-dim">{"// RESULTS"}</h2>
+          <MetricsTable metrics={project.metrics} />
+        </section>
+
+        <section className="max-w-[68ch] border-t border-faint pt-8">
+          <h2 className="mb-4 font-mono text-xs uppercase tracking-[0.18em] text-dim">{"// STACK"}</h2>
+          <ul className="flex flex-wrap gap-2">
+            {project.stack.map((item) => (
+              <li key={item} className="border border-faint px-3 py-1 font-mono text-xs uppercase tracking-[0.12em] text-dim">
+                {item}
+              </li>
+            ))}
+          </ul>
+        </section>
+      </article>
+    </main>
+  );
+}
+
+function TextSection({ title, body }: { title: string; body: string }) {
+  return (
+    <section className="max-w-[68ch] border-t border-faint pt-8">
+      <h2 className="mb-4 font-mono text-xs uppercase tracking-[0.18em] text-dim">{`// ${title}`}</h2>
+      <p className="text-dim">{body}</p>
+    </section>
+  );
+}

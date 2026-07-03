@@ -1,107 +1,245 @@
-"use client";
+import Link from "next/link";
+import { identity } from "@/content/identity";
+import { EmailLink } from "@/components/site/EmailLink";
+import { MetricsTable } from "@/components/site/MetricsTable";
+import { StatusBadge } from "@/components/site/StatusBadge";
+import { now } from "@/lib/content/now";
+import { getProjectByChapter, getProjectRequired } from "@/lib/content/projects";
+import type { TierOneProject } from "@/lib/content/projects";
+import type { Project } from "@/lib/content/schema";
 
-import dynamic from "next/dynamic";
-import { Suspense, useCallback, useEffect, useRef, useState } from "react";
-import Navigation from "@/components/ui/Navigation";
-import SectionOrchestrator from "@/components/motion/SectionOrchestrator";
-import { isSectionId, type SectionId } from "@/lib/navigation/sections";
+const linkClass =
+  "text-bone underline decoration-bone/40 underline-offset-4 transition-colors hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bone";
 
-const SceneContainer = dynamic(() => import("@/components/three/SceneContainer"), {
-  ssr: false,
-});
+function Overline({ children }: { children: string }) {
+  return <p className="mb-5 font-mono text-xs uppercase tracking-[0.18em] text-dim">{children}</p>;
+}
 
-const Hero = dynamic(() => import("@/components/sections/Hero"));
-const SovereignStack = dynamic(() => import("@/components/sections/SovereignStack"));
-const Projects = dynamic(() => import("@/components/sections/Projects"));
-const About = dynamic(() => import("@/components/sections/About"));
-const Contact = dynamic(() => import("@/components/sections/Contact"));
+function ProjectRow({ project, inverted = false }: { project: Project; inverted?: boolean }) {
+  const textClass = inverted ? "text-soot" : "text-ink";
+  const dimClass = inverted ? "text-soot/75" : "text-dim";
+  const borderClass = inverted ? "border-soot/20" : "border-faint";
 
-type ScrollProgressDetail = {
-  progress: number;
-};
-
-type ActiveSectionDetail = {
-  section: string;
-};
-
-function SectionShimmer() {
   return (
-    <div className="flex min-h-[50vh] items-center justify-center" aria-busy="true">
-      <div className="h-1 w-24 animate-pulse rounded-full bg-ink-faint" />
+    <div className={`grid gap-3 border-t ${borderClass} py-5 md:grid-cols-[minmax(10rem,14rem)_auto_1fr_auto] md:items-baseline`}>
+      <h3 className={`font-display text-xl font-bold ${textClass}`}>{project.name}</h3>
+      <StatusBadge status={project.status} />
+      <p className={dimClass}>{project.tagline}</p>
+      <a href={project.links.repo} target="_blank" rel="noopener noreferrer" className={inverted ? "text-soot underline decoration-soot/30 underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bone" : linkClass}>
+        repo
+      </a>
     </div>
   );
 }
 
-export default function Page() {
-  const scrollProgressRef = useRef(0);
-  const mousePosRef = useRef<[number, number]>([0, 0]);
-  const [activeSection, setActiveSection] = useState<SectionId>("hero");
+function ResearchLabel({ project }: { project: TierOneProject }) {
+  const label = project.framingRules?.find((rule) => rule.startsWith("Persistent label: "))?.replace(
+    "Persistent label: ",
+    "",
+  );
 
-  const handlePointerMove = useCallback((event: PointerEvent) => {
-    mousePosRef.current = [
-      (event.clientX / window.innerWidth) * 2 - 1,
-      -(event.clientY / window.innerHeight) * 2 + 1,
-    ];
-  }, []);
+  return label ? <p className="font-mono text-xs uppercase tracking-[0.16em] text-ember">{label}</p> : null;
+}
 
-  useEffect(() => {
-    const onProgress: EventListener = (event) => {
-      const customEvent = event as CustomEvent<ScrollProgressDetail>;
-      scrollProgressRef.current = customEvent.detail.progress;
-    };
-
-    const onSection: EventListener = (event) => {
-      const customEvent = event as CustomEvent<ActiveSectionDetail>;
-      if (isSectionId(customEvent.detail.section)) {
-        setActiveSection(customEvent.detail.section);
-      }
-    };
-
-    window.addEventListener("pointermove", handlePointerMove, { passive: true });
-    window.addEventListener("portfolio-scroll-progress", onProgress);
-    window.addEventListener("portfolio-section-active", onSection);
-
-    return () => {
-      window.removeEventListener("pointermove", handlePointerMove);
-      window.removeEventListener("portfolio-scroll-progress", onProgress);
-      window.removeEventListener("portfolio-section-active", onSection);
-    };
-  }, [handlePointerMove]);
-
+function ListBlock({ title, items }: { title: string; items: string[] }) {
   return (
-    <>
-      <Suspense fallback={null}>
-        <SceneContainer
-          scrollProgressRef={scrollProgressRef}
-          mousePosRef={mousePosRef}
-        />
-      </Suspense>
+    <div>
+      <h3 className="mb-3 font-mono text-xs uppercase tracking-[0.14em] text-soot/70">{title}</h3>
+      <ul className="space-y-2">
+        {items.map((item) => (
+          <li key={item} className="border-t border-soot/20 pt-2">
+            {item}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
-      <Navigation activeSection={activeSection} />
-      <SectionOrchestrator />
+const ava = getProjectRequired("ava");
+const pantheon = getProjectRequired("pantheon-trades");
+const omni = getProjectRequired("omni");
+const agiLedger = getProjectRequired("agi-ledger");
+const neuralNets = getProjectRequired("neural-nets");
+const webdesk = getProjectRequired("webdesk");
+const tangled = getProjectRequired("tangled");
+const chapterOneProjects = getProjectByChapter(1);
 
-      <main
-        id="main"
-        role="main"
-        aria-label="Muhammad Afsah Mumtaz portfolio"
-        className="relative z-10"
-      >
-        <Suspense fallback={<SectionShimmer />}>
-          <Hero />
-        </Suspense>
-        <Suspense fallback={<SectionShimmer />}>
-          <SovereignStack />
-        </Suspense>
-        <Suspense fallback={<SectionShimmer />}>
-          <Projects />
-        </Suspense>
-        <Suspense fallback={<SectionShimmer />}>
-          <About />
-        </Suspense>
-        <Suspense fallback={<SectionShimmer />}>
-          <Contact />
-        </Suspense>
-      </main>
-    </>
+export default function HomePage() {
+  return (
+    <main id="main">
+      <section id="ignition" className="px-6 py-section-y">
+        <div className="mx-auto max-w-6xl">
+          <Overline>{"// IDENTITY"}</Overline>
+          <div className="max-w-[68ch] space-y-8">
+            <h1 className="font-display text-display font-bold text-ink">{identity.lockup}</h1>
+            <p className="text-2xl text-dim">{identity.positioning}</p>
+            <p className="font-mono text-sm uppercase tracking-[0.14em] text-dim">
+              {identity.location} · {identity.visa}
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <Link
+                href="/work/ava"
+                className="border border-bone px-5 py-3 font-mono text-xs uppercase tracking-[0.14em] text-bone transition-colors hover:bg-bone hover:text-void focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bone"
+              >
+                See the proof
+              </Link>
+              <EmailLink className="border border-faint px-5 py-3 font-mono text-xs uppercase tracking-[0.14em] text-ink transition-colors hover:border-bone hover:text-bone focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bone">
+                Start a conversation
+              </EmailLink>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="metal" className="border-t border-faint px-6 py-section-y">
+        <div className="mx-auto max-w-6xl">
+          <Overline>{"// METAL"}</Overline>
+          {chapterOneProjects.map((project) => (
+            <ProjectRow key={project.slug} project={project} />
+          ))}
+        </div>
+      </section>
+
+      <section id="voice" className="border-t border-faint px-6 py-section-y">
+        <div className="mx-auto max-w-6xl">
+          <Overline>{"// VOICE"}</Overline>
+          <p className="mb-8 max-w-[68ch] text-dim">The interface layer is where machines meet people.</p>
+          <ProjectRow project={webdesk} />
+        </div>
+      </section>
+
+      <section id="mind" className="border-t border-faint px-6 py-section-y">
+        <div className="mx-auto max-w-6xl space-y-8">
+          <Overline>{"// PROOF"}</Overline>
+          {ava.tier === 1 ? (
+            <article className="max-w-[68ch] space-y-5">
+              <h2 className="font-display text-4xl font-bold text-ink">{ava.name}</h2>
+              <p className="text-xl text-bone">{ava.tagline}</p>
+              <p className="text-dim">{ava.summary}</p>
+              <MetricsTable metrics={ava.metrics} />
+              <Link href="/work/ava" className={linkClass}>
+                /work/ava
+              </Link>
+            </article>
+          ) : null}
+          <ProjectRow project={neuralNets} />
+        </div>
+      </section>
+
+      <section id="council" className="border-t border-faint px-6 py-section-y">
+        <div className="mx-auto max-w-6xl">
+          <Overline>{"// COUNCIL"}</Overline>
+          {pantheon.tier === 1 ? (
+            <article className="max-w-[68ch] space-y-5">
+              <div className="flex flex-wrap items-center gap-3">
+                <h2 className="font-display text-4xl font-bold text-ink">{pantheon.name}</h2>
+                <StatusBadge status={pantheon.status} />
+              </div>
+              <p className="text-xl text-bone">{pantheon.tagline}</p>
+              <p className="text-dim">{pantheon.summary}</p>
+              <MetricsTable metrics={pantheon.metrics} />
+              <div className="flex flex-wrap gap-4">
+                <Link href="/work/pantheon-trades" className={linkClass}>
+                  /work/pantheon-trades
+                </Link>
+                {pantheon.links.demo ? (
+                  <a href={pantheon.links.demo} target="_blank" rel="noopener noreferrer" className={linkClass}>
+                    demo
+                  </a>
+                ) : null}
+              </div>
+            </article>
+          ) : null}
+        </div>
+      </section>
+
+      <section id="blueprint" className="border-t border-faint px-6 py-section-y">
+        <div className="mx-auto max-w-6xl">
+          <Overline>{"// BLUEPRINT"}</Overline>
+          {omni.tier === 1 ? (
+            <article className="max-w-[68ch] space-y-5">
+              <ResearchLabel project={omni} />
+              <h2 className="font-display text-4xl font-bold text-ink">{omni.name}</h2>
+              <p className="text-xl text-bone">{omni.tagline}</p>
+              <p className="text-dim">{omni.summary}</p>
+              <MetricsTable metrics={omni.metrics} />
+              <Link href="/work/omni" className={linkClass}>
+                /work/omni
+              </Link>
+            </article>
+          ) : null}
+        </div>
+      </section>
+
+      <section id="light" className="border-t border-faint px-6 py-section-y">
+        <div className="mx-auto max-w-6xl">
+          <Overline>{"// LIGHT"}</Overline>
+          {agiLedger.tier === 1 ? (
+            <article className="max-w-[68ch] space-y-5">
+              <h2 className="font-display text-4xl font-bold text-ink">{agiLedger.name}</h2>
+              <p className="text-xl text-bone">{agiLedger.tagline}</p>
+              <p className="text-dim">{agiLedger.summary}</p>
+              <div className="flex flex-wrap gap-4">
+                <Link href="/work/agi-ledger" className={linkClass}>
+                  /work/agi-ledger
+                </Link>
+                {agiLedger.links.demo ? (
+                  <a href={agiLedger.links.demo} target="_blank" rel="noopener noreferrer" className={linkClass}>
+                    demo
+                  </a>
+                ) : null}
+              </div>
+            </article>
+          ) : null}
+        </div>
+      </section>
+
+      <section id="human" className="bg-paper px-6 py-section-y text-soot">
+        <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[1fr_1fr]">
+          <div className="space-y-10">
+            <div>
+              <p className="mb-5 font-mono text-xs uppercase tracking-[0.18em] text-soot/70">{"// HUMAN"}</p>
+              <h2 className="font-display text-4xl font-bold">{identity.name}</h2>
+            </div>
+            <ListBlock title="Affiliations" items={identity.affiliations} />
+            <ListBlock title="Open source" items={identity.openSource} />
+            <ListBlock title="Open to" items={identity.openTo} />
+          </div>
+          <div className="space-y-10">
+            <ProjectRow project={tangled} inverted />
+            <div className="border-t border-soot/20 pt-6">
+              <p className="font-mono text-xs uppercase tracking-[0.14em] text-soot/70">Updated {now.updated}</p>
+              <Link
+                href="/now"
+                className="mt-2 block text-xl text-soot underline decoration-soot/30 underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bone"
+              >
+                {now.building[0]}
+              </Link>
+            </div>
+            <div className="space-y-4 border-t border-soot/20 pt-6">
+              <EmailLink className="block text-soot underline decoration-soot/30 underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bone" />
+              <div className="flex flex-wrap gap-4 font-mono text-xs uppercase tracking-[0.12em]">
+                <a href={identity.socials.github} target="_blank" rel="noopener noreferrer" className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bone">
+                  GitHub
+                </a>
+                <a href={identity.socials.linkedin} target="_blank" rel="noopener noreferrer" className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bone">
+                  LinkedIn
+                </a>
+                <a href={identity.socials.x} target="_blank" rel="noopener noreferrer" className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bone">
+                  X
+                </a>
+                <a href={identity.socials.huggingface} target="_blank" rel="noopener noreferrer" className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bone">
+                  HuggingFace
+                </a>
+                <Link href="/cv" className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bone">
+                  CV
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
   );
 }
