@@ -26,6 +26,8 @@ import {
   Vector3,
 } from "three";
 import { filmProgressStore, useFilmProgress } from "@/lib/film/progress";
+import { Council } from "./Council";
+import { Torus } from "./Torus";
 
 const SIGNAL = "#E3B341";
 const DIM = "#8A8578";
@@ -319,7 +321,7 @@ export function Machine() {
     const local = progress.chapterLocal;
     const chapter0 = chapter === 0 ? smoothstep(local) : chapter > 0 ? 1 : 0;
     const chapter3 = chapter === 3 ? smoothstep(local) : chapter > 3 ? 1 : 0;
-    const activeColumns = chapter >= 3 && chapter <= 6 ? 1 : chapter === 7 ? 1 - smoothstep(local / 0.5) : 0;
+    const activeColumns = chapter === 3 ? 1 : chapter === 4 ? 1 - smoothstep(local / 0.25) : 0;
     const powerDown = chapter === 7 ? smoothstep(local / 0.5) : 0;
     const lightScale = 1 - powerDown * 0.85;
     const aspect = viewport.width / Math.max(viewport.height, 0.001);
@@ -366,6 +368,30 @@ export function Machine() {
       );
     } else if (chapter === 3) {
       cameraPosition.set(1.6 - chapter3 * 0.8, 2.2 - chapter3 * 0.4, 4.6 - chapter3 * 1);
+    } else if (chapter === 4) {
+      const orbitHold = local < 0.7 ? smoothstep(local / 0.7) : local < 0.85 ? 1 : 1;
+      const sealPush = smoothstep((local - 0.85) / 0.15);
+      const angle = -0.34 + orbitHold * 0.52;
+
+      cameraPosition.set(
+        group.position.x + Math.sin(angle) * 2.8 - sealPush * 0.2,
+        2.24 - sealPush * 0.42,
+        3.72 + Math.cos(angle) * 0.5 - sealPush * 0.22,
+      );
+    } else if (chapter === 5) {
+      const reveal = smoothstep(local);
+
+      cameraPosition.set(
+        Math.sin(time * 0.08) * 0.18,
+        3.2 + reveal * 0.18,
+        5.2 - reveal * 0.38,
+      );
+    } else if (chapter === 6) {
+      cameraPosition.set(
+        Math.sin(time * 0.05) * 0.22,
+        3.34 + local * 0.2,
+        5.08 + local * 0.42,
+      );
     } else {
       cameraPosition.set(
         0.8 + Math.sin(time * 0.06) * 0.06,
@@ -375,7 +401,13 @@ export function Machine() {
     }
 
     camera.position.lerp(cameraPosition, damping);
-    cameraTarget.set(group.position.x, group.position.y + (chapter >= 3 ? 0.55 : 0), group.position.z);
+    if (chapter === 5 || chapter === 6) {
+      cameraTarget.set(group.position.x, group.position.y + 1.55, group.position.z);
+    } else if (chapter === 4) {
+      cameraTarget.set(group.position.x, group.position.y + 1.12, group.position.z);
+    } else {
+      cameraTarget.set(group.position.x, group.position.y + (chapter >= 3 ? 0.55 : 0), group.position.z);
+    }
     camera.lookAt(cameraTarget);
 
     for (let index = 0; index < BENCHMARKS.length; index += 1) {
@@ -543,6 +575,8 @@ export function Machine() {
             </sprite>
           </group>
         ))}
+        <Council progressRef={progressRef} glowTexture={glowTexture} />
+        <Torus progressRef={progressRef} glowTexture={glowTexture} />
       </group>
       <group ref={shadowRef} position={[2.4, -0.18, 0]}>
         <ContactShadows
