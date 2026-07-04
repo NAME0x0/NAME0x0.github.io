@@ -11,11 +11,11 @@ import { KineticWall } from "@/components/site/KineticWall";
 import { Magnetic } from "@/components/site/Magnetic";
 import { Marquee } from "@/components/site/Marquee";
 import { MetricsTable } from "@/components/site/MetricsTable";
-import { PhotoDeck } from "@/components/site/PhotoDeck";
 import { ScrollFXMount } from "@/components/site/ScrollFXMount";
 import { StatusBadge } from "@/components/site/StatusBadge";
 import { Terminal } from "@/components/site/Terminal";
 import { TrackedLink } from "@/components/site/TrackedLink";
+import { Folder } from "@/components/gallery/Folder";
 import { SceneWidget } from "@/components/widgets/SceneWidget";
 import { now } from "@/lib/content/now";
 import { getPhotos } from "@/lib/content/photos";
@@ -322,7 +322,7 @@ export default function HomePage() {
             <ListBlock title="Open to" items={identity.openTo} />
           </div>
           <div className="space-y-10">
-            {photos.length > 0 ? <PhotoDeck photos={photos} /> : null}
+            {photos.length > 0 ? <Folder photos={photos} /> : null}
             <ProjectRow project={tangled} inverted />
             <div className="border-t border-soot/20 pt-6">
               <p className="font-mono text-xs uppercase tracking-[0.14em] text-soot/70">Updated {now.updated}</p>
