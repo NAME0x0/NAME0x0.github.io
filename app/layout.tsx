@@ -3,6 +3,7 @@ import { Manrope, Space_Grotesk } from "next/font/google";
 import { GeistMono } from "geist/font/mono";
 import { Analytics } from "@vercel/analytics/next";
 import { Footer } from "@/components/site/Footer";
+import { FluidInkMount } from "@/components/site/FluidInkMount";
 import { Header } from "@/components/site/Header";
 import { KineticWall } from "@/components/site/KineticWall";
 import { ProgressHairline } from "@/components/site/ProgressHairline";
@@ -127,6 +128,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: personJsonLdText }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: websiteJsonLdText }} />
         <KineticWall />
+        <FluidInkMount />
         <ProgressHairline />
         <Header />
         {children}

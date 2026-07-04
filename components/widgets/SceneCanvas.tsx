@@ -6,25 +6,32 @@ import type { CanvasTexture } from "three";
 import type { WidgetScene } from "./SceneWidget";
 import { BarsScene } from "./scenes/BarsScene";
 import { CouncilScene } from "./scenes/CouncilScene";
+import { ReactorScene } from "./scenes/ReactorScene";
 import { StarsScene } from "./scenes/StarsScene";
 import { TorusScene } from "./scenes/TorusScene";
 import { createGlowTexture, smoothstep } from "./scenes/shared";
+import type { WidgetSceneData } from "./SceneWidget";
 
 type SceneCanvasProps = {
   scene: WidgetScene;
   active: boolean;
+  data?: WidgetSceneData;
 };
 
 export type WidgetSceneProps = {
   entryRef: MutableRefObject<number>;
   glowTexture: CanvasTexture;
+  data?: WidgetSceneData;
 };
 
 function CameraSetup({ scene }: { scene: WidgetScene }) {
   const camera = useThree((state) => state.camera);
 
   useEffect(() => {
-    if (scene === "torus") {
+    if (scene === "reactor") {
+      camera.position.set(0, 0.85, 5.6);
+      camera.lookAt(0, 0, 0);
+    } else if (scene === "torus") {
       camera.position.set(0.25, 2.1, 5.7);
       camera.lookAt(0.25, 1.15, 0);
     } else if (scene === "stars") {
@@ -54,7 +61,7 @@ function EntryProgress({ active, entryRef }: { active: boolean; entryRef: Mutabl
   return null;
 }
 
-function SceneContent({ scene, active }: SceneCanvasProps) {
+function SceneContent({ scene, active, data }: SceneCanvasProps) {
   const entryRef = useRef(0);
   const glowTexture = useMemo(() => createGlowTexture(), []);
 
@@ -70,11 +77,12 @@ function SceneContent({ scene, active }: SceneCanvasProps) {
       {scene === "council" ? <CouncilScene entryRef={entryRef} glowTexture={glowTexture} /> : null}
       {scene === "torus" ? <TorusScene entryRef={entryRef} glowTexture={glowTexture} /> : null}
       {scene === "stars" ? <StarsScene entryRef={entryRef} glowTexture={glowTexture} /> : null}
+      {scene === "reactor" ? <ReactorScene entryRef={entryRef} glowTexture={glowTexture} data={data} /> : null}
     </>
   );
 }
 
-export function SceneCanvas({ scene, active }: SceneCanvasProps) {
+export function SceneCanvas({ scene, active, data }: SceneCanvasProps) {
   return (
     <Canvas
       frameloop={active ? "always" : "never"}
@@ -82,7 +90,7 @@ export function SceneCanvas({ scene, active }: SceneCanvasProps) {
       camera={{ position: [0, 1.8, 5.2], fov: 38, near: 0.1, far: 30 }}
       gl={{ alpha: true, antialias: true, powerPreference: "high-performance" }}
     >
-      <SceneContent scene={scene} active={active} />
+      <SceneContent scene={scene} active={active} data={data} />
     </Canvas>
   );
 }

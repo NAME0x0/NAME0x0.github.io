@@ -155,6 +155,20 @@ export function ScrollFX() {
             },
           );
         });
+
+        document.querySelectorAll<HTMLElement>("[data-ghost-numeral]").forEach((element) => {
+          const section = element.closest("section") ?? element;
+
+          gsap.fromTo(
+            element,
+            { y: 60 },
+            {
+              y: -60,
+              ease: "none",
+              scrollTrigger: { trigger: section, start: "top bottom", end: "bottom top", scrub: true },
+            },
+          );
+        });
       });
 
       fontRefresh();

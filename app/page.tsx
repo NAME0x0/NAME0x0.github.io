@@ -4,6 +4,8 @@ import { projects } from "@/content/projects";
 import { ChapterTracker } from "@/components/site/ChapterTracker";
 import { EmailLink } from "@/components/site/EmailLink";
 import { ChapterRail } from "@/components/site/ChapterRail";
+import { ChapterGlow } from "@/components/site/ChapterGlow";
+import { GhostNumeral } from "@/components/site/GhostNumeral";
 import { Konami } from "@/components/site/Konami";
 import { Magnetic } from "@/components/site/Magnetic";
 import { Marquee } from "@/components/site/Marquee";
@@ -13,6 +15,7 @@ import { StatusBadge } from "@/components/site/StatusBadge";
 import { Terminal } from "@/components/site/Terminal";
 import { TrackedLink } from "@/components/site/TrackedLink";
 import { SceneWidget } from "@/components/widgets/SceneWidget";
+import { getClaimsReceipts, type ClaimReceipt } from "@/lib/content/claims";
 import { now } from "@/lib/content/now";
 import { getProjectByChapter, getProjectRequired } from "@/lib/content/projects";
 import type { TierOneProject } from "@/lib/content/projects";
@@ -94,18 +97,65 @@ const terminalProjects = projects.map(({ slug, name, status, tagline, tier, link
   links,
   metrics,
 }));
+const claimReceipts = getClaimsReceipts();
+
+function relativeFromNow(isoDate: string) {
+  const seconds = Math.max(0, Math.floor((Date.now() - new Date(isoDate).getTime()) / 1000));
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+  const months = Math.floor(days / 30);
+
+  if (months > 0) return `${months}mo ago`;
+  if (days > 0) return `${days}d ago`;
+  if (hours > 0) return `${hours}h ago`;
+  if (minutes > 0) return `${minutes}m ago`;
+  return "just now";
+}
+
+function ClaimReactorPanel({ receipts }: { receipts: ClaimReceipt[] }) {
+  const verifiedCount = receipts.filter((receipt) => receipt.status === "verified").length;
+  const allVerified = verifiedCount === receipts.length;
+  const verifiedAt = receipts[0]?.verifiedAt;
+
+  return (
+    <div className="w-full max-w-[34rem] space-y-4 lg:justify-self-end">
+      <SceneWidget scene="reactor" data={receipts} />
+      <div className="border-t border-faint pt-4 font-mono text-xs uppercase tracking-[0.12em] text-dim">
+        <p className={allVerified ? "text-signal" : "text-dim"}>
+          {allVerified && verifiedAt
+            ? `${verifiedCount}/${receipts.length} claims verified against source repos · ${relativeFromNow(verifiedAt)}`
+            : "claims unverified — showing last verified state"}
+        </p>
+        <p className="mt-3 leading-6 text-dim">
+          Every number on this site is checked against its repo README at build time. A mismatch fails the build.
+        </p>
+        <a
+          href="https://github.com/NAME0x0/NAME0x0.github.io#what-makes-it-unusual"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-3 inline-block text-bone underline decoration-bone/40 underline-offset-4 transition-colors hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bone"
+        >
+          how? →
+        </a>
+      </div>
+    </div>
+  );
+}
 
 export default function HomePage() {
   return (
     <main id="main">
       <ChapterTracker />
       <ChapterRail />
+      <ChapterGlow />
       <Konami />
       <ScrollFXMount />
-      <section id="ignition" className="px-6 py-section-y">
-        <div className="mx-auto max-w-6xl">
+      <section id="ignition" className="relative overflow-hidden px-6 py-section-y">
+        <GhostNumeral value="01" />
+        <div className="relative z-10 mx-auto grid max-w-6xl gap-12 lg:grid-cols-[minmax(0,68ch)_minmax(18rem,34rem)] lg:items-center">
           <Overline>{"// IDENTITY"}</Overline>
-          <div className="max-w-[68ch] space-y-8">
+          <div className="max-w-[68ch] space-y-8 lg:col-start-1">
             <h1 data-reveal="lines" data-hero-lockup className="font-display text-display font-bold text-ink">{identity.lockup}</h1>
             <p className="text-2xl text-dim">{identity.positioning}</p>
             <p className="font-mono text-sm uppercase tracking-[0.14em] text-dim">
@@ -128,11 +178,15 @@ export default function HomePage() {
               </Magnetic>
             </div>
           </div>
+          <div data-reveal="row" className="lg:col-start-2 lg:row-span-2 lg:row-start-1">
+            <ClaimReactorPanel receipts={claimReceipts} />
+          </div>
         </div>
       </section>
 
-      <section id="metal" className="border-t border-faint px-6 py-section-y">
-        <div className="mx-auto max-w-6xl">
+      <section id="metal" className="relative overflow-hidden border-t border-faint px-6 py-section-y">
+        <GhostNumeral value="02" />
+        <div className="relative z-10 mx-auto max-w-6xl">
           <Overline>{"// METAL"}</Overline>
           {chapterOneProjects.map((project) => (
             <ProjectRow key={project.slug} project={project} />
@@ -140,8 +194,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="voice" className="border-t border-faint px-6 py-section-y">
-        <div className="mx-auto max-w-6xl">
+      <section id="voice" className="relative overflow-hidden border-t border-faint px-6 py-section-y">
+        <GhostNumeral value="03" />
+        <div className="relative z-10 mx-auto max-w-6xl">
           <Overline>{"// VOICE"}</Overline>
           <p className="mb-8 max-w-[68ch] text-dim">The interface layer is where machines meet people.</p>
           <ProjectRow project={webdesk} />
@@ -149,8 +204,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="mind" className="border-t border-faint px-6 py-section-y">
-        <div className="mx-auto max-w-6xl space-y-8">
+      <section id="mind" className="relative overflow-hidden border-t border-faint px-6 py-section-y">
+        <GhostNumeral value="04" />
+        <div className="relative z-10 mx-auto max-w-6xl space-y-8">
           <Overline>{"// PROOF"}</Overline>
           {ava.tier === 1 ? (
             <article className="grid gap-8 lg:grid-cols-[minmax(0,68ch)_minmax(18rem,30rem)] lg:items-start">
@@ -178,8 +234,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="council" className="border-t border-faint px-6 py-section-y">
-        <div className="mx-auto max-w-6xl">
+      <section id="council" className="relative overflow-hidden border-t border-faint px-6 py-section-y">
+        <GhostNumeral value="05" />
+        <div className="relative z-10 mx-auto max-w-6xl">
           <Overline>{"// COUNCIL"}</Overline>
           {pantheon.tier === 1 ? (
             <article className="grid gap-8 lg:grid-cols-[minmax(0,68ch)_minmax(18rem,30rem)] lg:items-start">
@@ -221,8 +278,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="blueprint" className="border-t border-faint px-6 py-section-y">
-        <div className="mx-auto max-w-6xl">
+      <section id="blueprint" className="relative overflow-hidden border-t border-faint px-6 py-section-y">
+        <GhostNumeral value="06" />
+        <div className="relative z-10 mx-auto max-w-6xl">
           <Overline>{"// BLUEPRINT"}</Overline>
           {omni.tier === 1 ? (
             <article className="grid gap-8 lg:grid-cols-[minmax(0,68ch)_minmax(18rem,30rem)] lg:items-start">
@@ -250,8 +308,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="light" className="border-t border-faint px-6 py-section-y">
-        <div className="mx-auto max-w-6xl">
+      <section id="light" className="relative overflow-hidden border-t border-faint px-6 py-section-y">
+        <GhostNumeral value="07" />
+        <div className="relative z-10 mx-auto max-w-6xl">
           <Overline>{"// LIGHT"}</Overline>
           {agiLedger.tier === 1 ? (
             <article className="grid gap-8 lg:grid-cols-[minmax(0,68ch)_minmax(18rem,30rem)] lg:items-start">
@@ -291,8 +350,9 @@ export default function HomePage() {
 
       <Marquee />
 
-      <section id="human" className="bg-paper px-6 py-section-y text-soot">
-        <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[1fr_1fr]">
+      <section id="human" className="relative overflow-hidden bg-paper px-6 py-section-y text-soot">
+        <GhostNumeral value="08" />
+        <div className="relative z-10 mx-auto grid max-w-6xl gap-12 lg:grid-cols-[1fr_1fr]">
           <div className="space-y-10">
             <div>
               <div data-reveal="overline" data-parallax="soft" className="mb-5">

@@ -2,19 +2,22 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
+import type { ClaimReceipt } from "@/lib/content/claims";
 import { checkFilmGate } from "@/lib/film/gate";
 
-export type WidgetScene = "bars" | "council" | "torus" | "stars";
+export type WidgetScene = "bars" | "council" | "torus" | "stars" | "reactor";
+export type WidgetSceneData = ClaimReceipt[];
 
 type SceneWidgetProps = {
   scene: WidgetScene;
+  data?: WidgetSceneData;
 };
 
 const SceneCanvas = dynamic(() => import("./SceneCanvas").then((module) => module.SceneCanvas), {
   ssr: false,
 });
 
-export function SceneWidget({ scene }: SceneWidgetProps) {
+export function SceneWidget({ scene, data }: SceneWidgetProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [enabled, setEnabled] = useState(false);
   const [active, setActive] = useState(false);
@@ -69,8 +72,11 @@ export function SceneWidget({ scene }: SceneWidgetProps) {
   }
 
   return (
-    <div ref={containerRef} className="aspect-[4/3] w-full max-w-[30rem] overflow-hidden bg-transparent">
-      <SceneCanvas scene={scene} active={active} />
+    <div
+      ref={containerRef}
+      className={`${scene === "reactor" ? "aspect-square max-w-[34rem]" : "aspect-[4/3] max-w-[30rem]"} w-full overflow-hidden bg-transparent`}
+    >
+      <SceneCanvas scene={scene} active={active} data={data} />
     </div>
   );
 }
