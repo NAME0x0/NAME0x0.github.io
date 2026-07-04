@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import Lenis from "lenis";
 
 export const CHAPTER_SECTION_IDS = [
   "ignition",
@@ -78,18 +77,9 @@ export function useFilmProgress() {
 
 export function useFilmProgressEngine() {
   useEffect(() => {
-    let disposed = false;
-    let rafId = 0;
     let scrollRafId = 0;
     let resizeRafId = 0;
     let bands: ChapterBand[] = [];
-
-    const lenis = new Lenis({
-      autoRaf: false,
-      lerp: 0.11,
-      smoothWheel: true,
-      syncTouch: false,
-    });
 
     const measure = () => {
       bands = CHAPTER_SECTION_IDS.map((id) => {
@@ -149,34 +139,21 @@ export function useFilmProgressEngine() {
       });
     };
 
-    const raf = (time: number) => {
-      if (disposed) {
-        return;
-      }
-
-      lenis.raf(time);
-      rafId = window.requestAnimationFrame(raf);
-    };
-
     measure();
     update();
-    rafId = window.requestAnimationFrame(raf);
 
-    const unsubscribeScroll = lenis.on("scroll", scheduleUpdate);
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
     window.addEventListener("resize", scheduleMeasure);
 
     const resizeObserver = new ResizeObserver(scheduleMeasure);
     resizeObserver.observe(document.body);
 
     return () => {
-      disposed = true;
-      unsubscribeScroll();
       resizeObserver.disconnect();
+      window.removeEventListener("scroll", scheduleUpdate);
       window.removeEventListener("resize", scheduleMeasure);
-      window.cancelAnimationFrame(rafId);
       window.cancelAnimationFrame(scrollRafId);
       window.cancelAnimationFrame(resizeRafId);
-      lenis.destroy();
       filmProgressStore.setSnapshot(initialProgress);
     };
   }, []);

@@ -4,6 +4,7 @@ import { MetricsTable } from "@/components/site/MetricsTable";
 import { ScrollFXMount } from "@/components/site/ScrollFXMount";
 import { StatusBadge } from "@/components/site/StatusBadge";
 import { TrackedLink } from "@/components/site/TrackedLink";
+import { SceneWidget, type WidgetScene } from "@/components/widgets/SceneWidget";
 import { getTierOneProjectBySlug, tierOneProjects } from "@/lib/content/projects";
 
 type WorkDetailPageProps = {
@@ -14,6 +15,13 @@ type WorkDetailPageProps = {
 
 const linkClass =
   "text-bone underline decoration-bone/40 underline-offset-4 transition-colors hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bone";
+
+const sceneBySlug: Record<string, WidgetScene> = {
+  ava: "bars",
+  "pantheon-trades": "council",
+  omni: "torus",
+  "agi-ledger": "stars",
+};
 
 export function generateStaticParams() {
   return tierOneProjects.map((project) => ({ slug: project.slug }));
@@ -88,6 +96,9 @@ export default function WorkDetailPage({ params }: WorkDetailPageProps) {
                 </a>
               )
             ))}
+          </div>
+          <div data-reveal="row" className="pt-3">
+            <SceneWidget scene={sceneBySlug[project.slug]} />
           </div>
         </header>
 

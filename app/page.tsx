@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { identity } from "@/content/identity";
 import { projects } from "@/content/projects";
-import { FilmMount } from "@/components/film/FilmMount";
 import { ChapterTracker } from "@/components/site/ChapterTracker";
 import { EmailLink } from "@/components/site/EmailLink";
 import { Konami } from "@/components/site/Konami";
@@ -10,6 +9,7 @@ import { ScrollFXMount } from "@/components/site/ScrollFXMount";
 import { StatusBadge } from "@/components/site/StatusBadge";
 import { Terminal } from "@/components/site/Terminal";
 import { TrackedLink } from "@/components/site/TrackedLink";
+import { SceneWidget } from "@/components/widgets/SceneWidget";
 import { now } from "@/lib/content/now";
 import { getProjectByChapter, getProjectRequired } from "@/lib/content/projects";
 import type { TierOneProject } from "@/lib/content/projects";
@@ -95,7 +95,6 @@ const terminalProjects = projects.map(({ slug, name, status, tagline, tier, link
 export default function HomePage() {
   return (
     <main id="main">
-      <FilmMount />
       <ChapterTracker />
       <Konami />
       <ScrollFXMount />
@@ -146,18 +145,25 @@ export default function HomePage() {
         <div className="mx-auto max-w-6xl space-y-8">
           <Overline>{"// PROOF"}</Overline>
           {ava.tier === 1 ? (
-            <article className="max-w-[68ch] space-y-5">
-              <h2 data-reveal="lines" className="font-display text-4xl font-bold text-ink">{ava.name}</h2>
-              <p className="text-xl text-bone">{ava.tagline}</p>
-              <p className="text-dim">{ava.summary}</p>
-              <MetricsTable metrics={ava.metrics} />
-              <TrackedLink
-                href="/work/ava"
-                event={{ name: "case_study_opened", properties: { slug: "ava" } }}
-                className={linkClass}
-              >
-                /work/ava
-              </TrackedLink>
+            <article className="grid gap-8 lg:grid-cols-[minmax(0,68ch)_minmax(18rem,30rem)] lg:items-start">
+              <div className="max-w-[68ch] space-y-5">
+                <h2 data-reveal="lines" className="font-display text-4xl font-bold text-ink">{ava.name}</h2>
+                <p className="text-xl text-bone">{ava.tagline}</p>
+                <p className="text-dim">{ava.summary}</p>
+              </div>
+              <div data-reveal="row" className="w-full lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:justify-self-end">
+                <SceneWidget scene="bars" />
+              </div>
+              <div className="max-w-[68ch] space-y-5 lg:col-start-1">
+                <MetricsTable metrics={ava.metrics} />
+                <TrackedLink
+                  href="/work/ava"
+                  event={{ name: "case_study_opened", properties: { slug: "ava" } }}
+                  className={linkClass}
+                >
+                  /work/ava
+                </TrackedLink>
+              </div>
             </article>
           ) : null}
           <ProjectRow project={neuralNets} />
@@ -168,32 +174,39 @@ export default function HomePage() {
         <div className="mx-auto max-w-6xl">
           <Overline>{"// COUNCIL"}</Overline>
           {pantheon.tier === 1 ? (
-            <article className="max-w-[68ch] space-y-5">
-              <div className="flex flex-wrap items-center gap-3">
-                <h2 data-reveal="lines" className="font-display text-4xl font-bold text-ink">{pantheon.name}</h2>
-                <StatusBadge status={pantheon.status} />
+            <article className="grid gap-8 lg:grid-cols-[minmax(0,68ch)_minmax(18rem,30rem)] lg:items-start">
+              <div className="max-w-[68ch] space-y-5">
+                <div className="flex flex-wrap items-center gap-3">
+                  <h2 data-reveal="lines" className="font-display text-4xl font-bold text-ink">{pantheon.name}</h2>
+                  <StatusBadge status={pantheon.status} />
+                </div>
+                <p className="text-xl text-bone">{pantheon.tagline}</p>
+                <p className="text-dim">{pantheon.summary}</p>
               </div>
-              <p className="text-xl text-bone">{pantheon.tagline}</p>
-              <p className="text-dim">{pantheon.summary}</p>
-              <MetricsTable metrics={pantheon.metrics} />
-              <div className="flex flex-wrap gap-4">
-                <TrackedLink
-                  href="/work/pantheon-trades"
-                  event={{ name: "case_study_opened", properties: { slug: "pantheon-trades" } }}
-                  className={linkClass}
-                >
-                  /work/pantheon-trades
-                </TrackedLink>
-                {pantheon.links.demo ? (
+              <div data-reveal="row" className="w-full lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:justify-self-end">
+                <SceneWidget scene="council" />
+              </div>
+              <div className="max-w-[68ch] space-y-5 lg:col-start-1">
+                <MetricsTable metrics={pantheon.metrics} />
+                <div className="flex flex-wrap gap-4">
                   <TrackedLink
-                    href={pantheon.links.demo}
-                    event={{ name: "demo_clicked", properties: { slug: "pantheon-trades" } }}
+                    href="/work/pantheon-trades"
+                    event={{ name: "case_study_opened", properties: { slug: "pantheon-trades" } }}
                     className={linkClass}
-                    external
                   >
-                    demo
+                    /work/pantheon-trades
                   </TrackedLink>
-                ) : null}
+                  {pantheon.links.demo ? (
+                    <TrackedLink
+                      href={pantheon.links.demo}
+                      event={{ name: "demo_clicked", properties: { slug: "pantheon-trades" } }}
+                      className={linkClass}
+                      external
+                    >
+                      demo
+                    </TrackedLink>
+                  ) : null}
+                </div>
               </div>
             </article>
           ) : null}
@@ -204,19 +217,26 @@ export default function HomePage() {
         <div className="mx-auto max-w-6xl">
           <Overline>{"// BLUEPRINT"}</Overline>
           {omni.tier === 1 ? (
-            <article className="max-w-[68ch] space-y-5">
-              <ResearchLabel project={omni} />
-              <h2 data-reveal="lines" className="font-display text-4xl font-bold text-ink">{omni.name}</h2>
-              <p className="text-xl text-bone">{omni.tagline}</p>
-              <p className="text-dim">{omni.summary}</p>
-              <MetricsTable metrics={omni.metrics} />
-              <TrackedLink
-                href="/work/omni"
-                event={{ name: "case_study_opened", properties: { slug: "omni" } }}
-                className={linkClass}
-              >
-                /work/omni
-              </TrackedLink>
+            <article className="grid gap-8 lg:grid-cols-[minmax(0,68ch)_minmax(18rem,30rem)] lg:items-start">
+              <div className="max-w-[68ch] space-y-5">
+                <ResearchLabel project={omni} />
+                <h2 data-reveal="lines" className="font-display text-4xl font-bold text-ink">{omni.name}</h2>
+                <p className="text-xl text-bone">{omni.tagline}</p>
+                <p className="text-dim">{omni.summary}</p>
+              </div>
+              <div data-reveal="row" className="w-full lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:justify-self-end">
+                <SceneWidget scene="torus" />
+              </div>
+              <div className="max-w-[68ch] space-y-5 lg:col-start-1">
+                <MetricsTable metrics={omni.metrics} />
+                <TrackedLink
+                  href="/work/omni"
+                  event={{ name: "case_study_opened", properties: { slug: "omni" } }}
+                  className={linkClass}
+                >
+                  /work/omni
+                </TrackedLink>
+              </div>
             </article>
           ) : null}
         </div>
@@ -226,28 +246,35 @@ export default function HomePage() {
         <div className="mx-auto max-w-6xl">
           <Overline>{"// LIGHT"}</Overline>
           {agiLedger.tier === 1 ? (
-            <article className="max-w-[68ch] space-y-5">
-              <h2 data-reveal="lines" className="font-display text-4xl font-bold text-ink">{agiLedger.name}</h2>
-              <p className="text-xl text-bone">{agiLedger.tagline}</p>
-              <p className="text-dim">{agiLedger.summary}</p>
-              <div className="flex flex-wrap gap-4">
-                <TrackedLink
-                  href="/work/agi-ledger"
-                  event={{ name: "case_study_opened", properties: { slug: "agi-ledger" } }}
-                  className={linkClass}
-                >
-                  /work/agi-ledger
-                </TrackedLink>
-                {agiLedger.links.demo ? (
+            <article className="grid gap-8 lg:grid-cols-[minmax(0,68ch)_minmax(18rem,30rem)] lg:items-start">
+              <div className="max-w-[68ch] space-y-5">
+                <h2 data-reveal="lines" className="font-display text-4xl font-bold text-ink">{agiLedger.name}</h2>
+                <p className="text-xl text-bone">{agiLedger.tagline}</p>
+                <p className="text-dim">{agiLedger.summary}</p>
+              </div>
+              <div data-reveal="row" className="w-full lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:justify-self-end">
+                <SceneWidget scene="stars" />
+              </div>
+              <div className="max-w-[68ch] space-y-5 lg:col-start-1">
+                <div className="flex flex-wrap gap-4">
                   <TrackedLink
-                    href={agiLedger.links.demo}
-                    event={{ name: "demo_clicked", properties: { slug: "agi-ledger" } }}
+                    href="/work/agi-ledger"
+                    event={{ name: "case_study_opened", properties: { slug: "agi-ledger" } }}
                     className={linkClass}
-                    external
                   >
-                    demo
+                    /work/agi-ledger
                   </TrackedLink>
-                ) : null}
+                  {agiLedger.links.demo ? (
+                    <TrackedLink
+                      href={agiLedger.links.demo}
+                      event={{ name: "demo_clicked", properties: { slug: "agi-ledger" } }}
+                      className={linkClass}
+                      external
+                    >
+                      demo
+                    </TrackedLink>
+                  ) : null}
+                </div>
               </div>
             </article>
           ) : null}
