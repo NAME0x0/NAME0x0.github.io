@@ -60,6 +60,10 @@ export function KineticWall({ tone = "void", position = "fixed" }: KineticWallPr
     };
 
     const draw = (time: number) => {
+      const bounds = position === "absolute" ? canvas.getBoundingClientRect() : null;
+      const fieldOffsetX = bounds ? -bounds.left : 0;
+      const fieldOffsetY = bounds ? -bounds.top : 0;
+
       context.clearRect(0, 0, width, height);
       context.globalAlpha = palette.alpha;
 
@@ -73,17 +77,19 @@ export function KineticWall({ tone = "void", position = "fixed" }: KineticWallPr
       pointer.x += (pointer.targetX - pointer.x) * 0.12;
       pointer.y += (pointer.targetY - pointer.y) * 0.12;
 
-      for (let y = -PITCH; y < height + PITCH; y += PITCH) {
-        for (let x = -PITCH; x < width + PITCH; x += PITCH) {
+      for (let y = -PITCH - fieldOffsetY; y < height + PITCH - fieldOffsetY; y += PITCH) {
+        for (let x = -PITCH - fieldOffsetX; x < width + PITCH - fieldOffsetX; x += PITCH) {
+          const localX = x + fieldOffsetX;
+          const localY = y + fieldOffsetY;
           const wave = 0.5 + Math.sin(phase + x * 0.006 + y * 0.004) * 0.5;
-          const dx = x - pointer.x;
-          const dy = y - pointer.y;
+          const dx = localX - pointer.x;
+          const dy = localY - pointer.y;
           const distance = Math.hypot(dx, dy);
           const ripple = pointer.active && !reduced.matches ? Math.max(0, 1 - distance / 130) : 0;
           const push = ripple * ripple * 6;
           const invDistance = 1 / Math.max(distance, 1);
-          const dotX = x + scrollDrift + dx * invDistance * push;
-          const dotY = y - scrollDrift * 0.35 + dy * invDistance * push;
+          const dotX = localX + scrollDrift + dx * invDistance * push;
+          const dotY = localY - scrollDrift * 0.35 + dy * invDistance * push;
           const amount = Math.min(0.42, (0.08 + wave * 0.16 + ripple * 0.18) * scrollBoost);
 
           context.fillStyle = `rgb(${mix(palette.base[0], palette.dim[0], amount)}, ${mix(palette.base[1], palette.dim[1], amount)}, ${mix(palette.base[2], palette.dim[2], amount)})`;

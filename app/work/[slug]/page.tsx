@@ -110,7 +110,7 @@ export default function WorkDetailPage({ params }: WorkDetailPageProps) {
             ))}
           </div>
           <div data-reveal="row" className="pt-3">
-            <SceneWidget scene={sceneBySlug[project.slug]} />
+            <SceneWidget scene={sceneBySlug[project.slug]} aspect={sceneBySlug[project.slug] === "stars" ? "wide" : "square"} />
           </div>
         </header>
 

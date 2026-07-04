@@ -11,13 +11,14 @@ export type WidgetSceneData = ClaimReceipt[];
 type SceneWidgetProps = {
   scene: WidgetScene;
   data?: WidgetSceneData;
+  aspect?: "square" | "wide";
 };
 
 const SceneCanvas = dynamic(() => import("./SceneCanvas").then((module) => module.SceneCanvas), {
   ssr: false,
 });
 
-export function SceneWidget({ scene, data }: SceneWidgetProps) {
+export function SceneWidget({ scene, data, aspect = "square" }: SceneWidgetProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [enabled, setEnabled] = useState(false);
   const [active, setActive] = useState(false);
@@ -74,7 +75,7 @@ export function SceneWidget({ scene, data }: SceneWidgetProps) {
   return (
     <div
       ref={containerRef}
-      className="aspect-square w-full max-w-[38rem] self-start overflow-hidden bg-transparent lg:sticky lg:top-24"
+      className={`${aspect === "wide" ? "aspect-[16/9] max-w-[44rem]" : "aspect-square max-w-[38rem]"} w-full self-start overflow-hidden bg-transparent lg:sticky lg:top-24`}
     >
       <SceneCanvas scene={scene} active={active} data={data} />
     </div>

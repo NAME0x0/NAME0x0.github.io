@@ -41,7 +41,7 @@ export function ScrollFX() {
     const observer = new MutationObserver(refresh);
 
     mm.add("(prefers-reduced-motion: no-preference)", () => {
-      const splits: SplitText[] = [];
+      const splits = new Set<SplitText>();
       const ctx = gsap.context(() => {
         document.querySelectorAll<HTMLElement>("[data-reveal='lines']").forEach((element) => {
           const split = new SplitText(element, {
@@ -51,8 +51,8 @@ export function ScrollFX() {
           } as SplitText.Vars);
           const isHero = element.hasAttribute("data-hero-lockup");
 
-          splits.push(split);
-          gsap.set(split.lines, { yPercent: 110 });
+          splits.add(split);
+          gsap.set(split.lines, { yPercent: 110, paddingBlock: "0.12em", marginBlock: "-0.12em" });
           gsap.to(split.lines, {
             yPercent: 0,
             duration: 0.9,
@@ -60,6 +60,10 @@ export function ScrollFX() {
             stagger: 0.08,
             delay: isHero ? 0.15 : 0,
             scrollTrigger: isHero ? undefined : { trigger: element, start: "top 82%", once: true },
+            onComplete: () => {
+              split.revert();
+              splits.delete(split);
+            },
           });
         });
 

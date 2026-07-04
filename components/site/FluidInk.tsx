@@ -11,7 +11,7 @@ import { useEffect, useRef } from "react";
 const SIM_SIZE = 96;
 const VELOCITY_DISSIPATION = 0.98;
 const DYE_DISSIPATION = 0.965;
-const SPLAT_RADIUS = 0.009;
+const SPLAT_RADIUS = 0.00675;
 
 const vertexShader = `#version 300 es
 precision highp float;
@@ -363,7 +363,7 @@ export function FluidInk() {
       const y = 1 - event.clientY / Math.max(window.innerHeight, 1);
       const dx = hasPointer ? (event.clientX - lastX) * 0.004 : 0;
       const dy = hasPointer ? (lastY - event.clientY) * 0.004 : 0;
-      const dyeColor = splatCount % 8 === 0 ? [0.27, 0.17, 0.11] as const : [0.2, 0.19, 0.15] as const;
+      const dyeColor = splatCount % 8 === 0 ? [0.162, 0.102, 0.066] as const : [0.12, 0.114, 0.09] as const;
 
       hasPointer = true;
       lastX = event.clientX;
@@ -394,5 +394,5 @@ export function FluidInk() {
     };
   }, []);
 
-  return <canvas ref={canvasRef} className="pointer-events-none fixed inset-0 z-[1] opacity-[0.32] mix-blend-screen" aria-hidden="true" />;
+  return <canvas ref={canvasRef} className="pointer-events-none fixed inset-0 z-[1] opacity-[0.18] mix-blend-screen" aria-hidden="true" />;
 }

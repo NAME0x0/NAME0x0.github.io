@@ -2,7 +2,7 @@
 
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, type MutableRefObject } from "react";
-import type { CanvasTexture } from "three";
+import type { CanvasTexture, PerspectiveCamera } from "three";
 import type { WidgetScene } from "./SceneWidget";
 import { BarsScene } from "./scenes/BarsScene";
 import { CouncilScene } from "./scenes/CouncilScene";
@@ -18,6 +18,16 @@ type SceneCanvasProps = {
   data?: WidgetSceneData;
 };
 
+const CAMERA_FOV = 34;
+const FIT_MARGIN = 0.12;
+const SCENE_BOUNDS: Record<WidgetScene, { center: readonly [number, number, number]; radius: number }> = {
+  bars: { center: [0, 0.75, 0], radius: 1.95 },
+  council: { center: [0, 1.05, 0], radius: 2.1 },
+  torus: { center: [0.05, 1.12, 0], radius: 2.25 },
+  stars: { center: [0, 1.15, 0], radius: 3.15 },
+  reactor: { center: [0, 0, 0], radius: 2.25 },
+};
+
 export type WidgetSceneProps = {
   entryRef: MutableRefObject<number>;
   glowTexture: CanvasTexture;
@@ -26,22 +36,22 @@ export type WidgetSceneProps = {
 
 function CameraSetup({ scene }: { scene: WidgetScene }) {
   const camera = useThree((state) => state.camera);
+  const size = useThree((state) => state.size);
 
   useEffect(() => {
-    if (scene === "reactor") {
-      camera.position.set(0, 0.45, 4.15);
-      camera.lookAt(0, 0, 0);
-    } else if (scene === "torus") {
-      camera.position.set(0.18, 1.25, 4.15);
-      camera.lookAt(0.18, 1.05, 0);
-    } else if (scene === "stars") {
-      camera.position.set(0, 1.2, 4);
-      camera.lookAt(0.3, 1.25, 0);
-    } else {
-      camera.position.set(0, 0.95, 4);
-      camera.lookAt(0, 0.65, 0);
-    }
-  }, [camera, scene]);
+    const perspective = camera as PerspectiveCamera;
+    const bounds = SCENE_BOUNDS[scene];
+    const aspect = Math.max(size.width / Math.max(size.height, 1), 0.01);
+    const verticalHalfFov = (perspective.fov * Math.PI / 180) * 0.5;
+    const horizontalHalfFov = Math.atan(Math.tan(verticalHalfFov) * aspect);
+    const strictHalfFov = Math.min(verticalHalfFov, horizontalHalfFov);
+    const distance = bounds.radius / (Math.sin(strictHalfFov) * (1 - FIT_MARGIN));
+    const [x, y, z] = bounds.center;
+
+    perspective.position.set(x, y, z + distance);
+    perspective.lookAt(x, y, z);
+    perspective.updateProjectionMatrix();
+  }, [camera, scene, size.height, size.width]);
 
   return null;
 }
@@ -87,7 +97,7 @@ export function SceneCanvas({ scene, active, data }: SceneCanvasProps) {
     <Canvas
       frameloop={active ? "always" : "never"}
       dpr={[1, 1.5]}
-      camera={{ position: [0, 0.95, 4], fov: 34, near: 0.1, far: 30 }}
+      camera={{ position: [0, 0.95, 4], fov: CAMERA_FOV, near: 0.1, far: 40 }}
       gl={{ alpha: true, antialias: true, powerPreference: "high-performance" }}
     >
       <SceneContent scene={scene} active={active} data={data} />

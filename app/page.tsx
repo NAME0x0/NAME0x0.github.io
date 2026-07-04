@@ -17,7 +17,6 @@ import { StatusBadge } from "@/components/site/StatusBadge";
 import { Terminal } from "@/components/site/Terminal";
 import { TrackedLink } from "@/components/site/TrackedLink";
 import { SceneWidget } from "@/components/widgets/SceneWidget";
-import { getClaimsReceipts } from "@/lib/content/claims";
 import { now } from "@/lib/content/now";
 import { getPhotos } from "@/lib/content/photos";
 import { getProjectByChapter, getProjectRequired } from "@/lib/content/projects";
@@ -100,16 +99,7 @@ const terminalProjects = projects.map(({ slug, name, status, tagline, tier, link
   links,
   metrics,
 }));
-const claimReceipts = getClaimsReceipts();
 const photos = getPhotos();
-
-function ClaimReactorPanel() {
-  return (
-    <div className="w-full max-w-[38rem] lg:justify-self-end">
-      <SceneWidget scene="reactor" data={claimReceipts} />
-    </div>
-  );
-}
 
 export default function HomePage() {
   return (
@@ -121,9 +111,9 @@ export default function HomePage() {
       <ScrollFXMount />
       <section id="ignition" className="relative overflow-hidden px-6 py-section-y">
         <GhostNumeral value="01" />
-        <div className="relative z-10 mx-auto grid max-w-6xl gap-12 lg:grid-cols-[minmax(0,68ch)_minmax(18rem,34rem)] lg:items-center">
+        <div className="relative z-10 mx-auto max-w-6xl">
           <Overline>{"// IDENTITY"}</Overline>
-          <div className="max-w-[68ch] space-y-8 lg:col-start-1">
+          <div className="max-w-[68ch] space-y-8">
             <h1 data-reveal="lines" data-hero-lockup className="font-display text-display font-bold text-ink">{identity.lockup}</h1>
             <p className="text-2xl text-dim">{identity.positioning}</p>
             <p className="font-mono text-sm uppercase tracking-[0.14em] text-dim">
@@ -145,9 +135,6 @@ export default function HomePage() {
                 </EmailLink>
               </Magnetic>
             </div>
-          </div>
-          <div data-reveal="row" className="lg:col-start-2 lg:row-span-2 lg:row-start-1">
-            <ClaimReactorPanel />
           </div>
         </div>
       </section>
@@ -288,7 +275,7 @@ export default function HomePage() {
                 <p className="text-dim">{agiLedger.summary}</p>
               </div>
               <div data-reveal="row" className="w-full lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:justify-self-end">
-                <SceneWidget scene="stars" />
+                <SceneWidget scene="stars" aspect="wide" />
               </div>
               <div className="max-w-[68ch] space-y-5 lg:col-start-1">
                 <div className="flex flex-wrap gap-4">
