@@ -274,7 +274,7 @@ export function Torus({ progressRef, glowTexture }: TorusProps) {
   });
 
   return (
-    <group ref={groupRef} visible={false}>
+    <group ref={groupRef} visible={false} position={[0.9, 0, 0]}>
       <mesh>
         <torusGeometry args={[TORUS_MAJOR, 0.42, 12, 64]} />
         <meshBasicMaterial

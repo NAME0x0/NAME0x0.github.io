@@ -24,9 +24,9 @@ export const wideRail: RailTrack = [
   { cameraPosition: [-0.5, 1.8, 3.4], lookAt: [-1.4, 0.1, 0], cardPosition: [0, 0, 0], cardScale: 1, cardDimming: 0 },
   { cameraPosition: [0.5, 1, 4.8], lookAt: [-1.4, 0.15, 0], cardPosition: [0, 0, 0], cardScale: 1, cardDimming: 0 },
   { cameraPosition: [3.2, 2, 3.8], lookAt: [-1.4, 0.55, 0], cardPosition: [0, 0, 0], cardScale: 1, cardDimming: 0 },
-  { cameraPosition: [1.2, 3.8, 4.6], lookAt: [-1.4, 1.12, 0], cardPosition: [-1.2, -1.6, 0.6], cardScale: 0.8, cardDimming: 0.75 },
-  { cameraPosition: [3, 6.2, 9.2], lookAt: [-1.8, 1.25, 0], cardPosition: [-0.25, -0.45, 0.2], cardScale: 0.92, cardDimming: 0.35 },
-  { cameraPosition: [0.5, 6, 9.5], lookAt: [-1.4, 1.25, 0], cardPosition: [0, 0, 0], cardScale: 1, cardDimming: 0.65 },
+  { cameraPosition: [1.2, 3.8, 4.6], lookAt: [-1.4, 1.12, 0], cardPosition: [0, 0, 0], cardScale: 1, cardDimming: 0 },
+  { cameraPosition: [3, 6.2, 9.2], lookAt: [-1.8, 1.25, 0], cardPosition: [0, 0, 0], cardScale: 1, cardDimming: 0 },
+  { cameraPosition: [0.5, 6, 9.5], lookAt: [-1.4, 1.25, 0], cardPosition: [0, 0, 0], cardScale: 1, cardDimming: 0 },
   { cameraPosition: [0.5, 0.4, 5.5], lookAt: [-1.4, 0.2, 0], cardPosition: [0, 0, 0], cardScale: 1, cardDimming: 0.9 },
 ];
 

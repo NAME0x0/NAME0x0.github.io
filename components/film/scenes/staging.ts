@@ -20,26 +20,32 @@ export function layerPresence(chapter: number, chapterLocal: number, layer: numb
   return chapter === layer ? presence(chapterLocal) : 0;
 }
 
+export const ASSEMBLED_GROUP_TOTAL = 8;
+
+function assemblyIn(chapterLocal: number) {
+  return smoothstepRange(0.15, 0.55, chapterLocal);
+}
+
 export function assembledGroupCount(chapter: number, chapterLocal: number) {
   let count = 0;
 
-  if (chapter > 1) count += 2;
-  else if (chapter === 1) count += smoothstepRange(0.2, 0.55, chapterLocal) * 2;
+  if (chapter > 1) count += 3;
+  else if (chapter === 1) count += assemblyIn(chapterLocal) * 3;
 
   if (chapter > 2) count += 1;
-  else if (chapter === 2) count += smoothstepRange(0.2, 0.55, chapterLocal);
+  else if (chapter === 2) count += assemblyIn(chapterLocal);
 
   if (chapter > 3) count += 1;
-  else if (chapter === 3) count += smoothstepRange(0.2, 0.55, chapterLocal);
+  else if (chapter === 3) count += assemblyIn(chapterLocal);
 
   if (chapter > 4) count += 1;
-  else if (chapter === 4) count += smoothstepRange(0.2, 0.55, chapterLocal);
+  else if (chapter === 4) count += assemblyIn(chapterLocal);
 
   if (chapter > 6) count += 1;
-  else if (chapter === 6) count += smoothstepRange(0.2, 0.55, chapterLocal);
+  else if (chapter === 6) count += assemblyIn(chapterLocal);
 
   if (chapter > 7) count += 1;
-  else if (chapter === 7) count += smoothstepRange(0.2, 0.55, chapterLocal);
+  else if (chapter === 7) count += assemblyIn(chapterLocal);
 
   return count;
 }

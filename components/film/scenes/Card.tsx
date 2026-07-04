@@ -47,22 +47,23 @@ type ObjectRecord = {
 };
 
 type AssemblyRecords = {
-  motherboard: ObjectRecord[];
+  structure: ObjectRecord[];
   ports: ObjectRecord[];
   heatsink: ObjectRecord[];
   fanHolders: ObjectRecord[];
   fans: ObjectRecord[];
-  shroud: ObjectRecord[];
+  covers: ObjectRecord[];
 };
 
 const GROUP_PATTERNS = {
+  body: [/body/i],
   motherboard: [/motherboard/i, /pcb/i],
   backShield: [/back_shield/i, /back.*shield/i],
   ports: [/ports?/i, /io/i],
   heatsink: [/heatsink_front/i, /heatsink/i],
   fanHolders: [/fan_holder/i, /fan_ring/i],
   fans: [/^fan$/i, /^fan_2$/i, /fan_RTX/i, /fan_2_RTX/i],
-  shroud: [/cover/i, /body/i],
+  covers: [/cover/i],
 } as const;
 
 function assemblyForChapter(chapter: number, chapterLocal: number, assembleChapter: number) {
@@ -74,7 +75,7 @@ function assemblyForChapter(chapter: number, chapterLocal: number, assembleChapt
     return 0;
   }
 
-  return smoothstepRange(0.2, 0.55, chapterLocal);
+  return smoothstepRange(0.15, 0.55, chapterLocal);
 }
 
 function collectMaterials(root: Object3D) {
@@ -102,6 +103,7 @@ function collectMaterials(root: Object3D) {
       });
       byMaterial.set(standard, records[records.length - 1]);
       standard.transparent = true;
+      standard.envMapIntensity = Math.max(standard.envMapIntensity ?? 1, 1.35);
     });
   });
 
@@ -148,13 +150,14 @@ function hasMatchedAncestor(object: Object3D, matches: Object3D[]) {
 
 function classify(root: Object3D) {
   const groups: Record<keyof typeof GROUP_PATTERNS, Object3D[]> = {
+    body: [],
     motherboard: [],
     backShield: [],
     ports: [],
     heatsink: [],
     fanHolders: [],
     fans: [],
-    shroud: [],
+    covers: [],
   };
 
   root.traverse((object) => {
@@ -279,12 +282,17 @@ export function Card({ progressRef, cardDimmingRef, onLoaded }: CardProps) {
   const materials = materialData.records;
   const groups = useMemo(() => classify(gltf.scene), [gltf.scene]);
   const assemblyRecords = useMemo<AssemblyRecords>(() => ({
-    motherboard: createRecords([...groups.motherboard, ...groups.backShield], materialData.byMaterial, normalizeScale, 1),
+    structure: createRecords(
+      [...groups.body, ...groups.motherboard, ...groups.backShield],
+      materialData.byMaterial,
+      normalizeScale,
+      1,
+    ),
     ports: createRecords(groups.ports, materialData.byMaterial, normalizeScale, 0.95),
     heatsink: createRecords(groups.heatsink, materialData.byMaterial, normalizeScale, 0.85),
     fanHolders: createRecords(groups.fanHolders, materialData.byMaterial, normalizeScale, 0.9),
     fans: createRecords(groups.fans, materialData.byMaterial, normalizeScale, 1),
-    shroud: createRecords(groups.shroud, materialData.byMaterial, normalizeScale, 1.05),
+    covers: createRecords(groups.covers, materialData.byMaterial, normalizeScale, 1.05),
   }), [groups, materialData.byMaterial, normalizeScale]);
   const clips = useMemo(() => {
     const result: Record<string, AnimationClip | undefined> = {};
@@ -319,25 +327,25 @@ export function Card({ progressRef, cardDimmingRef, onLoaded }: CardProps) {
 
     const { chapter, chapterLocal } = progressRef.current;
     const dimming = cardDimmingRef.current;
-    const motherboard = Math.max(
+    const structure = Math.max(
       assemblyForChapter(chapter, chapterLocal, 1),
-      groups.motherboard.length === 0 && groups.backShield.length === 0 ? 1 : 0,
+      groups.body.length === 0 && groups.motherboard.length === 0 && groups.backShield.length === 0 ? 1 : 0,
     );
     const ports = Math.max(assemblyForChapter(chapter, chapterLocal, 2), groups.ports.length === 0 ? 1 : 0);
     const heatsink = Math.max(assemblyForChapter(chapter, chapterLocal, 3), groups.heatsink.length === 0 ? 1 : 0);
     const fanHolders = Math.max(assemblyForChapter(chapter, chapterLocal, 4), groups.fanHolders.length === 0 ? 1 : 0);
     const fans = Math.max(assemblyForChapter(chapter, chapterLocal, 6), groups.fans.length === 0 ? 1 : 0);
-    const shroud = Math.max(assemblyForChapter(chapter, chapterLocal, 7), groups.shroud.length === 0 ? 1 : 0);
+    const covers = Math.max(assemblyForChapter(chapter, chapterLocal, 7), groups.covers.length === 0 ? 1 : 0);
 
     fadeRef.current += (1 - fadeRef.current) * (1 - Math.pow(0.001, delta));
     root.visible = true;
 
-    applyAssembly(assemblyRecords.motherboard, motherboard);
+    applyAssembly(assemblyRecords.structure, structure);
     applyAssembly(assemblyRecords.ports, ports);
     applyAssembly(assemblyRecords.heatsink, heatsink);
     applyAssembly(assemblyRecords.fanHolders, fanHolders);
     applyAssembly(assemblyRecords.fans, fans);
-    applyAssembly(assemblyRecords.shroud, shroud);
+    applyAssembly(assemblyRecords.covers, covers);
 
     for (let index = 0; index < materials.length; index += 1) {
       const record = materials[index];

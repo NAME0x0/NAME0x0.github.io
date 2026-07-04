@@ -122,62 +122,6 @@ function createCircuitTexture(anisotropy: number) {
   return texture;
 }
 
-function createEngravingTexture(anisotropy: number) {
-  const canvas = document.createElement("canvas");
-  canvas.width = 1024;
-  canvas.height = 1024;
-
-  const ctx = canvas.getContext("2d");
-
-  if (!ctx) {
-    return new CanvasTexture(canvas);
-  }
-
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = "rgba(232, 228, 222, 0.46)";
-  ctx.textAlign = "left";
-  ctx.textBaseline = "middle";
-  ctx.font = "700 58px Arial, sans-serif";
-  ctx.fillText("4 GB", 146, 164);
-
-  const texture = new CanvasTexture(canvas);
-  texture.anisotropy = anisotropy;
-  texture.colorSpace = SRGBColorSpace;
-  texture.magFilter = LinearFilter;
-  texture.minFilter = LinearFilter;
-  texture.wrapS = ClampToEdgeWrapping;
-  texture.wrapT = ClampToEdgeWrapping;
-
-  return texture;
-}
-
-function createSilkscreenTexture(anisotropy: number) {
-  const canvas = document.createElement("canvas");
-  canvas.width = 1024;
-  canvas.height = 128;
-
-  const ctx = canvas.getContext("2d");
-
-  if (!ctx) {
-    return new CanvasTexture(canvas);
-  }
-
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = "rgba(196, 181, 160, 0.2)";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.font = "700 34px Arial, sans-serif";
-  ctx.fillText("NAME0x0", 512, 64);
-
-  const texture = new CanvasTexture(canvas);
-  texture.anisotropy = anisotropy;
-  texture.colorSpace = SRGBColorSpace;
-  texture.magFilter = LinearFilter;
-  texture.minFilter = LinearFilter;
-
-  return texture;
-}
-
 function createGlowTexture() {
   const canvas = document.createElement("canvas");
   canvas.width = 256;
@@ -261,7 +205,6 @@ export function Machine() {
   const substrateMaterialRef = useRef<MeshPhysicalMaterial>(null);
   const dieMaterialRef = useRef<MeshPhysicalMaterial>(null);
   const circuitMaterialRef = useRef<MeshPhysicalMaterial>(null);
-  const engravingMaterialRef = useRef<MeshPhysicalMaterial>(null);
   const padsRef = useRef<InstancedMesh>(null);
   const padsMaterialRef = useRef<MeshPhysicalMaterial>(null);
   const padsReadyRef = useRef(false);
@@ -285,6 +228,7 @@ export function Machine() {
   const camera = useThree((state) => state.camera);
   const viewport = useThree((state) => state.viewport);
   const targetPosition = useMemo(() => new Vector3(), []);
+  const cardTargetPosition = useMemo(() => new Vector3(), []);
   const shadowTargetPosition = useMemo(() => new Vector3(), []);
   const cameraPosition = useMemo(() => new Vector3(), []);
   const cameraTarget = useMemo(() => new Vector3(0, 0, 0), []);
@@ -304,14 +248,6 @@ export function Machine() {
     () => createCircuitTexture(gl.capabilities.getMaxAnisotropy()),
     [gl],
   );
-  const engravingTexture = useMemo(
-    () => createEngravingTexture(gl.capabilities.getMaxAnisotropy()),
-    [gl],
-  );
-  const silkscreenTexture = useMemo(
-    () => createSilkscreenTexture(gl.capabilities.getMaxAnisotropy()),
-    [gl],
-  );
   const glowTexture = useMemo(() => createGlowTexture(), []);
   const labelTextures = useMemo(
     () => BENCHMARKS.map((benchmark) => createLabelTexture(benchmark.label, benchmark.color)),
@@ -325,12 +261,10 @@ export function Machine() {
 
   useEffect(() => () => {
     circuitTexture.dispose();
-    engravingTexture.dispose();
-    silkscreenTexture.dispose();
     glowTexture.dispose();
     labelTextures.forEach((texture) => texture.dispose());
     moteField.geometry.dispose();
-  }, [circuitTexture, engravingTexture, silkscreenTexture, glowTexture, labelTextures, moteField]);
+  }, [circuitTexture, glowTexture, labelTextures, moteField]);
 
   useFrame(({ clock }, delta) => {
     const group = groupRef.current;
@@ -340,7 +274,6 @@ export function Machine() {
     const substrateMaterial = substrateMaterialRef.current;
     const dieMaterial = dieMaterialRef.current;
     const circuitMaterial = circuitMaterialRef.current;
-    const engravingMaterial = engravingMaterialRef.current;
     const pads = padsRef.current;
     const padsMaterial = padsMaterialRef.current;
     const ambientLight = ambientLightRef.current;
@@ -359,7 +292,6 @@ export function Machine() {
       !substrateMaterial ||
       !dieMaterial ||
       !circuitMaterial ||
-      !engravingMaterial ||
       !pads ||
       !padsMaterial ||
       !ambientLight ||
@@ -392,11 +324,21 @@ export function Machine() {
     const track = isNarrow ? narrowRail : wideRail;
 
     sampleRail(track, chapter, local, railSample);
-    cardDimmingRef.current += (railSample.cardDimming - cardDimmingRef.current) * damping;
+    const slide = chapter === 5
+      ? smoothstepRange(0, 0.3, local) * (1 - smoothstepRange(0.7, 1, local))
+      : 0;
+    const dimmingTarget = railSample.cardDimming + slide * 0.75;
+
+    cardDimmingRef.current = dimmingTarget;
 
     targetPosition.copy(activeStage);
     group.position.lerp(targetPosition, damping);
-    cardGroup.position.lerp(railSample.cardPosition, damping);
+    cardTargetPosition.set(
+      railSample.cardPosition.x - slide * 1.4,
+      railSample.cardPosition.y - slide * 1.7,
+      railSample.cardPosition.z + slide * 0.7,
+    );
+    cardGroup.position.lerp(cardTargetPosition, damping);
     cardGroup.scale.setScalar(cardGroup.scale.x + (railSample.cardScale - cardGroup.scale.x) * damping);
     dieGroup.position.y = Math.sin(time * 0.42) * 0.02;
     dieGroup.rotation.x = -0.035 + Math.sin(time * 0.3) * 0.008;
@@ -446,8 +388,6 @@ export function Machine() {
     const circuitIntensity = 0.18 + mindPresence * 0.17 + bootFlash * 0.25;
     circuitMaterial.opacity = 1 - powerDown * 0.75;
     circuitMaterial.emissiveIntensity = circuitIntensity * (1 - powerDown) + 0.02 * powerDown;
-    engravingMaterial.opacity = 0.9 * (1 - powerDown * 0.75);
-    engravingMaterial.emissiveIntensity = Math.max(0.02, 0.08 * lightScale);
 
     shadowTargetPosition.set(group.position.x, -0.18, group.position.z);
     shadow.position.lerp(shadowTargetPosition, damping);
@@ -577,23 +517,6 @@ export function Machine() {
                 clearcoat={0.52}
                 clearcoatRoughness={0.2}
               />
-            </mesh>
-            <mesh position={[0, 0.086, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-              <planeGeometry args={[1.52, 1.52, 1, 1]} />
-              <meshPhysicalMaterial
-                ref={engravingMaterialRef}
-                map={engravingTexture}
-                color="#e8e4de"
-                metalness={0.1}
-                roughness={0.82}
-                transparent
-                opacity={0.72}
-                depthWrite={false}
-              />
-            </mesh>
-            <mesh position={[0, 0.034, 1.18]} rotation={[-Math.PI / 2, 0, 0]}>
-              <planeGeometry args={[1.05, 0.14, 1, 1]} />
-              <meshBasicMaterial map={silkscreenTexture} transparent opacity={0.72} depthWrite={false} />
             </mesh>
             <instancedMesh ref={padsRef} args={[undefined, undefined, PAD_COUNT]}>
               <boxGeometry args={[1, 1, 1]} />
