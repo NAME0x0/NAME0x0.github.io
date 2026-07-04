@@ -9,12 +9,13 @@ import { CouncilScene } from "./scenes/CouncilScene";
 import { ReactorScene } from "./scenes/ReactorScene";
 import { StarsScene } from "./scenes/StarsScene";
 import { TorusScene } from "./scenes/TorusScene";
-import { createGlowTexture, smoothstep } from "./scenes/shared";
+import { createGlowTexture } from "./scenes/shared";
 import type { WidgetSceneData } from "./SceneWidget";
 
 type SceneCanvasProps = {
   scene: WidgetScene;
   active: boolean;
+  entry: number;
   data?: WidgetSceneData;
 };
 
@@ -23,7 +24,7 @@ const FIT_MARGIN = 0.12;
 const SCENE_BOUNDS: Record<WidgetScene, { center: readonly [number, number, number]; radius: number }> = {
   bars: { center: [0, 0.75, 0], radius: 1.95 },
   council: { center: [0, 1.05, 0], radius: 2.1 },
-  torus: { center: [0.05, 1.12, 0], radius: 2.25 },
+  torus: { center: [0.05, 1.1, 0], radius: 2.5 },
   stars: { center: [0, 1.15, 0], radius: 3.15 },
   reactor: { center: [0, 0, 0], radius: 2.25 },
 };
@@ -56,24 +57,13 @@ function CameraSetup({ scene }: { scene: WidgetScene }) {
   return null;
 }
 
-function EntryProgress({ active, entryRef }: { active: boolean; entryRef: MutableRefObject<number> }) {
-  const rawEntryRef = useRef(0);
-
-  useFrame((_, delta) => {
-    if (!active || rawEntryRef.current >= 1) {
-      return;
-    }
-
-    rawEntryRef.current = Math.min(1, rawEntryRef.current + delta / 1.4);
-    entryRef.current = smoothstep(rawEntryRef.current);
-  });
-
-  return null;
-}
-
-function SceneContent({ scene, active, data }: SceneCanvasProps) {
+function SceneContent({ scene, entry, data }: SceneCanvasProps) {
   const entryRef = useRef(0);
   const glowTexture = useMemo(() => createGlowTexture(), []);
+
+  useEffect(() => {
+    entryRef.current = entry;
+  }, [entry]);
 
   useEffect(() => () => {
     glowTexture.dispose();
@@ -82,7 +72,6 @@ function SceneContent({ scene, active, data }: SceneCanvasProps) {
   return (
     <>
       <CameraSetup scene={scene} />
-      <EntryProgress active={active} entryRef={entryRef} />
       {scene === "bars" ? <BarsScene entryRef={entryRef} glowTexture={glowTexture} /> : null}
       {scene === "council" ? <CouncilScene entryRef={entryRef} glowTexture={glowTexture} /> : null}
       {scene === "torus" ? <TorusScene entryRef={entryRef} glowTexture={glowTexture} /> : null}
@@ -92,7 +81,7 @@ function SceneContent({ scene, active, data }: SceneCanvasProps) {
   );
 }
 
-export function SceneCanvas({ scene, active, data }: SceneCanvasProps) {
+export function SceneCanvas({ scene, active, entry, data }: SceneCanvasProps) {
   return (
     <Canvas
       frameloop={active ? "always" : "never"}
@@ -100,7 +89,7 @@ export function SceneCanvas({ scene, active, data }: SceneCanvasProps) {
       camera={{ position: [0, 0.95, 4], fov: CAMERA_FOV, near: 0.1, far: 40 }}
       gl={{ alpha: true, antialias: true, powerPreference: "high-performance" }}
     >
-      <SceneContent scene={scene} active={active} data={data} />
+      <SceneContent scene={scene} active={active} entry={entry} data={data} />
     </Canvas>
   );
 }

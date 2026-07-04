@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Manrope, Space_Grotesk } from "next/font/google";
 import { GeistMono } from "geist/font/mono";
 import { Analytics } from "@vercel/analytics/next";
+import { CursorDot } from "@/components/site/CursorDot";
 import { Footer } from "@/components/site/Footer";
 import { FluidInkMount } from "@/components/site/FluidInkMount";
 import { Header } from "@/components/site/Header";
@@ -129,6 +130,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: websiteJsonLdText }} />
         <KineticWall />
         <FluidInkMount />
+        <CursorDot />
         <ProgressHairline />
         <Header />
         {children}

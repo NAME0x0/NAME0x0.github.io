@@ -23,20 +23,20 @@ const BENCHMARKS = [
 
 function createLabelTexture(text: string, color: string) {
   const canvas = document.createElement("canvas");
-  canvas.width = 512;
-  canvas.height = 128;
+  canvas.width = 1024;
+  canvas.height = 192;
 
   const ctx = canvas.getContext("2d");
 
   if (ctx) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.font = "700 54px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
+    ctx.font = "700 92px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.shadowColor = "rgba(0, 0, 0, 0.85)";
-    ctx.shadowBlur = 18;
+    ctx.shadowBlur = 20;
     ctx.fillStyle = color;
-    ctx.fillText(text, 256, 64);
+    ctx.fillText(text, 512, 96);
   }
 
   const texture = new CanvasTexture(canvas);
@@ -93,8 +93,8 @@ export function BarsScene({ entryRef, glowTexture }: WidgetSceneProps) {
       }
 
       if (label) {
-        label.position.y = -0.56 + height + index * 0.16;
-        (label.material as SpriteMaterial).opacity = 0.86 * grow;
+        label.position.y = -0.5 + height + index * 0.28;
+        (label.material as SpriteMaterial).opacity = grow;
       }
     }
   });
@@ -114,7 +114,7 @@ export function BarsScene({ entryRef, glowTexture }: WidgetSceneProps) {
           <sprite ref={(node) => { basesRef.current[index] = node; }} position={[0, -0.9, 0]} scale={[0.74, 0.74, 1]}>
             <spriteMaterial map={glowTexture} color={benchmark.color} transparent opacity={0} blending={AdditiveBlending} depthWrite={false} />
           </sprite>
-          <sprite ref={(node) => { labelsRef.current[index] = node; }} position={[0.08 + index * 0.08, -0.56, 0]} scale={[0.64, 0.16, 1]}>
+          <sprite ref={(node) => { labelsRef.current[index] = node; }} position={[0.08 + index * 0.08, -0.56, 0]} scale={[1.28, 0.24, 1]}>
             <spriteMaterial map={labelTextures[index]} transparent opacity={0} depthWrite={false} />
           </sprite>
         </group>

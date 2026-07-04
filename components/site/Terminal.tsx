@@ -19,6 +19,8 @@ type Tone = "normal" | "dim" | "signal" | "error" | "bone";
 type TerminalLine = {
   text: string;
   tone?: Tone;
+  href?: string;
+  hrefLabel?: string;
 };
 
 type OutputBlock = {
@@ -34,6 +36,7 @@ const hints = [
   "try: help",
   "try: ls",
   "try: neofetch",
+  "try: vram",
   "try: sudo make me a sandwich",
 ];
 
@@ -43,10 +46,13 @@ const helpLines: TerminalLine[] = [
   { text: "ls                   list project slugs, tier 1 first" },
   { text: "cat <slug>           show project name, status, tagline, and repo" },
   { text: "open <slug>          tier 1 opens /work/<slug>; tier 2 opens the repo" },
+  { text: "sudo hire-me         escalate to the CV" },
+  { text: "vram                 print a 4 GB pressure gauge" },
+  { text: "matrix               run an eight-second mono rain" },
   { text: "sudo <anything>      try the obvious mistake" },
   { text: "rm -rf /             request catastrophic restraint" },
   { text: "rm -rf /*            same refusal, different slash" },
-  { text: "trackmania           print the current obsession" },
+  { text: "trackmania           run the racing line" },
   { text: "clear                clear scrollback" },
   { text: "exit                 blur the prompt" },
   { text: "neofetch             print machine trivia" },
@@ -94,16 +100,67 @@ function findArcChallengeMetric(metrics: ProjectMetric[]) {
   return metrics.find((metric) => metric.verified && metric.label === "ARC-Challenge");
 }
 
+function renderLinkedText(line: TerminalLine) {
+  const label = line.hrefLabel ?? line.href;
+
+  if (!line.href || !label || !line.text.includes(label)) {
+    return line.text;
+  }
+
+  const [before, after] = line.text.split(label);
+
+  return (
+    <>
+      {before}
+      <a href={line.href} className="underline decoration-bone/40 underline-offset-4 hover:text-bone">
+        {label}
+      </a>
+      {after}
+    </>
+  );
+}
+
+function vramMeter(frame: number) {
+  const progress = Math.min(1, frame / 15);
+  const used = 0.31 * progress;
+  const filled = Math.round(progress * 4);
+
+  return `[${"#".repeat(filled)}${"-".repeat(16 - filled)}] ${used.toFixed(2)} / 4.00 GB`;
+}
+
+function rainLine(frame: number) {
+  const glyphs = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ#$+-";
+
+  return Array.from({ length: 52 }, (_, index) => glyphs[(frame * 17 + index * 11) % glyphs.length]).join("");
+}
+
+function trackFrame(frame: number) {
+  const width = 28;
+  const position = Math.min(width - 1, Math.round((frame / 18) * (width - 1)));
+  const line = `${" ".repeat(position)}> ${".".repeat(Math.max(width - position - 2, 0))}`;
+
+  return [
+    "/==============================\\",
+    `|${line.padEnd(width, " ")}|`,
+    "\\_____ apex ____ exit _________/",
+  ];
+}
+
 export function Terminal({ identity, projects }: TerminalProps) {
   const inputId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const nextIdRef = useRef(0);
+  const animationTimersRef = useRef<number[]>([]);
+  const reducedMotionRef = useRef(false);
+  const idleHintPlayedRef = useRef(false);
+  const hasInteractedRef = useRef(false);
   const [blocks, setBlocks] = useState<OutputBlock[]>([]);
   const [value, setValue] = useState("");
   const [history, setHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState<number | null>(null);
   const [hasTyped, setHasTyped] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false);
   const [hintIndex, setHintIndex] = useState(0);
   const sortedProjects = useMemo(
     () => [...projects].sort((left, right) => left.tier - right.tier),
@@ -124,8 +181,72 @@ export function Terminal({ identity, projects }: TerminalProps) {
     nextIdRef.current += 1;
   };
 
+  const schedule = (callback: () => void, delay: number) => {
+    const timer = window.setTimeout(callback, delay);
+
+    animationTimersRef.current.push(timer);
+  };
+
   const blurInput = () => {
     inputRef.current?.blur();
+  };
+
+  const markInteraction = () => {
+    hasInteractedRef.current = true;
+
+    if (!hasInteracted) {
+      setHasInteracted(true);
+    }
+  };
+
+  const runVram = (command: string) => {
+    pushBlock({ command, lines: [{ text: vramMeter(0), tone: "signal" }] });
+
+    for (let frame = 1; frame <= 15; frame += 1) {
+      schedule(() => {
+        pushBlock({
+          lines: [
+            { text: vramMeter(frame), tone: "signal" },
+            ...(frame === 15 ? [{ text: "this site knows the feeling.", tone: "dim" as Tone }] : []),
+          ],
+        });
+      }, frame * 100);
+    }
+  };
+
+  const runMatrix = (command: string) => {
+    if (reducedMotionRef.current) {
+      pushBlock({ command, lines: [{ text: "no rain today.", tone: "dim" }] });
+      return;
+    }
+
+    pushBlock({ command, lines: [{ text: "stream opened.", tone: "signal" }] });
+
+    for (let frame = 1; frame <= 16; frame += 1) {
+      schedule(() => {
+        pushBlock({
+          lines: [
+            { text: rainLine(frame), tone: "signal" },
+            ...(frame === 16 ? [{ text: "wake up, recruiter.", tone: "bone" as Tone }] : []),
+          ],
+        });
+      }, frame * 500);
+    }
+  };
+
+  const runTrackmania = (command: string) => {
+    pushBlock({ command, lines: trackFrame(0).map((text) => ({ text, tone: "bone" as Tone })) });
+
+    for (let frame = 1; frame <= 18; frame += 1) {
+      schedule(() => {
+        pushBlock({
+          lines: [
+            ...trackFrame(frame).map((text) => ({ text, tone: "bone" as Tone })),
+            ...(frame === 18 ? [{ text: "improvement has no finish line.", tone: "signal" as Tone }] : []),
+          ],
+        });
+      }, frame * 166);
+    }
   };
 
   const runCommand = (rawCommand: string) => {
@@ -141,11 +262,34 @@ export function Terminal({ identity, projects }: TerminalProps) {
       return;
     }
 
+    if (lower === "vram") {
+      runVram(command);
+      return;
+    }
+
+    if (lower === "matrix") {
+      runMatrix(command);
+      return;
+    }
+
+    if (lower === "trackmania") {
+      runTrackmania(command);
+      return;
+    }
+
     const [name = "", ...args] = command.split(/\s+/);
     const slug = args[0]?.toLowerCase();
     let lines: TerminalLine[];
 
-    if (lower === "rm -rf /" || lower === "rm -rf /*") {
+    if (lower === "sudo hire-me") {
+      lines = [
+        {
+          text: "escalating privileges... granted. CV: /cv/muhammad-afsah-cv.pdf — references available, refusals recorded on-chain.",
+          href: "/cv/muhammad-afsah-cv.pdf",
+          hrefLabel: "/cv/muhammad-afsah-cv.pdf",
+        },
+      ];
+    } else if (lower === "rm -rf /" || lower === "rm -rf /*") {
       lines = [{ text: "refused. restraint is recorded on-chain around here." }];
     } else if (lower.startsWith("sudo ")) {
       lines = [{ text: "nice try. this machine has exactly one operator." }];
@@ -200,13 +344,6 @@ export function Terminal({ identity, projects }: TerminalProps) {
           }
           break;
         }
-        case "trackmania":
-          lines = [
-            {
-              text: "current obsession: the endless pursuit of a cleaner racing line. improvement has no finish line.",
-            },
-          ];
-          break;
         case "exit":
           lines = [{ text: "there is no exit. scroll on." }];
           window.setTimeout(blurInput, 0);
@@ -232,6 +369,7 @@ export function Terminal({ identity, projects }: TerminalProps) {
     const command = value;
 
     if (command.trim()) {
+      markInteraction();
       setHistory((current) => [...current, command.trim()]);
     }
 
@@ -244,6 +382,8 @@ export function Terminal({ identity, projects }: TerminalProps) {
     if (!hasTyped) {
       setHasTyped(true);
     }
+
+    markInteraction();
 
     if (event.key === "Enter") {
       event.preventDefault();
@@ -285,6 +425,65 @@ export function Terminal({ identity, projects }: TerminalProps) {
       });
     }
   };
+
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => {
+      reducedMotionRef.current = media.matches;
+    };
+
+    update();
+    media.addEventListener("change", update);
+
+    return () => {
+      media.removeEventListener("change", update);
+    };
+  }, []);
+
+  useEffect(() => () => {
+    animationTimersRef.current.forEach((timer) => window.clearTimeout(timer));
+  }, []);
+
+  useEffect(() => {
+    if (hasInteractedRef.current || idleHintPlayedRef.current || reducedMotionRef.current) {
+      return undefined;
+    }
+
+    const startTimer = window.setTimeout(() => {
+      if (hasInteractedRef.current || idleHintPlayedRef.current || reducedMotionRef.current) {
+        return;
+      }
+
+      idleHintPlayedRef.current = true;
+      const hint = "help";
+
+      for (let index = 1; index <= hint.length; index += 1) {
+        schedule(() => {
+          if (!hasInteractedRef.current) {
+            setValue(hint.slice(0, index));
+          }
+        }, index * 150);
+      }
+
+      schedule(() => {
+        if (!hasInteractedRef.current) {
+          setValue(hint);
+        }
+      }, 2600);
+
+      for (let index = hint.length - 1; index >= 0; index -= 1) {
+        schedule(() => {
+          if (!hasInteractedRef.current) {
+            setValue(hint.slice(0, index));
+          }
+        }, 2700 + (hint.length - index) * 90);
+      }
+    }, 25000);
+
+    return () => {
+      window.clearTimeout(startTimer);
+    };
+  }, [hasInteracted]);
 
   useEffect(() => {
     if (hasTyped) {
@@ -329,7 +528,10 @@ export function Terminal({ identity, projects }: TerminalProps) {
       role="region"
       aria-label="Interactive terminal"
       className="mt-8 h-[22rem] overflow-hidden border border-faint bg-void/85 font-mono text-sm text-ink focus-within:outline focus-within:outline-2 focus-within:outline-offset-4 focus-within:outline-bone"
-      onClick={() => inputRef.current?.focus()}
+      onClick={() => {
+        markInteraction();
+        inputRef.current?.focus();
+      }}
     >
       <div className="flex items-baseline justify-between border-b border-faint px-4 py-3">
         <p className="text-xs uppercase tracking-[0.18em] text-bone">{"// TERMINAL"}</p>
@@ -347,7 +549,7 @@ export function Terminal({ identity, projects }: TerminalProps) {
               ) : null}
               {block.lines.map((line, index) => (
                 <p key={`${block.id}-${index}`} className={toneClass(line.tone)}>
-                  {line.text}
+                  {renderLinkedText(line)}
                 </p>
               ))}
             </div>
@@ -361,7 +563,10 @@ export function Terminal({ identity, projects }: TerminalProps) {
               ref={inputRef}
               id={inputId}
               value={value}
-              onChange={(event) => setValue(event.target.value)}
+              onChange={(event) => {
+                markInteraction();
+                setValue(event.target.value);
+              }}
               onKeyDown={onKeyDown}
               placeholder={hasTyped ? "" : hints[hintIndex]}
               className="min-w-0 flex-1 bg-transparent px-1 text-ink placeholder:text-dim focus:outline-none"

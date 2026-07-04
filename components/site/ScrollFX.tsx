@@ -7,6 +7,16 @@ import { SplitText } from "gsap/SplitText";
 
 let registered = false;
 
+const sectionIntertitles: Record<string, string> = {
+  metal: "02 — METAL",
+  voice: "03 — VOICE",
+  mind: "04 — PROOF",
+  council: "05 — COUNCIL",
+  blueprint: "06 — BLUEPRINT",
+  light: "07 — LIGHT",
+  human: "08 — HUMAN",
+};
+
 function parseLeadingNumber(value: string) {
   const match = value.match(/^~?\d[\d,]*\.?\d*/);
 
@@ -42,7 +52,99 @@ export function ScrollFX() {
 
     mm.add("(prefers-reduced-motion: no-preference)", () => {
       const splits = new Set<SplitText>();
+      const createdElements: HTMLElement[] = [];
+      const skeletonObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) {
+              return;
+            }
+
+            const section = entry.target as HTMLElement;
+            const container = section.querySelector<HTMLElement>(":scope > div");
+
+            skeletonObserver.unobserve(section);
+
+            if (!container) {
+              return;
+            }
+
+            const overlay = document.createElement("div");
+            const isPaper = section.id === "human";
+
+            overlay.setAttribute("aria-hidden", "true");
+            overlay.textContent = "▒ ".repeat(420);
+            Object.assign(overlay.style, {
+              position: "absolute",
+              inset: "0",
+              zIndex: "60",
+              overflow: "hidden",
+              pointerEvents: "none",
+              color: isPaper ? "rgba(28, 26, 23, 0.1)" : "rgba(196, 181, 160, 0.18)",
+              background: isPaper
+                ? "linear-gradient(105deg, rgba(28, 26, 23, 0), rgba(28, 26, 23, 0.08), rgba(28, 26, 23, 0))"
+                : "linear-gradient(105deg, rgba(196, 181, 160, 0), rgba(196, 181, 160, 0.14), rgba(196, 181, 160, 0))",
+              backgroundSize: "220% 100%",
+              fontFamily: "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace",
+              fontSize: "13px",
+              letterSpacing: "0.18em",
+              lineHeight: "1.6",
+              opacity: "0",
+            });
+            container.appendChild(overlay);
+            createdElements.push(overlay);
+            gsap.timeline({
+              onComplete: () => {
+                overlay.remove();
+              },
+            })
+              .to(overlay, { opacity: 1, backgroundPosition: "100% 0", duration: 0.08, ease: "power1.out" })
+              .to(overlay, { opacity: 0, duration: 0.14, ease: "power1.out" });
+          });
+        },
+        { rootMargin: "0px 0px 45% 0px", threshold: 0 },
+      );
       const ctx = gsap.context(() => {
+        document.querySelectorAll<HTMLElement>("main#main > section[id]").forEach((section) => {
+          if (section.id !== "ignition") {
+            skeletonObserver.observe(section);
+          }
+
+          const label = sectionIntertitles[section.id];
+
+          if (!label) {
+            return;
+          }
+
+          const intertitle = document.createElement("div");
+          const isPaper = section.id === "human";
+
+          intertitle.setAttribute("aria-hidden", "true");
+          intertitle.textContent = label;
+          Object.assign(intertitle.style, {
+            position: "absolute",
+            top: "clamp(2rem, 8vw, 6rem)",
+            left: "6vw",
+            zIndex: "2",
+            pointerEvents: "none",
+            whiteSpace: "nowrap",
+            color: isPaper ? "rgba(28, 26, 23, 0.14)" : "rgba(232, 228, 222, 0.12)",
+            fontFamily: "var(--font-space-grotesk), system-ui, sans-serif",
+            fontSize: "clamp(3rem, 11vw, 9.5rem)",
+            fontWeight: "700",
+            lineHeight: "0.82",
+            opacity: "0",
+          });
+          section.appendChild(intertitle);
+          createdElements.push(intertitle);
+          gsap.timeline({
+            scrollTrigger: { trigger: section, start: "top 70%", once: true },
+          })
+            .fromTo(intertitle, { x: "6vw", opacity: 0 }, { x: "0vw", opacity: 1, duration: 0.55, ease: "power3.out" })
+            .to(intertitle, { opacity: 1, duration: 0.6 })
+            .to(intertitle, { opacity: 0, duration: 0.4, ease: "power2.out" });
+        });
+
         document.querySelectorAll<HTMLElement>("[data-reveal='lines']").forEach((element) => {
           const split = new SplitText(element, {
             type: "lines",
@@ -182,7 +284,9 @@ export function ScrollFX() {
       return () => {
         window.removeEventListener("resize", refresh);
         observer.disconnect();
+        skeletonObserver.disconnect();
         splits.forEach((split) => split.revert());
+        createdElements.forEach((element) => element.remove());
         ctx.revert();
       };
     });
