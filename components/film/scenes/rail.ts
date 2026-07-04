@@ -25,8 +25,8 @@ export const wideRail: RailTrack = [
   { cameraPosition: [0.5, 1, 4.8], lookAt: [-1.4, 0.15, 0], cardPosition: [0, 0, 0], cardScale: 1, cardDimming: 0 },
   { cameraPosition: [3.2, 2, 3.8], lookAt: [-1.4, 0.55, 0], cardPosition: [0, 0, 0], cardScale: 1, cardDimming: 0 },
   { cameraPosition: [1.2, 3.8, 4.6], lookAt: [-1.4, 1.12, 0], cardPosition: [0, 0, 0], cardScale: 1, cardDimming: 0 },
-  { cameraPosition: [3, 6.2, 9.2], lookAt: [-1.8, 1.25, 0], cardPosition: [0, 0, 0], cardScale: 1, cardDimming: 0 },
-  { cameraPosition: [0.5, 6, 9.5], lookAt: [-1.4, 1.25, 0], cardPosition: [0, 0, 0], cardScale: 1, cardDimming: 0 },
+  { cameraPosition: [2.6, 6.6, 8.8], lookAt: [-1.6, 0.9, 0], cardPosition: [0, 0, 0], cardScale: 1, cardDimming: 0 },
+  { cameraPosition: [2.2, 7.2, 9.8], lookAt: [-1.4, 1, 0.1], cardPosition: [0, 0, 0], cardScale: 1, cardDimming: 0 },
   { cameraPosition: [0.5, 0.4, 5.5], lookAt: [-1.4, 0.2, 0], cardPosition: [0, 0, 0], cardScale: 1, cardDimming: 0.9 },
 ];
 

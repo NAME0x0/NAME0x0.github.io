@@ -31,6 +31,7 @@ import { filmProgressStore, useFilmProgress } from "@/lib/film/progress";
 import { FilmErrorBoundary } from "../FilmErrorBoundary";
 import { Card } from "./Card";
 import { Council } from "./Council";
+import { Cosmos } from "./Cosmos";
 import { Torus } from "./Torus";
 import { sampleRail, narrowRail, wideRail, type RailSample } from "./rail";
 import { layerPresence, smoothstep, smoothstepRange } from "./staging";
@@ -39,6 +40,7 @@ const SIGNAL = "#E3B341";
 const DIM = "#8A8578";
 const EMBER = "#D08C5A";
 const BONE = "#C4B5A0";
+const INK = "#E8E4DE";
 const MOTE_COUNT = 320;
 const PAD_COUNT = 48;
 
@@ -311,6 +313,11 @@ export function Machine() {
     const chapter0 = chapter === 0 ? smoothstep(local) : chapter > 0 ? 1 : 0;
     const mindPresence = layerPresence(chapter, local, 3);
     const councilPresence = layerPresence(chapter, local, 4);
+    const lightPresence = chapter === 6
+      ? smoothstepRange(0, 0.5, local)
+      : chapter === 7
+        ? 1 - smoothstepRange(0, 0.3, local)
+        : 0;
     const activeColumns = mindPresence;
     const powerDown = chapter === 7 ? smoothstep(local / 0.5) : 0;
     const lightScale = 1 - powerDown * 0.85;
@@ -439,11 +446,11 @@ export function Machine() {
       }
     }
 
-    const motePresence = Math.max(mindPresence, councilPresence);
+    const motePresence = Math.max(mindPresence, councilPresence, lightPresence);
     const positionAttribute = moteField.geometry.getAttribute("position") as BufferAttribute;
     const positions = moteField.positions;
     const seeds = moteField.seeds;
-    const moteColor = mindPresence >= councilPresence ? SIGNAL : BONE;
+    const moteColor = lightPresence > Math.max(mindPresence, councilPresence) ? INK : mindPresence >= councilPresence ? SIGNAL : BONE;
 
     for (let index = 0; index < MOTE_COUNT; index += 1) {
       const positionIndex = index * 3;
@@ -593,6 +600,7 @@ export function Machine() {
         ))}
         <Council progressRef={progressRef} glowTexture={glowTexture} />
         <Torus progressRef={progressRef} glowTexture={glowTexture} />
+        <Cosmos progressRef={progressRef} glowTexture={glowTexture} />
       </group>
       <group ref={shadowRef} position={[2.5, -0.18, 0]}>
         <ContactShadows

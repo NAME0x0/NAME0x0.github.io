@@ -171,7 +171,9 @@ export function Torus({ progressRef, glowTexture }: TorusProps) {
 
     const { chapter, chapterLocal } = progressRef.current;
     const torusPresence = layerPresence(chapter, chapterLocal, 5);
-    const chapter6Fade = chapter === 6 ? 1 - smoothstepRange(0.18, 1, chapterLocal) : 0;
+    const chapter6Presence = layerPresence(chapter, chapterLocal, 6);
+    const chapter6Exit = chapter === 6 ? smoothstepRange(0, 0.3, chapter6Presence) : 0;
+    const chapter6Fade = chapter === 6 ? 1 - chapter6Exit : 0;
     const visible = torusPresence > 0.001 || chapter6Fade > 0.001;
 
     group.visible = visible;
@@ -183,7 +185,7 @@ export function Torus({ progressRef, glowTexture }: TorusProps) {
     const time = clock.elapsedTime;
     const entry = chapter === 5 ? torusPresence : 1;
     const routePresence = chapter === 5 ? torusPresence : 0;
-    const exit = chapter === 6 ? smoothstepRange(0.18, 1, chapterLocal) : 0;
+    const exit = chapter6Exit;
     const opacity = chapter === 6 ? chapter6Fade : torusPresence;
     const routeStep = Math.floor(time / 1.2) % routePath.length;
     const nextStep = (routeStep + 1) % routePath.length;
@@ -191,7 +193,7 @@ export function Torus({ progressRef, glowTexture }: TorusProps) {
     const activeNode = routePath[routeStep];
     const nextNode = routePath[nextStep];
 
-    group.scale.setScalar(1 + exit * 0.4);
+    group.scale.setScalar(1 + exit * 0.15);
     group.rotation.y = time * 0.08;
     wireMaterial.opacity = 0.18 * opacity;
     (nodes.material as MeshBasicMaterial).opacity = 0.88 * opacity;
