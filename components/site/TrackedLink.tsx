@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import type { AnchorHTMLAttributes, MouseEvent, ReactNode } from "react";
 import { trackAnalyticsEvent, type AnalyticsEvent } from "@/lib/analytics";
+import { TransitionLink } from "./TransitionLink";
 
 type TrackedLinkProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {
   href: string;
@@ -50,8 +50,8 @@ export function TrackedLink({
   }
 
   return (
-    <Link href={href} className={className} onClick={handleClick} {...props}>
+    <TransitionLink href={href} className={className} onClick={handleClick} {...props}>
       {children}
-    </Link>
+    </TransitionLink>
   );
 }

@@ -1,5 +1,6 @@
-import Link from "next/link";
 import { identity } from "@/content/identity";
+import { Scramble } from "@/components/site/Scramble";
+import { TransitionLink } from "@/components/site/TransitionLink";
 import { TrackedLink } from "@/components/site/TrackedLink";
 
 const navItems = [
@@ -24,22 +25,22 @@ export function Header() {
           aria-label="Primary"
           className="mx-auto flex max-w-6xl flex-col gap-5 sm:flex-row sm:items-center sm:justify-between"
         >
-          <Link
+          <TransitionLink
             href="/"
             className="font-display text-base font-bold text-ink transition-colors hover:text-bone focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bone"
           >
             {identity.lockup}
-          </Link>
+          </TransitionLink>
           <div className="flex flex-wrap gap-x-5 gap-y-3">
             {navItems.map((item) => (
               "event" in item ? (
                 <TrackedLink key={item.href} href={item.href} event={item.event} className={linkClass}>
-                  {item.label}
+                  <Scramble>{item.label}</Scramble>
                 </TrackedLink>
               ) : (
-                <Link key={item.href} href={item.href} className={linkClass}>
-                  {item.label}
-                </Link>
+                <TransitionLink key={item.href} href={item.href} className={linkClass}>
+                  <Scramble>{item.label}</Scramble>
+                </TransitionLink>
               )
             ))}
             <TrackedLink
@@ -48,7 +49,7 @@ export function Header() {
               className={linkClass}
               external
             >
-              GitHub
+              <Scramble>GitHub</Scramble>
             </TrackedLink>
           </div>
         </nav>

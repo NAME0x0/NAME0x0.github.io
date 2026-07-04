@@ -98,6 +98,63 @@ html:has(body[data-konami="on"]) {
   filter: invert(1) hue-rotate(180deg);
 }
 
+.spotlight-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  padding: 1px;
+  background: radial-gradient(
+    220px at var(--spot-x, 50%) var(--spot-y, 50%),
+    rgba(196, 181, 160, 0.16),
+    transparent 70%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+.marquee-band {
+  overflow: hidden;
+}
+
+.marquee-track {
+  animation: marquee-scroll 55s linear infinite;
+}
+
+@keyframes marquee-scroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes vt-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes vt-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+::view-transition-old(root) {
+  animation: vt-out 160ms ease both;
+}
+
+::view-transition-new(root) {
+  animation: vt-in 220ms ease both;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   html {
     transition: filter 300ms ease;
@@ -173,6 +230,12 @@ button,
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .marquee-track,
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
+  }
+
   *,
   *::before,
   *::after {

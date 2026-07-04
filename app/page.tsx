@@ -3,7 +3,10 @@ import { identity } from "@/content/identity";
 import { projects } from "@/content/projects";
 import { ChapterTracker } from "@/components/site/ChapterTracker";
 import { EmailLink } from "@/components/site/EmailLink";
+import { ChapterRail } from "@/components/site/ChapterRail";
 import { Konami } from "@/components/site/Konami";
+import { Magnetic } from "@/components/site/Magnetic";
+import { Marquee } from "@/components/site/Marquee";
 import { MetricsTable } from "@/components/site/MetricsTable";
 import { ScrollFXMount } from "@/components/site/ScrollFXMount";
 import { StatusBadge } from "@/components/site/StatusBadge";
@@ -96,6 +99,7 @@ export default function HomePage() {
   return (
     <main id="main">
       <ChapterTracker />
+      <ChapterRail />
       <Konami />
       <ScrollFXMount />
       <section id="ignition" className="px-6 py-section-y">
@@ -108,16 +112,20 @@ export default function HomePage() {
               {identity.location} · {identity.visa}
             </p>
             <div className="flex flex-wrap gap-4">
-              <TrackedLink
-                href="/work/ava"
-                event={{ name: "case_study_opened", properties: { slug: "ava" } }}
-                className="border border-bone px-5 py-3 font-mono text-xs uppercase tracking-[0.14em] text-bone transition-colors hover:bg-bone hover:text-void focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bone"
-              >
-                See the proof
-              </TrackedLink>
-              <EmailLink className="border border-faint px-5 py-3 font-mono text-xs uppercase tracking-[0.14em] text-ink transition-colors hover:border-bone hover:text-bone focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bone">
-                Start a conversation
-              </EmailLink>
+              <Magnetic>
+                <TrackedLink
+                  href="/work/ava"
+                  event={{ name: "case_study_opened", properties: { slug: "ava" } }}
+                  className="block border border-bone px-5 py-3 font-mono text-xs uppercase tracking-[0.14em] text-bone transition-colors hover:bg-bone hover:text-void focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bone"
+                >
+                  See the proof
+                </TrackedLink>
+              </Magnetic>
+              <Magnetic>
+                <EmailLink className="block border border-faint px-5 py-3 font-mono text-xs uppercase tracking-[0.14em] text-ink transition-colors hover:border-bone hover:text-bone focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bone">
+                  Start a conversation
+                </EmailLink>
+              </Magnetic>
             </div>
           </div>
         </div>
@@ -280,6 +288,8 @@ export default function HomePage() {
           ) : null}
         </div>
       </section>
+
+      <Marquee />
 
       <section id="human" className="bg-paper px-6 py-section-y text-soot">
         <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[1fr_1fr]">

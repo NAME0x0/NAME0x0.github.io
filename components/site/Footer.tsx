@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { identity } from "@/content/identity";
 import { EmailLink } from "@/components/site/EmailLink";
+import { LastCommit } from "@/components/site/LastCommit";
+import { Scramble } from "@/components/site/Scramble";
 import { TrackedLink } from "@/components/site/TrackedLink";
 
 const socialLinks = [
@@ -25,6 +27,7 @@ export function Footer() {
           <p>
             {identity.location} · {identity.visa}
           </p>
+          <LastCommit />
         </div>
         <div className="flex flex-wrap gap-x-5 gap-y-3 font-mono text-xs uppercase tracking-[0.12em]">
           {socialLinks.map((link) => (
@@ -36,11 +39,11 @@ export function Footer() {
                 className={focusClass}
                 external
               >
-                {link.label}
+                <Scramble>{link.label}</Scramble>
               </TrackedLink>
             ) : (
               <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer" className={focusClass}>
-                {link.label}
+                <Scramble>{link.label}</Scramble>
               </a>
             )
           ))}

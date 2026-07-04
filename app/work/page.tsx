@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import type { CSSProperties } from "react";
+import { SpotlightCard } from "@/components/site/SpotlightCard";
 import { StatusBadge } from "@/components/site/StatusBadge";
 import { TrackedLink } from "@/components/site/TrackedLink";
 import { tierOneProjects, tierTwoProjects } from "@/lib/content/projects";
@@ -21,10 +23,15 @@ export default function WorkPage() {
 
         <section className="grid auto-rows-fr gap-6 lg:grid-cols-2">
           {tierOneProjects.map((project) => (
-            <article key={project.slug} className="flex min-h-full flex-col justify-between border border-faint p-6">
+            <SpotlightCard key={project.slug} className="flex min-h-full flex-col justify-between p-6">
               <div className="space-y-5">
                 <div className="flex flex-wrap items-center gap-3">
-                  <h2 className="font-display text-2xl font-bold text-ink">{project.name}</h2>
+                  <h2
+                    className="font-display text-2xl font-bold text-ink"
+                    style={{ viewTransitionName: `cs-${project.slug}` } as CSSProperties}
+                  >
+                    {project.name}
+                  </h2>
                   <StatusBadge status={project.status} />
                 </div>
                 <p className="line-clamp-2 text-bone">{project.tagline}</p>
@@ -46,7 +53,7 @@ export default function WorkPage() {
               >
                 /work/{project.slug}
               </TrackedLink>
-            </article>
+            </SpotlightCard>
           ))}
         </section>
 

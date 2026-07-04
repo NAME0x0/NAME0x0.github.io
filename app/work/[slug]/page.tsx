@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import type { CSSProperties } from "react";
 import { notFound } from "next/navigation";
 import { MetricsTable } from "@/components/site/MetricsTable";
 import { ScrollFXMount } from "@/components/site/ScrollFXMount";
 import { StatusBadge } from "@/components/site/StatusBadge";
+import { TransitionLink } from "@/components/site/TransitionLink";
 import { TrackedLink } from "@/components/site/TrackedLink";
 import { SceneWidget, type WidgetScene } from "@/components/widgets/SceneWidget";
 import { getTierOneProjectBySlug, tierOneProjects } from "@/lib/content/projects";
@@ -68,12 +70,22 @@ export default function WorkDetailPage({ params }: WorkDetailPageProps) {
       <ScrollFXMount />
       <article className="mx-auto max-w-6xl space-y-12">
         <header className="max-w-[68ch] space-y-5">
+          <TransitionLink href="/work" className={linkClass}>
+            {"<- /work"}
+          </TransitionLink>
           <div data-reveal="overline" data-parallax="soft">
             <p className="font-mono text-xs uppercase tracking-[0.18em] text-dim">{"// WORK"}</p>
             <span data-reveal-rule className="mt-3 block h-px w-24 origin-left bg-faint" aria-hidden="true" />
           </div>
           <div className="flex flex-wrap items-center gap-3">
-            <h1 data-reveal="lines" data-hero-lockup className="font-display text-4xl font-bold text-ink">{project.name}</h1>
+            <h1
+              data-reveal="lines"
+              data-hero-lockup
+              className="font-display text-4xl font-bold text-ink"
+              style={{ viewTransitionName: `cs-${project.slug}` } as CSSProperties}
+            >
+              {project.name}
+            </h1>
             <StatusBadge status={project.status} />
           </div>
           {project.slug === "omni" ? <ResearchLabel slug={project.slug} /> : null}

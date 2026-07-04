@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { Footer } from "@/components/site/Footer";
 import { Header } from "@/components/site/Header";
 import { KineticWall } from "@/components/site/KineticWall";
+import { ProgressHairline } from "@/components/site/ProgressHairline";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -126,6 +127,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: personJsonLdText }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: websiteJsonLdText }} />
         <KineticWall />
+        <ProgressHairline />
         <Header />
         {children}
         <Footer />
