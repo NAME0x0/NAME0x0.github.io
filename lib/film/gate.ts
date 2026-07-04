@@ -1,61 +1,22 @@
-import type { ModelEntry } from "detect-gpu";
-
 type NavigatorWithConnection = Navigator & {
   connection?: {
     saveData?: boolean;
   };
 };
 
-function supportsWebGL2() {
-  const canvas = document.createElement("canvas");
-  const gl = canvas.getContext("webgl2", {
-    antialias: true,
-    powerPreference: "high-performance",
-  });
+// Software/reference rasterizers that would render the scenes at slideshow
+// speed. Everything else with a real WebGL2 context is allowed: the widget
+// scenes are a few hundred additively-blended points on small canvases —
+// well within reach of any hardware GPU, mobile included.
+//
+// (A previous version scored GPUs against a local detect-gpu benchmark table
+// of consumer model names. Workstation parts like the owner's RTX A2000
+// matched nothing, scored tier 1, and were silently refused — a false
+// negative on exactly the hardware this site celebrates. Default-allow with
+// a software-renderer blocklist cannot fail that way.)
+const SOFTWARE_RENDERER = /swiftshader|llvmpipe|software rasterizer|microsoft basic render/i;
 
-  if (!gl) {
-    return false;
-  }
-
-  gl.getExtension("WEBGL_lose_context")?.loseContext();
-  return true;
-}
-
-function getLocalBenchmarkRows(file: string): ModelEntry[] {
-  const isMobile = file.startsWith("m-");
-  const fps = isMobile ? 64 : 72;
-  const family = file.replace(/^(d|m)-/, "").replace("-ipad", "").replace(".json", "");
-  const versionsByFamily: Record<string, string[]> = {
-    adreno: ["530", "540", "615", "630", "640", "650", "660", "730", "740", "750", ""],
-    amd: ["460", "470", "480", "550", "560", "570", "580", "5500", "5600", "5700", "6600", "6700", "6800", "6900", "7600", "7700", "7800", "7900", ""],
-    apple: ["7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "1", "2", "3", "4", ""],
-    geforce: ["1050", "1060", "1070", "1080", "1650", "1660", "2060", "2070", "2080", "3050", "3060", "3070", "3080", "3090", "4050", "4060", "4070", "4080", "4090", ""],
-    intel: ["4000", "4400", "4600", "5000", "510", "520", "530", "540", "550", "620", "630", "640", "655", "xe", "arc", ""],
-    "mali-t": ["760", "860", "880", ""],
-    mali: ["g52", "g57", "g68", "g71", "g72", "g76", "g77", "g78", "g710", "g715", "g720", ""],
-    nvidia: ["1050", "1060", "1070", "1080", "1650", "1660", "2060", "2070", "2080", "3050", "3060", "3070", "3080", "3090", "4050", "4060", "4070", "4080", "4090", ""],
-    powervr: ["rogue", ""],
-    radeon: ["460", "470", "480", "550", "560", "570", "580", "5500", "5600", "5700", "6600", "6700", "6800", "6900", "7600", "7700", "7800", "7900", ""],
-    samsung: ["920", "940", ""],
-  };
-  const versions = versionsByFamily[family] ?? [""];
-  const rows = versions.map<ModelEntry>((version) => [
-    `${family} ${version}`.trim(),
-    version,
-    `${family} graphics ${version}`.trim(),
-    0,
-    [
-      [1280, 720, fps, `${family} local`],
-      [1920, 1080, fps, `${family} local`],
-      [2560, 1440, fps - 8, `${family} local`],
-      [3840, 2160, fps - 18, `${family} local`],
-    ],
-  ]);
-
-  return ["4.0.0" as unknown as ModelEntry, ...rows];
-}
-
-export async function checkFilmGate() {
+export async function checkFilmGate(): Promise<boolean> {
   if (new URLSearchParams(window.location.search).get("film") === "force") {
     return true;
   }
@@ -63,17 +24,25 @@ export async function checkFilmGate() {
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const saveData = (navigator as NavigatorWithConnection).connection?.saveData === true;
 
-  if (prefersReducedMotion || saveData || !supportsWebGL2()) {
+  if (prefersReducedMotion || saveData) {
     return false;
   }
 
-  const { getGPUTier } = await import("detect-gpu");
-  const tier = await getGPUTier({
-    override: {
-      loadBenchmarks: async (file) => getLocalBenchmarkRows(file),
-    },
-  });
-  const requiredTier = tier.isMobile ? 3 : 2;
+  const canvas = document.createElement("canvas");
+  const gl = canvas.getContext("webgl2", { powerPreference: "high-performance" });
 
-  return tier.tier >= requiredTier;
+  if (!gl) {
+    return false;
+  }
+
+  let renderer = "";
+  const debugInfo = gl.getExtension("WEBGL_debug_renderer_info");
+
+  if (debugInfo) {
+    renderer = String(gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) ?? "");
+  }
+
+  gl.getExtension("WEBGL_lose_context")?.loseContext();
+
+  return !SOFTWARE_RENDERER.test(renderer);
 }
