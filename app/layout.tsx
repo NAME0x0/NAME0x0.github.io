@@ -2,12 +2,14 @@ import type { Metadata, Viewport } from "next";
 import { Manrope, Space_Grotesk } from "next/font/google";
 import { GeistMono } from "geist/font/mono";
 import { Analytics } from "@vercel/analytics/next";
+import { identity } from "@/content/identity";
 import { CursorDot } from "@/components/site/CursorDot";
 import { Footer } from "@/components/site/Footer";
 import { FluidInkMount } from "@/components/site/FluidInkMount";
-import { Header } from "@/components/site/Header";
 import { KineticWall } from "@/components/site/KineticWall";
+import { PillNav } from "@/components/site/PillNav";
 import { ProgressHairline } from "@/components/site/ProgressHairline";
+import { getPhotos } from "@/lib/content/photos";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -132,7 +134,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <FluidInkMount />
         <CursorDot />
         <ProgressHairline />
-        <Header />
+        <PillNav lockup={identity.lockup} socials={identity.socials} photos={getPhotos()} />
         {children}
         <Footer />
         <Analytics />

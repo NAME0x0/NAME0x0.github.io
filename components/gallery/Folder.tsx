@@ -5,9 +5,12 @@ import type { PhotoEntry } from "@/lib/content/photos";
 
 type FolderProps = {
   photos: PhotoEntry[];
+  className?: string;
+  labelClassName?: string;
+  onNavigate?: () => void;
 };
 
-export function Folder({ photos }: FolderProps) {
+export function Folder({ photos, className = "", labelClassName = "text-soot", onNavigate }: FolderProps) {
   const papers = photos.slice(0, 3);
   const paperClasses = [
     "-translate-x-1/2 translate-y-2 rotate-[-7deg] group-hover:-translate-x-[120%] group-hover:-translate-y-20 group-hover:rotate-[-15deg]",
@@ -19,7 +22,8 @@ export function Folder({ photos }: FolderProps) {
     <TransitionLink
       href="/photos"
       aria-label="Open photo gallery"
-      className="group inline-flex flex-col items-start gap-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bone"
+      onClick={onNavigate}
+      className={`group inline-flex flex-col items-start gap-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bone ${className}`}
     >
       <span className="relative block h-40 w-52 transition-transform duration-300 group-hover:-translate-y-2">
         <span className="absolute bottom-0 left-0 h-32 w-52 rounded-[0.35rem] rounded-tl-none border border-faint bg-faint">
@@ -36,7 +40,7 @@ export function Folder({ photos }: FolderProps) {
           <span className="absolute bottom-0 right-0 z-20 h-24 w-1/2 origin-bottom rounded-r-[0.35rem] bg-bone transition-transform duration-300 group-hover:-skew-x-[12deg] group-hover:scale-y-75" />
         </span>
       </span>
-      <span className="font-mono text-xs uppercase tracking-[0.14em] text-soot underline decoration-soot/30 underline-offset-4">
+      <span className={`font-mono text-xs uppercase tracking-[0.14em] underline underline-offset-4 ${labelClassName}`}>
         photos -&gt;
       </span>
     </TransitionLink>
