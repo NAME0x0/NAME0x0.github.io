@@ -1,8 +1,8 @@
 {
-  "name": "futuristic-portfolio-prototype",
+  "name": "the-machine-portfolio",
   "version": "1.0.0",
   "private": true,
-  "description": "Production source for a cinematic single-page portfolio built with Next.js, TypeScript, GSAP, and Three.js.",
+  "description": "The Machine — portfolio of Muhammad Afsah Mumtaz (NAME0x0). A GPU forged then awakened: scroll-driven 3D film over a fully server-rendered, machine-verified content site.",
   "scripts": {
     "dev": "next dev",
     "snapshot": "node scripts/fetch-github-snapshot.mjs",

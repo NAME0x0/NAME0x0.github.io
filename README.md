@@ -1,48 +1,40 @@
-﻿# NAME0x0 Portfolio
+# The Machine — Muhammad Afsah Mumtaz — NAME0x0
 
-## About
+Portfolio at [name0x0.vercel.app](https://name0x0.vercel.app). One scroll-driven film: a GPU is forged, boots, and thinks — while underneath, every page is plain server-rendered HTML that works with JavaScript disabled.
 
-This repository contains the production source for a cinematic, single-page portfolio built to present systems architecture work through interactive motion, 3D visuals, and curated project data.
+## What makes it unusual
 
-## Stack
+- **Machine-verified honesty.** Every hard number on the site (benchmark scores, test counts, Brier scores) lives in `content/claims.json` and is checked against the source repos' live READMEs at build time (`scripts/verify-claims.mjs`). A mismatch fails the build. Gold (`signal`) coloring is reserved exclusively for verified values; projections are labeled PROJECTED.
+- **The film degrades, never breaks.** WebGL film mounts only for capable devices (detect-gpu tier gate + reduced-motion + save-data checks, all offline — no CDN benchmark fetch). Everyone else gets the identical editorial page. A film runtime failure renders nothing and the page continues.
+- **One continuous machine.** No cuts: a keyframe rail (sine-eased shared boundary knots) drives camera and card through 8 chapters; components accumulate — the GPU is visibly assembled as the story progresses. Model: "GeForce RTX 3080 Graphics Card" by _surovic_, CC-BY 4.0, compressed 12 MB → 1.66 MB (meshopt + WebP; see `public/models/ATTRIBUTION.md`).
+- **Strict CSP throughout** — no `unsafe-eval` (WASM-only allowance for the meshopt decoder), no third-party origins beyond Vercel Analytics; all 3D assets self-hosted.
 
-- Next.js 14 (App Router, static export)
-- TypeScript
-- Tailwind CSS
-- GSAP (ScrollTrigger)
-- Three.js + React Three Fiber
-- SWR
+## Structure
 
-## Data flow
+```
+app/            routes (all SSG; /work/[slug] case studies, /writing MDX, RSS, per-route OG)
+components/
+  film/         the 3D film (gate, canvas, rail, scenes)
+  site/         server components + terminal easter egg
+content/        zod-validated content layer — single source of copy + claims registry
+lib/            content loaders, analytics, film progress store, GitHub snapshot pipeline
+scripts/        prebuild: GitHub snapshot, claim verification, writing meta
+docs/           BRIEF.md (design source of truth), ANALYTICS.md, task specs
+```
 
-Project data uses a hybrid GitHub pipeline:
-
-1. Build-time snapshot at `public/data/github-snapshot.json`
-2. Runtime refresh from GitHub API
-3. Automatic fallback to the snapshot when live fetch fails
-
-## Local development
+## Develop
 
 ```bash
 npm install
-npm run dev
+npm run dev        # local dev
+npm run build      # prebuild pipeline (snapshot + claim verification) + next build
+npm start
 ```
 
-## Scripts
+QA helpers: `/?film=force` mounts the film regardless of GPU tier; `&hud=1` adds a chapter/presence/assembly readout.
 
-```bash
-npm run snapshot   # refresh GitHub snapshot data
-npm run lint       # eslint (Next.js config)
-npm run typecheck  # tsc --noEmit
-npm run build      # static export (writes to out/)
-```
+CI (GitHub Actions): lint, typecheck, banned-vocabulary grep, gitleaks, npm audit, build with claim verification, Lighthouse budgets (mobile perf ≥ 85, a11y/bp/seo ≥ 95).
 
-`npm run build` executes `prebuild`, which refreshes the snapshot automatically.
+## License
 
-## CI/CD
-
-GitHub Actions workflow: `.github/workflows/nextjs.yml`
-
-- Runs on `pull_request` and `push` to `main`
-- Enforces `lint` and `typecheck` before build
-- Builds static output and deploys to GitHub Pages on non-PR runs
+Code MIT. Content and personal media © Muhammad Afsah Mumtaz. Third-party model attribution in `public/models/ATTRIBUTION.md`.
