@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { MetricsTable } from "@/components/site/MetricsTable";
+import { ScrollFXMount } from "@/components/site/ScrollFXMount";
 import { StatusBadge } from "@/components/site/StatusBadge";
 import { TrackedLink } from "@/components/site/TrackedLink";
 import { getTierOneProjectBySlug, tierOneProjects } from "@/lib/content/projects";
@@ -56,11 +57,15 @@ export default function WorkDetailPage({ params }: WorkDetailPageProps) {
 
   return (
     <main id="main" className="px-6 py-section-y">
+      <ScrollFXMount />
       <article className="mx-auto max-w-6xl space-y-12">
         <header className="max-w-[68ch] space-y-5">
-          <p className="font-mono text-xs uppercase tracking-[0.18em] text-dim">{"// WORK"}</p>
+          <div data-reveal="overline" data-parallax="soft">
+            <p className="font-mono text-xs uppercase tracking-[0.18em] text-dim">{"// WORK"}</p>
+            <span data-reveal-rule className="mt-3 block h-px w-24 origin-left bg-faint" aria-hidden="true" />
+          </div>
           <div className="flex flex-wrap items-center gap-3">
-            <h1 className="font-display text-4xl font-bold text-ink">{project.name}</h1>
+            <h1 data-reveal="lines" data-hero-lockup className="font-display text-4xl font-bold text-ink">{project.name}</h1>
             <StatusBadge status={project.status} />
           </div>
           {project.slug === "omni" ? <ResearchLabel slug={project.slug} /> : null}
@@ -91,25 +96,25 @@ export default function WorkDetailPage({ params }: WorkDetailPageProps) {
         {project.architecture ? <TextSection title="Architecture" body={project.architecture} /> : null}
         {project.warStories.length > 0 ? (
           <section className="max-w-[68ch] border-t border-faint pt-8">
-            <h2 className="mb-4 font-mono text-xs uppercase tracking-[0.18em] text-dim">{"// WAR STORIES"}</h2>
+            <h2 data-reveal="lines" className="mb-4 font-mono text-xs uppercase tracking-[0.18em] text-dim">{"// WAR STORIES"}</h2>
             <ul className="space-y-3 text-dim">
               {project.warStories.map((story) => (
-                <li key={story}>{story}</li>
+                <li key={story} data-reveal="row">{story}</li>
               ))}
             </ul>
           </section>
         ) : null}
 
         <section className="max-w-[68ch] border-t border-faint pt-8">
-          <h2 className="mb-4 font-mono text-xs uppercase tracking-[0.18em] text-dim">{"// RESULTS"}</h2>
+          <h2 data-reveal="lines" className="mb-4 font-mono text-xs uppercase tracking-[0.18em] text-dim">{"// RESULTS"}</h2>
           <MetricsTable metrics={project.metrics} />
         </section>
 
         <section className="max-w-[68ch] border-t border-faint pt-8">
-          <h2 className="mb-4 font-mono text-xs uppercase tracking-[0.18em] text-dim">{"// STACK"}</h2>
+          <h2 data-reveal="lines" className="mb-4 font-mono text-xs uppercase tracking-[0.18em] text-dim">{"// STACK"}</h2>
           <ul className="flex flex-wrap gap-2">
             {project.stack.map((item) => (
-              <li key={item} className="border border-faint px-3 py-1 font-mono text-xs uppercase tracking-[0.12em] text-dim">
+              <li key={item} data-reveal="row" className="border border-faint px-3 py-1 font-mono text-xs uppercase tracking-[0.12em] text-dim">
                 {item}
               </li>
             ))}
@@ -123,7 +128,7 @@ export default function WorkDetailPage({ params }: WorkDetailPageProps) {
 function TextSection({ title, body }: { title: string; body: string }) {
   return (
     <section className="max-w-[68ch] border-t border-faint pt-8">
-      <h2 className="mb-4 font-mono text-xs uppercase tracking-[0.18em] text-dim">{`// ${title}`}</h2>
+      <h2 data-reveal="lines" className="mb-4 font-mono text-xs uppercase tracking-[0.18em] text-dim">{`// ${title}`}</h2>
       <p className="text-dim">{body}</p>
     </section>
   );

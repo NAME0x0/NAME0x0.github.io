@@ -6,6 +6,7 @@ import { ChapterTracker } from "@/components/site/ChapterTracker";
 import { EmailLink } from "@/components/site/EmailLink";
 import { Konami } from "@/components/site/Konami";
 import { MetricsTable } from "@/components/site/MetricsTable";
+import { ScrollFXMount } from "@/components/site/ScrollFXMount";
 import { StatusBadge } from "@/components/site/StatusBadge";
 import { Terminal } from "@/components/site/Terminal";
 import { TrackedLink } from "@/components/site/TrackedLink";
@@ -18,7 +19,12 @@ const linkClass =
   "text-bone underline decoration-bone/40 underline-offset-4 transition-colors hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bone";
 
 function Overline({ children }: { children: string }) {
-  return <p className="mb-5 font-mono text-xs uppercase tracking-[0.18em] text-dim">{children}</p>;
+  return (
+    <div data-reveal="overline" data-parallax="soft" className="mb-5">
+      <p className="font-mono text-xs uppercase tracking-[0.18em] text-dim">{children}</p>
+      <span data-reveal-rule className="mt-3 block h-px w-24 origin-left bg-faint" aria-hidden="true" />
+    </div>
+  );
 }
 
 function ProjectRow({ project, inverted = false }: { project: Project; inverted?: boolean }) {
@@ -27,7 +33,7 @@ function ProjectRow({ project, inverted = false }: { project: Project; inverted?
   const borderClass = inverted ? "border-soot/20" : "border-faint";
 
   return (
-    <div className={`grid min-h-[5.5rem] gap-3 border-t ${borderClass} py-5 md:grid-cols-[minmax(10rem,14rem)_auto_1fr_auto] md:items-baseline`}>
+    <div data-reveal="row" className={`grid min-h-[5.5rem] gap-3 border-t ${borderClass} py-5 md:grid-cols-[minmax(10rem,14rem)_auto_1fr_auto] md:items-baseline`}>
       <h3 className={`font-display text-xl font-bold ${textClass}`}>{project.name}</h3>
       <StatusBadge status={project.status} />
       <p className={`line-clamp-2 ${dimClass}`}>{project.tagline}</p>
@@ -92,11 +98,12 @@ export default function HomePage() {
       <FilmMount />
       <ChapterTracker />
       <Konami />
+      <ScrollFXMount />
       <section id="ignition" className="px-6 py-section-y">
         <div className="mx-auto max-w-6xl">
           <Overline>{"// IDENTITY"}</Overline>
           <div className="max-w-[68ch] space-y-8">
-            <h1 className="font-display text-display font-bold text-ink">{identity.lockup}</h1>
+            <h1 data-reveal="lines" data-hero-lockup className="font-display text-display font-bold text-ink">{identity.lockup}</h1>
             <p className="text-2xl text-dim">{identity.positioning}</p>
             <p className="font-mono text-sm uppercase tracking-[0.14em] text-dim">
               {identity.location} · {identity.visa}
@@ -140,7 +147,7 @@ export default function HomePage() {
           <Overline>{"// PROOF"}</Overline>
           {ava.tier === 1 ? (
             <article className="max-w-[68ch] space-y-5">
-              <h2 className="font-display text-4xl font-bold text-ink">{ava.name}</h2>
+              <h2 data-reveal="lines" className="font-display text-4xl font-bold text-ink">{ava.name}</h2>
               <p className="text-xl text-bone">{ava.tagline}</p>
               <p className="text-dim">{ava.summary}</p>
               <MetricsTable metrics={ava.metrics} />
@@ -163,7 +170,7 @@ export default function HomePage() {
           {pantheon.tier === 1 ? (
             <article className="max-w-[68ch] space-y-5">
               <div className="flex flex-wrap items-center gap-3">
-                <h2 className="font-display text-4xl font-bold text-ink">{pantheon.name}</h2>
+                <h2 data-reveal="lines" className="font-display text-4xl font-bold text-ink">{pantheon.name}</h2>
                 <StatusBadge status={pantheon.status} />
               </div>
               <p className="text-xl text-bone">{pantheon.tagline}</p>
@@ -199,7 +206,7 @@ export default function HomePage() {
           {omni.tier === 1 ? (
             <article className="max-w-[68ch] space-y-5">
               <ResearchLabel project={omni} />
-              <h2 className="font-display text-4xl font-bold text-ink">{omni.name}</h2>
+              <h2 data-reveal="lines" className="font-display text-4xl font-bold text-ink">{omni.name}</h2>
               <p className="text-xl text-bone">{omni.tagline}</p>
               <p className="text-dim">{omni.summary}</p>
               <MetricsTable metrics={omni.metrics} />
@@ -220,7 +227,7 @@ export default function HomePage() {
           <Overline>{"// LIGHT"}</Overline>
           {agiLedger.tier === 1 ? (
             <article className="max-w-[68ch] space-y-5">
-              <h2 className="font-display text-4xl font-bold text-ink">{agiLedger.name}</h2>
+              <h2 data-reveal="lines" className="font-display text-4xl font-bold text-ink">{agiLedger.name}</h2>
               <p className="text-xl text-bone">{agiLedger.tagline}</p>
               <p className="text-dim">{agiLedger.summary}</p>
               <div className="flex flex-wrap gap-4">
@@ -251,8 +258,11 @@ export default function HomePage() {
         <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[1fr_1fr]">
           <div className="space-y-10">
             <div>
-              <p className="mb-5 font-mono text-xs uppercase tracking-[0.18em] text-soot/70">{"// HUMAN"}</p>
-              <h2 className="font-display text-4xl font-bold">{identity.name}</h2>
+              <div data-reveal="overline" data-parallax="soft" className="mb-5">
+                <p className="font-mono text-xs uppercase tracking-[0.18em] text-soot/70">{"// HUMAN"}</p>
+                <span data-reveal-rule className="mt-3 block h-px w-24 origin-left bg-soot/20" aria-hidden="true" />
+              </div>
+              <h2 data-reveal="lines" className="font-display text-4xl font-bold">{identity.name}</h2>
             </div>
             <ListBlock title="Affiliations" items={identity.affiliations} />
             <ListBlock title="Open source" items={identity.openSource} />

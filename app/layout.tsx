@@ -4,6 +4,7 @@ import { GeistMono } from "geist/font/mono";
 import { Analytics } from "@vercel/analytics/next";
 import { Footer } from "@/components/site/Footer";
 import { Header } from "@/components/site/Header";
+import { KineticWall } from "@/components/site/KineticWall";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -124,6 +125,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             build-time constants with < escaped; no user input reaches this. */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: personJsonLdText }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: websiteJsonLdText }} />
+        <KineticWall />
         <Header />
         {children}
         <Footer />

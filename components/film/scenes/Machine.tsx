@@ -1,7 +1,7 @@
 "use client";
 
 import { useFrame, useThree } from "@react-three/fiber";
-import { Suspense, useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import {
   AdditiveBlending,
   AmbientLight,
@@ -19,13 +19,11 @@ import {
   Vector3,
 } from "three";
 import { filmProgressStore, useFilmProgress } from "@/lib/film/progress";
-import { FilmErrorBoundary } from "../FilmErrorBoundary";
 import { AmbientField } from "./AmbientField";
-import { Card } from "./Card";
 import { Council } from "./Council";
 import { Torus } from "./Torus";
 import { sampleRail, narrowRail, wideRail, type RailSample } from "./rail";
-import { layerPresence, smoothstep, smoothstepRange } from "./staging";
+import { layerPresence, smoothstep } from "./staging";
 
 const SIGNAL = "#E3B341";
 const DIM = "#8A8578";
@@ -33,11 +31,9 @@ const EMBER = "#D08C5A";
 const BONE = "#C4B5A0";
 
 const BENCHMARKS = [
-  // Anchored in the open gap between the metrics table (left) and the portrait
-  // card (right) — nudging further left collides with the table edge.
-  { label: "ARC-C 82.0", value: 0.82, x: -1.12, z: -0.48, width: 0.13, color: SIGNAL },
-  { label: "ARC-E 92.0", value: 0.92, x: -0.96, z: 0, width: 0.15, color: SIGNAL },
-  { label: "Llama 3.2 78.6", value: 0.786, x: -0.8, z: 0.48, width: 0.08, color: DIM },
+  { label: "ARC-C 82.0", value: 0.82, x: -0.55, z: -0.52, width: 0.13, color: SIGNAL },
+  { label: "ARC-E 92.0", value: 0.92, x: 0, z: 0, width: 0.15, color: SIGNAL },
+  { label: "Llama 3.2 78.6", value: 0.786, x: 0.55, z: 0.52, width: 0.08, color: DIM },
 ] as const;
 
 function createGlowTexture() {
@@ -106,15 +102,12 @@ export function Machine() {
   const basesRef = useRef<(Sprite | null)[]>([]);
   const labelsRef = useRef<(Sprite | null)[]>([]);
   const progressRef = useRef(filmProgressStore.getSnapshot());
-  const cardDimmingRef = useRef(0);
-  const hudProjectionAssertRef = useRef(false);
   const store = useFilmProgress();
   const camera = useThree((state) => state.camera);
   const viewport = useThree((state) => state.viewport);
   const targetPosition = useMemo(() => new Vector3(), []);
   const cameraPosition = useMemo(() => new Vector3(), []);
   const cameraTarget = useMemo(() => new Vector3(0, 0, 0), []);
-  const screenProbe = useMemo(() => new Vector3(), []);
   const wideStage = useMemo(() => new Vector3(2.5, 0, 0), []);
   const narrowStage = useMemo(() => new Vector3(0, -1.6, 0), []);
   const railSample = useMemo<RailSample>(() => ({
@@ -130,12 +123,6 @@ export function Machine() {
   useEffect(() => store.subscribe((progress) => {
     progressRef.current = progress;
   }), [store]);
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-
-    hudProjectionAssertRef.current = params.get("film") === "force" && params.get("hud") === "1";
-  }, []);
 
   useEffect(() => () => {
     glowTexture.dispose();
@@ -164,7 +151,6 @@ export function Machine() {
     const track = isNarrow ? narrowRail : wideRail;
 
     sampleRail(track, chapter, chapterLocal, railSample);
-    cardDimmingRef.current = chapter === 7 ? smoothstepRange(0, 0.45, chapterLocal) * 0.28 : 0;
 
     targetPosition.copy(activeStage);
     group.position.lerp(targetPosition, damping);
@@ -186,15 +172,6 @@ export function Machine() {
       group.position.z + railSample.lookAt.z,
     );
     camera.lookAt(cameraTarget);
-
-    if (process.env.NODE_ENV !== "production" && hudProjectionAssertRef.current) {
-      screenProbe.copy(group.position).project(camera);
-      console.assert(
-        screenProbe.x >= 0.15 && screenProbe.x <= 0.75 && screenProbe.y >= -0.5 && screenProbe.y <= 0.6,
-        "E7 card center NDC out of frame",
-        { x: screenProbe.x, y: screenProbe.y, chapter, chapterLocal },
-      );
-    }
 
     for (let index = 0; index < BENCHMARKS.length; index += 1) {
       const benchmark = BENCHMARKS[index];
@@ -238,13 +215,8 @@ export function Machine() {
       <pointLight ref={cyanLightRef} position={[3.4, 2.3, 2.8]} intensity={1.05} color="#5bb9d2" />
       <group ref={groupRef} position={[2.5, 0, 0]}>
         <AmbientField progressRef={progressRef} glowTexture={glowTexture} />
-        <FilmErrorBoundary>
-          <Suspense fallback={null}>
-            <Card progressRef={progressRef} cardDimmingRef={cardDimmingRef} />
-          </Suspense>
-        </FilmErrorBoundary>
         {BENCHMARKS.map((benchmark, index) => (
-          <group key={benchmark.label} position={[benchmark.x, -1.2, benchmark.z]}>
+          <group key={benchmark.label} position={[benchmark.x, -0.9, benchmark.z]}>
             <mesh ref={(node) => { columnsRef.current[index] = node; }} scale={[benchmark.width, 0.001, benchmark.width]} position={[0, 0.1, 0]}>
               <boxGeometry args={[1, 1, 1]} />
               <meshBasicMaterial

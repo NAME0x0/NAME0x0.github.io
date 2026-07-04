@@ -8,7 +8,7 @@ import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment
 import type { FilmProgress } from "@/lib/film/progress";
 import { filmProgressStore, useFilmProgressEngine } from "@/lib/film/progress";
 import { Machine } from "./scenes/Machine";
-import { ASSEMBLED_GROUP_TOTAL, assembledGroupCount, layerPresence } from "./scenes/staging";
+import { layerPresence } from "./scenes/staging";
 
 function Environment() {
   const gl = useThree((state) => state.gl);
@@ -61,7 +61,6 @@ function FilmHud() {
       <p>{`p4 ${layerPresence(progress.chapter, progress.chapterLocal, 4).toFixed(2)}`}</p>
       <p>{`p5 ${layerPresence(progress.chapter, progress.chapterLocal, 5).toFixed(2)}`}</p>
       <p>{`p6 ${layerPresence(progress.chapter, progress.chapterLocal, 6).toFixed(2)}`}</p>
-      <p>{`assembled ${assembledGroupCount(progress.chapter, progress.chapterLocal).toFixed(1)} / ${ASSEMBLED_GROUP_TOTAL}`}</p>
     </div>
   );
 }
