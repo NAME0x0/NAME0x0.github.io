@@ -74,7 +74,7 @@ export function SceneWidget({ scene, data }: SceneWidgetProps) {
   return (
     <div
       ref={containerRef}
-      className={`${scene === "reactor" ? "aspect-square max-w-[34rem]" : "aspect-[4/3] max-w-[30rem]"} w-full overflow-hidden bg-transparent`}
+      className="aspect-square w-full max-w-[38rem] self-start overflow-hidden bg-transparent lg:sticky lg:top-24"
     >
       <SceneCanvas scene={scene} active={active} data={data} />
     </div>

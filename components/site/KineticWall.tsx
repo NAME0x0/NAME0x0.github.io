@@ -3,14 +3,29 @@
 import { useEffect, useRef } from "react";
 
 const PITCH = 44;
-const BASE = [58, 56, 50] as const;
-const DIM = [138, 133, 120] as const;
+const PALETTES = {
+  void: {
+    base: [58, 56, 50],
+    dim: [138, 133, 120],
+    alpha: 0.35,
+  },
+  paper: {
+    base: [28, 26, 23],
+    dim: [138, 133, 120],
+    alpha: 0.2,
+  },
+} as const;
+
+type KineticWallProps = {
+  tone?: "void" | "paper";
+  position?: "fixed" | "absolute";
+};
 
 function mix(from: number, to: number, amount: number) {
   return Math.round(from + (to - from) * amount);
 }
 
-export function KineticWall() {
+export function KineticWall({ tone = "void", position = "fixed" }: KineticWallProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -33,6 +48,7 @@ export function KineticWall() {
     let dpr = 1;
     let resizeTimer = 0;
     let running = false;
+    const palette = PALETTES[tone];
     let lastScrollY = window.scrollY;
     let scrollBoost = 1;
     const pointer = {
@@ -45,7 +61,7 @@ export function KineticWall() {
 
     const draw = (time: number) => {
       context.clearRect(0, 0, width, height);
-      context.globalAlpha = 0.35;
+      context.globalAlpha = palette.alpha;
 
       const scrollDrift = reduced.matches ? 0 : -Math.max(-6, Math.min(6, window.scrollY * 0.018));
       const phase = reduced.matches ? 0 : time * 0.0004;
@@ -70,7 +86,7 @@ export function KineticWall() {
           const dotY = y - scrollDrift * 0.35 + dy * invDistance * push;
           const amount = Math.min(0.42, (0.08 + wave * 0.16 + ripple * 0.18) * scrollBoost);
 
-          context.fillStyle = `rgb(${mix(BASE[0], DIM[0], amount)}, ${mix(BASE[1], DIM[1], amount)}, ${mix(BASE[2], DIM[2], amount)})`;
+          context.fillStyle = `rgb(${mix(palette.base[0], palette.dim[0], amount)}, ${mix(palette.base[1], palette.dim[1], amount)}, ${mix(palette.base[2], palette.dim[2], amount)})`;
           context.beginPath();
           context.arc(dotX, dotY, 1.1 * dpr, 0, Math.PI * 2);
           context.fill();
@@ -87,9 +103,12 @@ export function KineticWall() {
     };
 
     const resize = () => {
+      const bounds = position === "absolute"
+        ? canvas.parentElement?.getBoundingClientRect()
+        : { width: window.innerWidth, height: window.innerHeight };
       dpr = Math.min(window.devicePixelRatio || 1, 2);
-      width = window.innerWidth;
-      height = window.innerHeight;
+      width = Math.max(bounds?.width ?? window.innerWidth, 1);
+      height = Math.max(bounds?.height ?? window.innerHeight, 1);
       canvas.width = Math.ceil(width * dpr);
       canvas.height = Math.ceil(height * dpr);
       canvas.style.width = `${width}px`;
@@ -128,8 +147,10 @@ export function KineticWall() {
         return;
       }
 
-      pointer.targetX = event.clientX;
-      pointer.targetY = event.clientY;
+      const rect = canvas.getBoundingClientRect();
+
+      pointer.targetX = event.clientX - rect.left;
+      pointer.targetY = event.clientY - rect.top;
       pointer.active = true;
     };
 
@@ -156,7 +177,13 @@ export function KineticWall() {
       document.removeEventListener("visibilitychange", onVisibility);
       reduced.removeEventListener("change", start);
     };
-  }, []);
+  }, [position, tone]);
 
-  return <canvas ref={canvasRef} className="pointer-events-none fixed inset-0 z-0" aria-hidden="true" />;
+  return (
+    <canvas
+      ref={canvasRef}
+      className={`pointer-events-none inset-0 z-0 ${position === "fixed" ? "fixed" : "absolute"}`}
+      aria-hidden="true"
+    />
+  );
 }

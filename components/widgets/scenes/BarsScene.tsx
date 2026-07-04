@@ -100,7 +100,7 @@ export function BarsScene({ entryRef, glowTexture }: WidgetSceneProps) {
   });
 
   return (
-    <group rotation={[-0.08, -0.18, 0]} position={[0, 0.12, 0]}>
+    <group rotation={[-0.08, -0.18, 0]} position={[0, 0.36, 0]} scale={1.18}>
       {BENCHMARKS.map((benchmark, index) => (
         <group key={benchmark.label} position={[benchmark.x, 0, benchmark.z]}>
           <mesh ref={(node) => { columnsRef.current[index] = node; }} scale={[benchmark.width, 0.001, benchmark.width]} position={[0, -0.9, 0]}>

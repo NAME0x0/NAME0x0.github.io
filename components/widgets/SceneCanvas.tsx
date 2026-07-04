@@ -29,17 +29,17 @@ function CameraSetup({ scene }: { scene: WidgetScene }) {
 
   useEffect(() => {
     if (scene === "reactor") {
-      camera.position.set(0, 0.85, 5.6);
+      camera.position.set(0, 0.45, 4.15);
       camera.lookAt(0, 0, 0);
     } else if (scene === "torus") {
-      camera.position.set(0.25, 2.1, 5.7);
-      camera.lookAt(0.25, 1.15, 0);
+      camera.position.set(0.18, 1.25, 4.15);
+      camera.lookAt(0.18, 1.05, 0);
     } else if (scene === "stars") {
-      camera.position.set(0, 1.5, 5.4);
-      camera.lookAt(0.55, 1.3, 0);
+      camera.position.set(0, 1.2, 4);
+      camera.lookAt(0.3, 1.25, 0);
     } else {
-      camera.position.set(0, 1.8, 5.2);
-      camera.lookAt(0, 1.0, 0);
+      camera.position.set(0, 0.95, 4);
+      camera.lookAt(0, 0.65, 0);
     }
   }, [camera, scene]);
 
@@ -87,7 +87,7 @@ export function SceneCanvas({ scene, active, data }: SceneCanvasProps) {
     <Canvas
       frameloop={active ? "always" : "never"}
       dpr={[1, 1.5]}
-      camera={{ position: [0, 1.8, 5.2], fov: 38, near: 0.1, far: 30 }}
+      camera={{ position: [0, 0.95, 4], fov: 34, near: 0.1, far: 30 }}
       gl={{ alpha: true, antialias: true, powerPreference: "high-performance" }}
     >
       <SceneContent scene={scene} active={active} data={data} />

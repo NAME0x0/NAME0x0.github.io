@@ -182,7 +182,7 @@ export function StarsScene({ entryRef, glowTexture }: WidgetSceneProps) {
   });
 
   return (
-    <group ref={groupRef} position={[0.08, -0.18, 0]}>
+    <group ref={groupRef} position={[-0.08, -0.35, 0]} scale={1.22}>
       <points ref={pointsRef} geometry={geometry}>
         <primitive object={material} attach="material" />
       </points>

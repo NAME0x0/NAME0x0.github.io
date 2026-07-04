@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { identity } from "@/content/identity";
+import { ClaimsFooterStatus } from "@/components/site/ClaimsFooterStatus";
 import { EmailLink } from "@/components/site/EmailLink";
 import { LastCommit } from "@/components/site/LastCommit";
 import { Scramble } from "@/components/site/Scramble";
@@ -28,6 +29,7 @@ export function Footer() {
             {identity.location} · {identity.visa}
           </p>
           <LastCommit />
+          <ClaimsFooterStatus />
         </div>
         <div className="flex flex-wrap gap-x-5 gap-y-3 font-mono text-xs uppercase tracking-[0.12em]">
           {socialLinks.map((link) => (

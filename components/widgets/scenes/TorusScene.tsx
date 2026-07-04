@@ -226,7 +226,7 @@ export function TorusScene({ entryRef, glowTexture }: WidgetSceneProps) {
   });
 
   return (
-    <group ref={groupRef} position={[0.24, -0.04, 0]}>
+    <group ref={groupRef} position={[0.05, 0.02, 0]} scale={1.2}>
       <mesh>
         <torusGeometry args={[TORUS_MAJOR, 0.4, 12, 64]} />
         <meshBasicMaterial ref={wireMaterialRef} color={BONE} wireframe transparent opacity={0} blending={AdditiveBlending} depthWrite={false} />

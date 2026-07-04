@@ -245,7 +245,7 @@ export function CouncilScene({ entryRef, glowTexture }: WidgetSceneProps) {
   });
 
   return (
-    <group ref={groupRef} position={[0, -0.08, 0]}>
+    <group ref={groupRef} position={[0, 0.06, 0]} scale={1.22}>
       <instancedMesh ref={nodesRef} args={[undefined, undefined, NODE_COUNT]}>
         <sphereGeometry args={[1, 16, 12]} />
         <meshBasicMaterial transparent opacity={0.9} vertexColors blending={AdditiveBlending} depthWrite={false} />

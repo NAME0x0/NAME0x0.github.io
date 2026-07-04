@@ -151,7 +151,7 @@ export function ReactorScene({ entryRef, glowTexture, data = [] }: WidgetScenePr
   });
 
   return (
-    <group position={[0, 0.1, 0]}>
+    <group position={[0, 0.04, 0]} scale={1.12}>
       <sprite ref={coreRef} scale={[0.22, 0.22, 1]}>
         <spriteMaterial map={glowTexture} color={SIGNAL} transparent opacity={0} blending={AdditiveBlending} depthWrite={false} />
       </sprite>
