@@ -19,7 +19,7 @@ export default function WorkPage() {
           <h1 className="max-w-[68ch] font-display text-4xl font-bold text-ink">Work</h1>
         </section>
 
-        <section className="grid gap-6 lg:grid-cols-2">
+        <section className="grid auto-rows-fr gap-6 lg:grid-cols-2">
           {tierOneProjects.map((project) => (
             <article key={project.slug} className="flex min-h-full flex-col justify-between border border-faint p-6">
               <div className="space-y-5">
@@ -27,7 +27,7 @@ export default function WorkPage() {
                   <h2 className="font-display text-2xl font-bold text-ink">{project.name}</h2>
                   <StatusBadge status={project.status} />
                 </div>
-                <p className="text-bone">{project.tagline}</p>
+                <p className="line-clamp-2 text-bone">{project.tagline}</p>
                 <div className="grid gap-3 border-t border-faint pt-4">
                   {project.metrics.slice(0, 2).map((metric) => (
                     <div key={metric.label} className="flex items-baseline justify-between gap-4">
@@ -54,10 +54,10 @@ export default function WorkPage() {
           <p className="mb-5 font-mono text-xs uppercase tracking-[0.18em] text-dim">{"// MORE"}</p>
           <div className="space-y-0">
             {tierTwoProjects.map((project) => (
-              <article key={project.slug} className="grid gap-3 border-t border-faint py-5 md:grid-cols-[minmax(10rem,14rem)_auto_1fr_auto] md:items-baseline">
+              <article key={project.slug} className="grid min-h-[5.5rem] gap-3 border-t border-faint py-5 md:grid-cols-[minmax(10rem,14rem)_auto_1fr_auto] md:items-baseline">
                 <h2 className="font-display text-xl font-bold text-ink">{project.name}</h2>
                 <StatusBadge status={project.status} />
-                <p className="text-dim">{project.tagline}</p>
+                <p className="line-clamp-2 text-dim">{project.tagline}</p>
                 <a href={project.links.repo} target="_blank" rel="noopener noreferrer" className={linkClass}>
                   repo
                 </a>

@@ -27,10 +27,10 @@ function ProjectRow({ project, inverted = false }: { project: Project; inverted?
   const borderClass = inverted ? "border-soot/20" : "border-faint";
 
   return (
-    <div className={`grid gap-3 border-t ${borderClass} py-5 md:grid-cols-[minmax(10rem,14rem)_auto_1fr_auto] md:items-baseline`}>
+    <div className={`grid min-h-[5.5rem] gap-3 border-t ${borderClass} py-5 md:grid-cols-[minmax(10rem,14rem)_auto_1fr_auto] md:items-baseline`}>
       <h3 className={`font-display text-xl font-bold ${textClass}`}>{project.name}</h3>
       <StatusBadge status={project.status} />
-      <p className={dimClass}>{project.tagline}</p>
+      <p className={`line-clamp-2 ${dimClass}`}>{project.tagline}</p>
       <a href={project.links.repo} target="_blank" rel="noopener noreferrer" className={inverted ? "text-soot underline decoration-soot/30 underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bone" : linkClass}>
         repo
       </a>

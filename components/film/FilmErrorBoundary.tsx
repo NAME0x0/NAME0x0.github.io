@@ -23,9 +23,9 @@ export class FilmErrorBoundary extends Component<FilmErrorBoundaryProps, FilmErr
   }
 
   componentDidCatch(error: unknown) {
-    if (process.env.NODE_ENV !== "production") {
-      console.warn("[film] optional scene subtree failed; continuing without it", error);
-    }
+    // Always log, including production: this boundary once silently hid a
+    // stack overflow in the card scene and cost a debugging round.
+    console.error("[film] optional scene subtree failed; continuing without it", error);
   }
 
   render() {

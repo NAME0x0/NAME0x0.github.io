@@ -26,6 +26,10 @@ function assemblyIn(chapterLocal: number) {
   return smoothstepRange(0.15, 0.55, chapterLocal);
 }
 
+function assemblyInLate(chapterLocal: number) {
+  return smoothstepRange(0.15, 0.7, chapterLocal);
+}
+
 export function assembledGroupCount(chapter: number, chapterLocal: number) {
   let count = 0;
 
@@ -41,11 +45,8 @@ export function assembledGroupCount(chapter: number, chapterLocal: number) {
   if (chapter > 4) count += 1;
   else if (chapter === 4) count += assemblyIn(chapterLocal);
 
-  if (chapter > 6) count += 1;
-  else if (chapter === 6) count += assemblyIn(chapterLocal);
-
-  if (chapter > 7) count += 1;
-  else if (chapter === 7) count += assemblyIn(chapterLocal);
+  if (chapter > 6) count += 2;
+  else if (chapter === 6) count += assemblyInLate(chapterLocal) * 2;
 
   return count;
 }
