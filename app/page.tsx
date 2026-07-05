@@ -13,6 +13,7 @@ import { Marquee } from "@/components/site/Marquee";
 import { MetricsTable } from "@/components/site/MetricsTable";
 import { ScrollFXMount } from "@/components/site/ScrollFXMount";
 import { StatusBadge } from "@/components/site/StatusBadge";
+import { LazyVisible } from "@/components/site/LazyVisible";
 import { Terminal } from "@/components/site/Terminal";
 import { TrackedLink } from "@/components/site/TrackedLink";
 import { Folder } from "@/components/gallery/Folder";
@@ -155,7 +156,9 @@ export default function HomePage() {
           <Overline>{"// VOICE"}</Overline>
           <p className="mb-8 max-w-[68ch] text-dim">The interface layer is where machines meet people.</p>
           <ProjectRow project={webdesk} />
-          <Terminal identity={terminalIdentity} projects={terminalProjects} />
+          <LazyVisible minHeight="24rem">
+            <Terminal identity={terminalIdentity} projects={terminalProjects} />
+          </LazyVisible>
         </div>
       </section>
 

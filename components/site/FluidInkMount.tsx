@@ -34,7 +34,7 @@ export function FluidInkMount() {
       if (!cancelled) {
         setFluidInk(() => fluidInkModule.FluidInk);
       }
-    }, 1)) as unknown as number;
+    }, 200)) as unknown as number;
 
     return () => {
       cancelled = true;

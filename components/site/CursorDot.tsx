@@ -1,33 +1,41 @@
 "use client";
 
-import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
-
-const CursorDotMotion = dynamic(() => import("./CursorDotMotion").then((module) => module.CursorDotMotion), {
-  ssr: false,
-});
+import { useEffect, useState, type ComponentType } from "react";
 
 export function CursorDot() {
-  const [enabled, setEnabled] = useState(false);
+  const [MotionDot, setMotionDot] = useState<ComponentType | null>(null);
 
   useEffect(() => {
+    let mounted = true;
     const media = window.matchMedia("(hover: hover) and (pointer: fine)");
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setEnabled(media.matches && !reduced.matches);
+    const update = () => {
+      if (!media.matches || reduced.matches) {
+        setMotionDot(null);
+        return;
+      }
+
+      void import("./CursorDotMotion").then((module) => {
+        if (mounted && media.matches && !reduced.matches) {
+          setMotionDot(() => module.CursorDotMotion);
+        }
+      });
+    };
 
     update();
     media.addEventListener("change", update);
     reduced.addEventListener("change", update);
 
     return () => {
+      mounted = false;
       media.removeEventListener("change", update);
       reduced.removeEventListener("change", update);
     };
   }, []);
 
-  if (!enabled) {
+  if (!MotionDot) {
     return null;
   }
 
-  return <CursorDotMotion />;
+  return <MotionDot />;
 }

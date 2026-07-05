@@ -42,6 +42,7 @@ export function KineticWall({ tone = "void", position = "fixed" }: KineticWallPr
     }
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const coarsePointer = window.matchMedia("(pointer: coarse)");
     let frame = 0;
     let width = 0;
     let height = 0;
@@ -59,7 +60,10 @@ export function KineticWall({ tone = "void", position = "fixed" }: KineticWallPr
       active: false,
     };
 
+    const isStatic = () => reduced.matches || coarsePointer.matches || window.innerWidth < 768;
+
     const draw = (time: number) => {
+      const staticFrame = isStatic();
       const bounds = position === "absolute" ? canvas.getBoundingClientRect() : null;
       const fieldOffsetX = bounds ? -bounds.left : 0;
       const fieldOffsetY = bounds ? -bounds.top : 0;
@@ -67,10 +71,10 @@ export function KineticWall({ tone = "void", position = "fixed" }: KineticWallPr
       context.clearRect(0, 0, width, height);
       context.globalAlpha = palette.alpha;
 
-      const scrollDrift = reduced.matches ? 0 : -Math.max(-6, Math.min(6, window.scrollY * 0.018));
-      const phase = reduced.matches ? 0 : time * 0.0004;
+      const scrollDrift = staticFrame ? 0 : -Math.max(-6, Math.min(6, window.scrollY * 0.018));
+      const phase = staticFrame ? 0 : time * 0.0004;
       const scrollDelta = Math.abs(window.scrollY - lastScrollY);
-      const targetBoost = reduced.matches ? 1 : 1 + Math.min(0.5, scrollDelta * 0.015);
+      const targetBoost = staticFrame ? 1 : 1 + Math.min(0.5, scrollDelta * 0.015);
 
       lastScrollY = window.scrollY;
       scrollBoost += (targetBoost - scrollBoost) * 0.08;
@@ -85,7 +89,7 @@ export function KineticWall({ tone = "void", position = "fixed" }: KineticWallPr
           const dx = localX - pointer.x;
           const dy = localY - pointer.y;
           const distance = Math.hypot(dx, dy);
-          const ripple = pointer.active && !reduced.matches ? Math.max(0, 1 - distance / 130) : 0;
+          const ripple = pointer.active && !staticFrame ? Math.max(0, 1 - distance / 130) : 0;
           const push = ripple * ripple * 6;
           const invDistance = 1 / Math.max(distance, 1);
           const dotX = localX + scrollDrift + dx * invDistance * push;
@@ -103,7 +107,7 @@ export function KineticWall({ tone = "void", position = "fixed" }: KineticWallPr
     const tick = (time: number) => {
       draw(time);
 
-      if (running && !document.hidden && !reduced.matches) {
+      if (running && !document.hidden && !isStatic()) {
         frame = window.requestAnimationFrame(tick);
       }
     };
@@ -125,7 +129,7 @@ export function KineticWall({ tone = "void", position = "fixed" }: KineticWallPr
 
     const scheduleResize = () => {
       window.clearTimeout(resizeTimer);
-      resizeTimer = window.setTimeout(resize, 120);
+      resizeTimer = window.setTimeout(start, 120);
     };
 
     const start = () => {
@@ -133,7 +137,7 @@ export function KineticWall({ tone = "void", position = "fixed" }: KineticWallPr
       window.cancelAnimationFrame(frame);
       resize();
 
-      if (!document.hidden && !reduced.matches) {
+      if (!document.hidden && !isStatic()) {
         frame = window.requestAnimationFrame(tick);
       }
     };
@@ -141,7 +145,7 @@ export function KineticWall({ tone = "void", position = "fixed" }: KineticWallPr
     const onVisibility = () => {
       window.cancelAnimationFrame(frame);
 
-      if (!document.hidden && !reduced.matches) {
+      if (!document.hidden && !isStatic()) {
         frame = window.requestAnimationFrame(tick);
       } else {
         draw(performance.now());
@@ -150,6 +154,10 @@ export function KineticWall({ tone = "void", position = "fixed" }: KineticWallPr
 
     const onPointerMove = (event: PointerEvent) => {
       if (event.pointerType !== "mouse" && event.pointerType !== "pen") {
+        return;
+      }
+
+      if (isStatic()) {
         return;
       }
 
@@ -172,6 +180,7 @@ export function KineticWall({ tone = "void", position = "fixed" }: KineticWallPr
     window.addEventListener("pointerleave", onPointerLeave);
     document.addEventListener("visibilitychange", onVisibility);
     reduced.addEventListener("change", start);
+    coarsePointer.addEventListener("change", start);
 
     return () => {
       running = false;
@@ -182,6 +191,7 @@ export function KineticWall({ tone = "void", position = "fixed" }: KineticWallPr
       window.removeEventListener("pointerleave", onPointerLeave);
       document.removeEventListener("visibilitychange", onVisibility);
       reduced.removeEventListener("change", start);
+      coarsePointer.removeEventListener("change", start);
     };
   }, [position, tone]);
 

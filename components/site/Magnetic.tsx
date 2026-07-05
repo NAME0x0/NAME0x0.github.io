@@ -11,6 +11,14 @@ export function Magnetic({ children }: MagneticProps) {
 
   useEffect(() => {
     let mounted = true;
+    const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (!finePointer || reduced) {
+      return () => {
+        mounted = false;
+      };
+    }
 
     void import("./MagneticMotion").then((module) => {
       if (mounted) {
