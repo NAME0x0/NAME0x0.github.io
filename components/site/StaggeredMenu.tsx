@@ -2,9 +2,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type RefObject } from "react";
-import { Folder } from "@/components/gallery/Folder";
 import { TransitionLink } from "@/components/site/TransitionLink";
-import type { PhotoEntry } from "@/lib/content/photos";
 
 type StaggeredMenuProps = {
   id: string;
@@ -17,10 +15,10 @@ type StaggeredMenuProps = {
     x: string;
     huggingface: string;
   };
-  photos: PhotoEntry[];
 };
 
 const links = [
+  { href: "/", label: "Home" },
   { href: "/work", label: "Work" },
   { href: "/writing", label: "Writing" },
   { href: "/about", label: "About" },
@@ -37,7 +35,7 @@ function getFocusable(root: HTMLElement) {
   ).filter((element) => !element.hasAttribute("disabled") && element.getAttribute("aria-hidden") !== "true");
 }
 
-export function StaggeredMenu({ id, open, onClose, restoreFocusRef, socials, photos }: StaggeredMenuProps) {
+export function StaggeredMenu({ id, open, onClose, restoreFocusRef, socials }: StaggeredMenuProps) {
   const [present, setPresent] = useState(open);
   const rootRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -207,6 +205,18 @@ export function StaggeredMenu({ id, open, onClose, restoreFocusRef, socials, pho
         ref={panelRef}
         className="absolute inset-0 overflow-y-auto bg-void px-6 py-24 text-ink md:px-10"
       >
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close menu"
+          className="fixed right-4 top-4 z-10 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.16em] text-dim transition-colors hover:text-bone focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bone md:right-6 md:top-5"
+        >
+          <span aria-hidden="true" className="relative grid h-6 w-6 place-items-center">
+            <span className="absolute h-px w-5 rotate-45 bg-current" />
+            <span className="absolute h-px w-5 -rotate-45 bg-current" />
+          </span>
+          Close
+        </button>
         <div className="mx-auto flex min-h-[calc(100vh-12rem)] max-w-6xl flex-col justify-between gap-14">
           <ul className="space-y-4">
             {links.map((link, index) => (
@@ -222,14 +232,6 @@ export function StaggeredMenu({ id, open, onClose, restoreFocusRef, socials, pho
                       {link.label}
                     </span>
                   </TransitionLink>
-                  {link.href === "/photos" && photos.length > 0 ? (
-                    <Folder
-                      photos={photos}
-                      onNavigate={onClose}
-                      className="scale-75 origin-left md:ml-4"
-                      labelClassName="text-bone decoration-bone/40"
-                    />
-                  ) : null}
                 </div>
               </li>
             ))}

@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { useRef, useState } from "react";
 import { TransitionLink } from "@/components/site/TransitionLink";
 import { StaggeredMenu } from "@/components/site/StaggeredMenu";
-import type { PhotoEntry } from "@/lib/content/photos";
 
 type PillNavProps = {
   lockup: string;
@@ -15,7 +14,6 @@ type PillNavProps = {
     x: string;
     huggingface: string;
   };
-  photos: PhotoEntry[];
 };
 
 const navItems = [
@@ -35,7 +33,7 @@ function isActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function PillNav({ lockup, socials, photos }: PillNavProps) {
+export function PillNav({ lockup, socials }: PillNavProps) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -111,7 +109,6 @@ export function PillNav({ lockup, socials, photos }: PillNavProps) {
         onClose={() => setOpen(false)}
         restoreFocusRef={buttonRef}
         socials={socials}
-        photos={photos}
       />
     </>
   );

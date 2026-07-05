@@ -9,7 +9,6 @@ import { FluidInkMount } from "@/components/site/FluidInkMount";
 import { KineticWall } from "@/components/site/KineticWall";
 import { PillNav } from "@/components/site/PillNav";
 import { ProgressHairline } from "@/components/site/ProgressHairline";
-import { getPhotos } from "@/lib/content/photos";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -134,7 +133,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <FluidInkMount />
         <CursorDot />
         <ProgressHairline />
-        <PillNav lockup={identity.lockup} socials={identity.socials} photos={getPhotos()} />
+        <PillNav lockup={identity.lockup} socials={identity.socials} />
         {children}
         <Footer />
         <Analytics />
