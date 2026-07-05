@@ -1,40 +1,19 @@
 {
-  "generatedAt": "2026-06-08T19:47:57.364Z",
+  "generatedAt": "2026-07-05T04:42:07.130Z",
   "username": "NAME0x0",
   "profile": {
     "username": "NAME0x0",
     "displayName": "NAME",
     "avatarUrl": "https://avatars.githubusercontent.com/u/119836361?v=4",
     "location": "Dubai",
-    "contributions": 815,
-    "publicRepos": 49,
-    "followers": 75,
-    "following": 57,
+    "contributions": 940,
+    "publicRepos": 50,
+    "followers": 80,
+    "following": 64,
     "memberSince": "2022",
     "createdAt": "2022-12-05T05:51:58Z"
   },
   "repositories": [
-    {
-      "id": 982834257,
-      "name": "NAME0x0.github.io",
-      "description": "Production source for a cinematic single-page portfolio built with Next.js, TypeScript, GSAP, and Three.js.",
-      "language": "TypeScript",
-      "stars": 1,
-      "url": "https://github.com/NAME0x0/NAME0x0.github.io",
-      "homepage": "https://name0x0.github.io/",
-      "topics": [
-        "github-pages",
-        "gsap",
-        "nextjs",
-        "portfolio",
-        "threejs",
-        "typescript"
-      ],
-      "fork": false,
-      "archived": false,
-      "pushedAt": "2026-06-08T16:35:35Z",
-      "updatedAt": "2026-06-08T16:35:27Z"
-    },
     {
       "id": 884590447,
       "name": "NAME0x0",
@@ -45,8 +24,42 @@
       "topics": [],
       "fork": false,
       "archived": false,
-      "pushedAt": "2026-06-08T15:50:48Z",
-      "updatedAt": "2026-06-08T04:57:50Z"
+      "pushedAt": "2026-07-05T04:15:43Z",
+      "updatedAt": "2026-07-05T04:15:46Z"
+    },
+    {
+      "id": 1160940922,
+      "name": "OMNI",
+      "description": "PERSPECTIVE v2 — A 1.05 trillion parameter sparse Mixture-of-Experts language model that runs on consumer hardware (4 GB VRAM + 32 GB RAM). Features O(1) perspective decay recurrence, 3D torus manifold routing, native ternary {-1,0,+1} weights, holographic distributed memory, and hard geometric safety constraints. Built in Rust.",
+      "language": "Rust",
+      "stars": 2,
+      "url": "https://github.com/NAME0x0/OMNI",
+      "topics": [
+        "ai-safety",
+        "consumer-hardware",
+        "deep-learning",
+        "efficient-inference",
+        "holographic-memory",
+        "language-model",
+        "llm",
+        "machine-learning",
+        "manifold-routing",
+        "mixture-of-experts",
+        "moe",
+        "neural-network",
+        "nlp",
+        "novel-architecture",
+        "on-device-ai",
+        "research",
+        "rust",
+        "sparse-models",
+        "ternary-weights",
+        "transformer"
+      ],
+      "fork": false,
+      "archived": false,
+      "pushedAt": "2026-07-02T17:21:31Z",
+      "updatedAt": "2026-07-02T17:21:35Z"
     },
     {
       "id": 1179194356,
@@ -69,8 +82,148 @@
       ],
       "fork": false,
       "archived": false,
-      "pushedAt": "2026-06-05T19:33:22Z",
-      "updatedAt": "2026-06-05T19:33:26Z"
+      "pushedAt": "2026-06-30T16:47:33Z",
+      "updatedAt": "2026-06-30T16:47:37Z"
+    },
+    {
+      "id": 890343109,
+      "name": "AVA",
+      "description": "Research and training stack for AVA — a tool-using, memory-aware virtual assistant targeting 4 GB VRAM. Spans custom transformers, verifier-RL, external memory, multi-domain benchmarks, and Gemma 4 inference optimization.",
+      "language": "Python",
+      "stars": 4,
+      "url": "https://github.com/NAME0x0/AVA",
+      "homepage": "https://name0x0.github.io/AVA/",
+      "topics": [
+        "4gb-vram",
+        "ai",
+        "benchmarks",
+        "distillation",
+        "edge-inference",
+        "external-memory",
+        "gemma",
+        "inference-optimization",
+        "int4",
+        "kv-cache-compression",
+        "llm",
+        "long-context",
+        "personal-assistant",
+        "quantization",
+        "recurrent-depth",
+        "reproducible-research",
+        "small-language-models",
+        "tool-use",
+        "verifier-rl",
+        "virtual-assistant"
+      ],
+      "fork": false,
+      "archived": false,
+      "pushedAt": "2026-06-30T11:40:43Z",
+      "updatedAt": "2026-06-30T11:40:47Z"
+    },
+    {
+      "id": 912500800,
+      "name": "WebDesk",
+      "description": "Turn any website, video, image, or WebGL shader into a live Windows wallpaper. Free, open-source C#/.NET 8 + WebView2 desktop app - a free alternative to Wallpaper Engine and Lively.",
+      "language": "C#",
+      "stars": 3,
+      "url": "https://github.com/NAME0x0/WebDesk",
+      "homepage": "https://webdesk-live.vercel.app",
+      "topics": [
+        "csharp",
+        "desktop-customization",
+        "dotnet",
+        "dotnet8",
+        "live-wallpaper",
+        "lively-wallpaper",
+        "open-source",
+        "shaders",
+        "wallpaper",
+        "wallpaper-engine",
+        "webview2",
+        "windows",
+        "winforms"
+      ],
+      "fork": false,
+      "archived": false,
+      "pushedAt": "2026-06-29T12:46:51Z",
+      "updatedAt": "2026-06-29T12:46:51Z"
+    },
+    {
+      "id": 1281361197,
+      "name": "AGI-Ledger",
+      "description": "An observatory of human belief about AGI - a permanent, version-controlled record of what people think AGI should be, rendered as an interactive 3D star map. Each take is a star.",
+      "language": "TypeScript",
+      "stars": 1,
+      "url": "https://github.com/NAME0x0/AGI-Ledger",
+      "homepage": "https://agi-ledger.vercel.app",
+      "topics": [
+        "agi",
+        "ai",
+        "ai-alignment",
+        "ai-safety",
+        "artificial-general-intelligence",
+        "data-visualization",
+        "nextjs",
+        "open-data",
+        "public-opinion",
+        "react-three-fiber",
+        "tailwindcss",
+        "threejs",
+        "typescript",
+        "webgl"
+      ],
+      "fork": false,
+      "archived": false,
+      "pushedAt": "2026-06-27T20:18:25Z",
+      "updatedAt": "2026-06-27T20:23:12Z"
+    },
+    {
+      "id": 943830504,
+      "name": "Terminus",
+      "description": "A Windows-based terminal designed to replace the full desktop, combining terminal and desktop features for a modern, efficient user experience.",
+      "language": "C++",
+      "stars": 1,
+      "url": "https://github.com/NAME0x0/Terminus",
+      "topics": [],
+      "fork": false,
+      "archived": false,
+      "pushedAt": "2026-06-22T12:45:44Z",
+      "updatedAt": "2026-06-22T12:45:48Z"
+    },
+    {
+      "id": 982834257,
+      "name": "NAME0x0.github.io",
+      "description": "Production source for a cinematic single-page portfolio built with Next.js, TypeScript, GSAP, and Three.js.",
+      "language": "TypeScript",
+      "stars": 1,
+      "url": "https://github.com/NAME0x0/NAME0x0.github.io",
+      "homepage": "https://name0x0.github.io/",
+      "topics": [
+        "github-pages",
+        "gsap",
+        "nextjs",
+        "portfolio",
+        "threejs",
+        "typescript"
+      ],
+      "fork": false,
+      "archived": false,
+      "pushedAt": "2026-06-17T16:10:57Z",
+      "updatedAt": "2026-06-17T16:11:17Z"
+    },
+    {
+      "id": 1151381043,
+      "name": "SMNTC",
+      "description": "Subject: Semantic Engine for Motion, Animation, and Numerical Topographic Interactivity & Composition. Objective: Abstracting WebGL complexity into a Tokenized Intent Schema.",
+      "language": "TypeScript",
+      "stars": 2,
+      "url": "https://github.com/NAME0x0/SMNTC",
+      "homepage": "https://smntc.vercel.app",
+      "topics": [],
+      "fork": false,
+      "archived": false,
+      "pushedAt": "2026-06-09T18:36:59Z",
+      "updatedAt": "2026-06-09T18:28:35Z"
     },
     {
       "id": 1235584609,
@@ -108,41 +261,6 @@
       "updatedAt": "2026-06-02T09:21:28Z"
     },
     {
-      "id": 890343109,
-      "name": "AVA",
-      "description": "Research and training stack for AVA — a tool-using, memory-aware virtual assistant targeting 4 GB VRAM. Spans custom transformers, verifier-RL, external memory, multi-domain benchmarks, and Gemma 4 inference optimization.",
-      "language": "Python",
-      "stars": 4,
-      "url": "https://github.com/NAME0x0/AVA",
-      "homepage": "https://name0x0.github.io/AVA/",
-      "topics": [
-        "4gb-vram",
-        "ai",
-        "benchmarks",
-        "distillation",
-        "edge-inference",
-        "external-memory",
-        "gemma",
-        "inference-optimization",
-        "int4",
-        "kv-cache-compression",
-        "llm",
-        "long-context",
-        "personal-assistant",
-        "quantization",
-        "recurrent-depth",
-        "reproducible-research",
-        "small-language-models",
-        "tool-use",
-        "verifier-rl",
-        "virtual-assistant"
-      ],
-      "fork": false,
-      "archived": false,
-      "pushedAt": "2026-05-20T13:50:07Z",
-      "updatedAt": "2026-05-20T13:52:26Z"
-    },
-    {
       "id": 1054231161,
       "name": "MALD",
       "description": "Native Rust PKM for markdown notes with local AI. Iced desktop GUI, terminal CLI, and TUI — semantic search and cited RAG chat via Ollama. Fully local.",
@@ -168,40 +286,6 @@
       "archived": false,
       "pushedAt": "2026-05-03T12:51:30Z",
       "updatedAt": "2026-05-20T04:01:14Z"
-    },
-    {
-      "id": 1160940922,
-      "name": "OMNI",
-      "description": "PERSPECTIVE v2 — A 1.05 trillion parameter sparse Mixture-of-Experts language model that runs on consumer hardware (4 GB VRAM + 32 GB RAM). Features O(1) perspective decay recurrence, 3D torus manifold routing, native ternary {-1,0,+1} weights, holographic distributed memory, and hard geometric safety constraints. Built in Rust.",
-      "language": "Rust",
-      "stars": 2,
-      "url": "https://github.com/NAME0x0/OMNI",
-      "topics": [
-        "ai-safety",
-        "consumer-hardware",
-        "deep-learning",
-        "efficient-inference",
-        "holographic-memory",
-        "language-model",
-        "llm",
-        "machine-learning",
-        "manifold-routing",
-        "mixture-of-experts",
-        "moe",
-        "neural-network",
-        "nlp",
-        "novel-architecture",
-        "on-device-ai",
-        "research",
-        "rust",
-        "sparse-models",
-        "ternary-weights",
-        "transformer"
-      ],
-      "fork": false,
-      "archived": false,
-      "pushedAt": "2026-02-20T18:47:59Z",
-      "updatedAt": "2026-05-15T14:54:21Z"
     },
     {
       "id": 943714855,
@@ -276,19 +360,6 @@
       "archived": false,
       "pushedAt": "2026-04-27T06:55:52Z",
       "updatedAt": "2026-04-27T06:56:39Z"
-    },
-    {
-      "id": 1151381043,
-      "name": "SMNTC",
-      "description": "Subject: Semantic Engine for Motion, Animation, and Numerical Topographic Interactivity & Composition. Objective: Abstracting WebGL complexity into a Tokenized Intent Schema.",
-      "language": "TypeScript",
-      "stars": 2,
-      "url": "https://github.com/NAME0x0/SMNTC",
-      "topics": [],
-      "fork": false,
-      "archived": false,
-      "pushedAt": "2026-03-04T10:17:15Z",
-      "updatedAt": "2026-04-07T16:38:21Z"
     },
     {
       "id": 1176882775,
@@ -366,24 +437,6 @@
       "archived": false,
       "pushedAt": "2025-08-29T12:47:03Z",
       "updatedAt": "2026-01-19T16:00:07Z"
-    },
-    {
-      "id": 912500800,
-      "name": "WebDesk",
-      "description": "A Windows desktop application that transforms web content into live wallpapers. Load local HTML/CSS/JS files as interactive desktop backgrounds with WebView2 integration. Perfect for dynamic wallpapers and web-based desktop customization.",
-      "language": "Python",
-      "stars": 3,
-      "url": "https://github.com/NAME0x0/WebDesk",
-      "topics": [
-        "desktop-customization",
-        "python3",
-        "wallpaper-engine",
-        "windows-application"
-      ],
-      "fork": false,
-      "archived": false,
-      "pushedAt": "2025-01-20T18:23:20Z",
-      "updatedAt": "2026-01-01T18:33:06Z"
     },
     {
       "id": 1109019176,
@@ -551,19 +604,6 @@
       "updatedAt": "2025-04-05T14:31:45Z"
     },
     {
-      "id": 943830504,
-      "name": "Terminus",
-      "description": "A Windows-based terminal designed to replace the full desktop, combining terminal and desktop features for a modern, efficient user experience.",
-      "language": "C++",
-      "stars": 1,
-      "url": "https://github.com/NAME0x0/Terminus",
-      "topics": [],
-      "fork": false,
-      "archived": false,
-      "pushedAt": "2025-03-07T11:00:54Z",
-      "updatedAt": "2025-03-07T11:00:57Z"
-    },
-    {
       "id": 889788016,
       "name": "QwikLabs",
       "description": "QwikLabs task for Introduction to Git and Github course for certification",
@@ -593,42 +633,42 @@
   "languageDistribution": [
     {
       "name": "Python",
-      "percentage": 29,
+      "percentage": 28,
       "color": "#3572A5"
     },
     {
       "name": "TypeScript",
-      "percentage": 16.1,
+      "percentage": 18.8,
       "color": "#3178c6"
     },
     {
       "name": "JavaScript",
-      "percentage": 16.1,
+      "percentage": 15.6,
       "color": "#f1e05a"
     },
     {
       "name": "Rust",
-      "percentage": 12.9,
+      "percentage": 12.5,
       "color": "#dea584"
     },
     {
       "name": "Unknown",
-      "percentage": 9.7,
+      "percentage": 9.4,
       "color": "#6e7681"
     },
     {
       "name": "CSS",
-      "percentage": 6.5,
+      "percentage": 6.3,
       "color": "#563d7c"
     },
     {
       "name": "HTML",
-      "percentage": 6.5,
+      "percentage": 6.3,
       "color": "#e34c26"
     },
     {
-      "name": "Jupyter Notebook",
-      "percentage": 3.2,
+      "name": "C#",
+      "percentage": 3.1,
       "color": "#6e7681"
     }
   ]

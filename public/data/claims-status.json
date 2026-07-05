@@ -1,0 +1,104 @@
+{
+  "verifiedAt": "2026-07-05T04:42:07.669Z",
+  "status": "verified",
+  "results": [
+    {
+      "id": "ava-arc-challenge",
+      "repo": "NAME0x0/AVA",
+      "expected": "82.0",
+      "where": "readme",
+      "status": "PASS"
+    },
+    {
+      "id": "ava-arc-easy",
+      "repo": "NAME0x0/AVA",
+      "expected": "92.0",
+      "where": "readme",
+      "status": "PASS"
+    },
+    {
+      "id": "ava-adapter-42mb",
+      "repo": "NAME0x0/AVA",
+      "expected": "42 MB",
+      "where": "readme",
+      "status": "PASS"
+    },
+    {
+      "id": "pantheon-brier",
+      "repo": "NAME0x0/Pantheon-Trades",
+      "expected": "0.149",
+      "where": "readme",
+      "status": "PASS"
+    },
+    {
+      "id": "pantheon-tests-python",
+      "repo": "NAME0x0/Pantheon-Trades",
+      "expected": "714",
+      "where": "readme",
+      "status": "PASS"
+    },
+    {
+      "id": "pantheon-tests-solidity",
+      "repo": "NAME0x0/Pantheon-Trades",
+      "expected": "65",
+      "where": "readme",
+      "status": "PASS"
+    },
+    {
+      "id": "omni-tests",
+      "repo": "NAME0x0/OMNI",
+      "expected": "243",
+      "where": "readme",
+      "status": "PASS"
+    },
+    {
+      "id": "ava-mmlu",
+      "repo": "NAME0x0/AVA",
+      "expected": "59.2",
+      "where": "readme",
+      "status": "PASS"
+    },
+    {
+      "id": "ava-gsm8k",
+      "repo": "NAME0x0/AVA",
+      "expected": "35.3 / 44.0",
+      "where": "readme",
+      "status": "PASS"
+    },
+    {
+      "id": "ava-train-peak-vram",
+      "repo": "NAME0x0/AVA",
+      "expected": "1.81 GB",
+      "where": "readme",
+      "status": "PASS"
+    },
+    {
+      "id": "pantheon-human-brier",
+      "repo": "NAME0x0/Pantheon-Trades",
+      "expected": "0.126",
+      "where": "readme",
+      "status": "PASS"
+    },
+    {
+      "id": "pantheon-llm-brier",
+      "repo": "NAME0x0/Pantheon-Trades",
+      "expected": "0.260",
+      "where": "readme",
+      "status": "PASS"
+    },
+    {
+      "id": "omni-active-params",
+      "repo": "NAME0x0/OMNI",
+      "expected": "14.95B",
+      "where": "readme",
+      "status": "PASS"
+    },
+    {
+      "id": "omni-projected-throughput",
+      "repo": "NAME0x0/OMNI",
+      "expected": "~10-11 tok/s",
+      "where": "readme",
+      "status": "PASS"
+    }
+  ]
+}

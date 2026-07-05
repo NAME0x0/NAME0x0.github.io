@@ -2,8 +2,9 @@
   curatedProjectOverrides,
   languageColors,
   layerKeywords,
-  SOVEREIGN_STACK,
+  projectLayerDefinitions,
 } from "@/lib/data/curated";
+import { sanitizeText } from "@/lib/github/sanitize";
 import type {
   GitHubRepository,
   LanguageShare,
@@ -14,22 +15,29 @@ import type {
 } from "@/lib/github/types";
 
 function cleanText(input: string): string {
-  return input
+  return sanitizeText(
+    input
     .replace(/â€”/g, "—")
     .replace(/â€“/g, "–")
     .replace(/â€˜|â€™/g, "'")
     .replace(/â€œ|â€/g, "\"")
     .replace(/Â·/g, "·")
     .replace(/Â/g, "")
-    .trim();
+    .trim(),
+  );
 }
 
 function pickLayerFromContent(repo: GitHubRepository): ProjectLayer {
-  const haystack = [repo.name, repo.description, repo.language, ...repo.topics]
+  const haystack = [
+    sanitizeText(repo.name),
+    sanitizeText(repo.description),
+    sanitizeText(repo.language),
+    ...repo.topics.map(sanitizeText),
+  ]
     .join(" ")
     .toLowerCase();
 
-  for (const layer of SOVEREIGN_STACK.map((entry) => entry.layer)) {
+  for (const layer of projectLayerDefinitions.map((entry) => entry.layer)) {
     const keywords = layerKeywords[layer] ?? [];
     if (keywords.some((token) => haystack.includes(token))) {
       return layer;
@@ -52,14 +60,18 @@ function pickLayerFromContent(repo: GitHubRepository): ProjectLayer {
 }
 
 export function toPortfolioRepo(repo: GitHubRepository, source: PortfolioDataSource): PortfolioRepo {
-  const override = curatedProjectOverrides[repo.name];
+  const sanitizedName = sanitizeText(repo.name);
+  const sanitizedTopics = (repo.topics ?? []).map(sanitizeText).filter(Boolean);
+  const override = curatedProjectOverrides[sanitizedName] ?? curatedProjectOverrides[repo.name];
+  const overrideTopics = (override?.topics ?? []).map(sanitizeText).filter(Boolean);
 
   return {
     ...repo,
+    name: sanitizedName,
     description: cleanText((override?.description ?? repo.description ?? "").trim()),
-    language: override?.language ?? repo.language ?? "Unknown",
+    language: sanitizeText(override?.language ?? repo.language ?? "Unknown"),
     homepage: override?.homepage ?? repo.homepage,
-    topics: [...new Set([...(repo.topics ?? []), ...(override?.topics ?? [])])],
+    topics: [...new Set([...sanitizedTopics, ...overrideTopics])],
     layer: override?.layer ?? pickLayerFromContent(repo),
     featured: override?.featured ?? false,
     source,
@@ -134,7 +146,10 @@ export function toPortfolioDataset(
   const repositories = normalizeRepositories(input.repositories, source);
   const languageDistribution =
     input.languageDistribution && input.languageDistribution.length > 0
-      ? input.languageDistribution
+      ? input.languageDistribution.map((row) => ({
+          ...row,
+          name: sanitizeText(row.name),
+        }))
       : buildLanguageDistribution(repositories);
 
   return {

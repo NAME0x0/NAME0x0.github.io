@@ -1,45 +1,18 @@
-import { MetadataRoute } from "next";
+import type { MetadataRoute } from "next";
+import { tierOneProjects } from "@/lib/content/projects";
+import { getAllPosts } from "@/lib/content/writing";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://name0x0.vercel.app";
   const lastModified = new Date();
+  const staticRoutes = ["/", "/work", "/writing", "/photos", "/about", "/now", "/cv"];
+  const workRoutes = tierOneProjects.map((project) => `/work/${project.slug}`);
+  const writingRoutes = getAllPosts().map((post) => `/writing/${post.slug}`);
 
-  return [
-    {
-      url: baseUrl,
-      lastModified,
-      changeFrequency: "weekly",
-      priority: 1,
-    },
-    {
-      url: `${baseUrl}/#hero`,
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/#projects`,
-      lastModified,
-      changeFrequency: "daily",
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/#stack`,
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/#about`,
-      lastModified,
-      changeFrequency: "weekly",
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/#contact`,
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 0.6,
-    },
-  ];
+  return [...staticRoutes, ...workRoutes, ...writingRoutes].map((route) => ({
+    url: `${baseUrl}${route === "/" ? "" : route}`,
+    lastModified,
+    changeFrequency: "weekly",
+    priority: route === "/" ? 1 : 0.8,
+  }));
 }

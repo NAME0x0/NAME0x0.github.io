@@ -1,4 +1,22 @@
 /** @type {import('next').NextConfig} */
+// 'unsafe-inline' for script-src is a documented compromise: SSG pages cannot carry per-request nonces, and hashing Next's own inline RSC scripts is not maintainable.
+// 'wasm-unsafe-eval' permits WebAssembly ONLY (not JS eval) — required by the
+// meshopt decoder that unpacks the compressed GLB; blob: in connect-src/img-src
+// covers GLTFLoader's same-document object URLs for embedded textures.
+const contentSecurityPolicy = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://va.vercel-scripts.com",
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob: https://avatars.githubusercontent.com",
+  "font-src 'self'",
+  "connect-src 'self' blob: https://api.github.com https://va.vercel-scripts.com",
+  "frame-ancestors 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "object-src 'none'",
+  "upgrade-insecure-requests",
+].join("; ");
+
 const nextConfig = {
   // Deployed on Vercel: full Next.js (Route Handlers + ISR), no static export.
   images: {
@@ -16,6 +34,39 @@ const nextConfig = {
   poweredByHeader: false,
   compress: true,
   generateEtags: true,
+  async headers() {
+    return [
+      {
+        source: "/(.*)",
+        headers: [
+          {
+            key: "Content-Security-Policy",
+            value: contentSecurityPolicy,
+          },
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=63072000; includeSubDomains; preload",
+          },
+          {
+            key: "X-Content-Type-Options",
+            value: "nosniff",
+          },
+          {
+            key: "Referrer-Policy",
+            value: "strict-origin-when-cross-origin",
+          },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=(), interest-cohort=()",
+          },
+          {
+            key: "X-Frame-Options",
+            value: "DENY",
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;
