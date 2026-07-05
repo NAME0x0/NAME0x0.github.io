@@ -21,7 +21,6 @@ export function Folder({ photos, className = "", labelClassName = "text-soot", o
   return (
     <TransitionLink
       href="/photos"
-      aria-label="Open photo gallery"
       onClick={onNavigate}
       className={`group inline-flex flex-col items-start gap-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bone ${className}`}
     >
