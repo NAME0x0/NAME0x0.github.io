@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import type { Identity, Project, ProjectMetric } from "@/lib/content/schema";
 
@@ -21,6 +22,8 @@ type TerminalLine = {
   tone?: Tone;
   href?: string;
   hrefLabel?: string;
+  image?: string;
+  imageAlt?: string;
 };
 
 type OutputBlock = {
@@ -299,12 +302,12 @@ export function Terminal({ identity, projects }: TerminalProps) {
           lines = helpLines;
           break;
         case "whoami":
-          // TODO(owner): swap in photo asset.
           lines = [
+            { text: "", image: "/photos/pfp_1.jpg", imageAlt: `${identity.name} — ${identity.handle}` },
             { text: `${identity.name} — ${identity.handle}` },
             { text: identity.role },
             { text: identity.location },
-            { text: "photo pending. imagine someone who benchmarks at 3 a.m.", tone: "dim" },
+            { text: "yes, that photo was taken at 3 a.m. benchmarking something.", tone: "dim" },
           ];
           break;
         case "ls":
@@ -547,11 +550,23 @@ export function Terminal({ identity, projects }: TerminalProps) {
                   <span>{block.command}</span>
                 </p>
               ) : null}
-              {block.lines.map((line, index) => (
-                <p key={`${block.id}-${index}`} className={toneClass(line.tone)}>
-                  {renderLinkedText(line)}
-                </p>
-              ))}
+              {block.lines.map((line, index) =>
+                line.image ? (
+                  <Image
+                    key={`${block.id}-${index}`}
+                    src={line.image}
+                    alt={line.imageAlt ?? ""}
+                    width={96}
+                    height={96}
+                    unoptimized
+                    className="my-1 h-24 w-24 border border-faint object-cover grayscale contrast-125"
+                  />
+                ) : (
+                  <p key={`${block.id}-${index}`} className={toneClass(line.tone)}>
+                    {renderLinkedText(line)}
+                  </p>
+                ),
+              )}
             </div>
           ))}
           <div className="flex min-w-0 items-center">
