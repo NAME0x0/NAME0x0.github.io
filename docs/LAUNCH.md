@@ -2,6 +2,11 @@
 
 The site is ready when the acceptance checklist in docs/BRIEF.md §8 is green. This file is what YOU do around the launch. Work top to bottom.
 
+## Known post-launch tracking items
+
+- **Next.js 15 migration (security).** The site ships on Next 14.2.35 (latest 14.x). `npm audit` reports several HIGH advisories against 14.2.x, but every one targets a feature this site does not use — middleware (none), rewrites (none), or the image optimizer (`images.unoptimized: true`, no `remotePatterns`). None are exploitable in this configuration; they are only *patched* in Next 15, whose major-version breaking changes (async `params`/`headers`, caching defaults, React 19) were judged too risky to rush at launch. CI therefore gates on `critical` (zero) while printing `high` for visibility. Plan the Next 15 bump as a deliberate post-launch task, then restore the `--audit-level=high` gate.
+- **Card rest orientation / film polish** — see the film open items; needs a real-GPU pass.
+
 ## Pre-launch (before merging rebuild/machine to main)
 
 - [ ] Full film pass on your own GPU: `npm run build && npm start`, scroll `/?film=force` slowly end-to-end. Judge: boundary smoothness, card rest orientation (known open item), fan spin in ch6, power-down.
