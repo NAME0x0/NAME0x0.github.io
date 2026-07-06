@@ -5,11 +5,11 @@
 // covers GLTFLoader's same-document object URLs for embedded textures.
 const contentSecurityPolicy = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://va.vercel-scripts.com",
+  "script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://va.vercel-scripts.com https://vitals.vercel-insights.com",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https://avatars.githubusercontent.com",
   "font-src 'self'",
-  "connect-src 'self' blob: https://api.github.com https://va.vercel-scripts.com",
+  "connect-src 'self' blob: https://api.github.com https://va.vercel-scripts.com https://vitals.vercel-insights.com",
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",
