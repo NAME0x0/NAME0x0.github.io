@@ -78,6 +78,12 @@ jobs:
           </body>
           </html>
           HTML
+          # Links to github.io were shared before the move, including deep ones.
+          # Without a 404.html those hit GitHub's bare error page. The old Pages
+          # site had entirely different routes, so forwarding the path would
+          # mostly land on a 404 at the far end -- send everything to the root
+          # of the canonical host instead, which always resolves.
+          cp _site/index.html _site/404.html
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
