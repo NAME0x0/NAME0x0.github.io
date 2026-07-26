@@ -17,7 +17,7 @@
 | Case-study pages, post-v1 content drops | MALD, WebDesk, pane (each gated on owner-supplied war stories) |
 | /writing at launch | Triton-on-Windows post (migrated from existing gist) |
 | /writing post-launch | QLoRA-on-4GB post; OMNI bandwidth-model essay |
-| Domain | No custom domain in v1. Canonical: `name0x0.vercel.app`. `name0x0.github.io` 301s to it. **Line item: buy custom domain (name0x0.dev already in package.json metadata) before any public launch campaign** — redirect equity transfers cleanly |
+| Domain | Canonical: `portfolio.afsah.xyz` (afsah.xyz registered at Porkbun, `portfolio` CNAME → Vercel). `name0x0.vercel.app` 308s to it via a host-matched rule in `next.config.mjs`; `name0x0.github.io` bounces via the Pages stub. Root `afsah.xyz` reserved for a separate landing page |
 | Hosting | Vercel primary; GitHub Pages repo becomes redirect stub |
 | Scroll/animation | Lenis + Framer Motion; port AGI-Ledger particle-morph patterns (verified in source: MeshSurfaceSampler → single particle buffer, custom point shader dissolve, canvas glow sprite, `frameloop="never"` when inactive, DPR capped 1.25–1.5 via PerformanceMonitor) |
 | Analytics | Vercel Analytics only; funnel events per §7 of master prompt; documented in `docs/ANALYTICS.md` |

@@ -1,8 +1,9 @@
 import { getAllPosts } from "@/lib/content/writing";
+import { SITE_URL } from "@/lib/site";
 
 export const dynamic = "force-static";
 
-const siteUrl = "https://name0x0.vercel.app";
+const siteUrl = SITE_URL;
 
 function escapeXml(value: string): string {
   return value

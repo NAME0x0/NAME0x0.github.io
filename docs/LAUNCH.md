@@ -31,11 +31,11 @@ GitHub Actions shared runners give Lighthouse inconsistent CPU, so a single-run 
 
 ## Launch
 
-- [ ] Merge to main → production deploy on name0x0.vercel.app.
-- [ ] github.io redirect: the GitHub Pages surface cannot serve real 301s. Options, pick one:
-  1. Replace Pages content with a stub page: meta refresh + `<link rel="canonical" href="https://name0x0.vercel.app/">` + a visible link. (Do this at minimum.)
-  2. Better: buy the custom domain (name0x0.dev is already in package metadata history), point it at Vercel, and make it canonical — then both vercel.app and github.io defer to it. Redirect equity transfers cleanly whenever you do this; before any public campaign is the right time.
-- [ ] Search Console: add the property, submit sitemap.xml.
+- [x] Merge to main → production deploy on Vercel.
+- [x] Custom domain: `portfolio.afsah.xyz` (afsah.xyz at Porkbun; explicit `portfolio` CNAME → `0fbebf97c52ff01e.vercel-dns-017.com`, which overrides the `*.afsah.xyz` parking wildcard). Canonical everywhere via `lib/site.ts`.
+- [x] `name0x0.vercel.app` → 308 to the canonical host (host-matched redirect in `next.config.mjs`; preview deploys unaffected).
+- [x] `name0x0.github.io` → Pages stub points at the canonical host directly (Pages cannot serve real 301s; meta refresh + `location.replace` is the ceiling).
+- [ ] Search Console: add `portfolio.afsah.xyz` as the property, submit sitemap.xml. Keep the old properties registered until their traffic drops to zero so the redirects are observed.
 - [ ] Link-preview test: paste /, /work/ava, /writing/triton-fla-bitsandbytes-windows into WhatsApp/Discord/X — OG images should render with status labels.
 
 ## Distribution (the 6–18 month campaign)

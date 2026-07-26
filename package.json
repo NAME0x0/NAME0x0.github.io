@@ -31,7 +31,7 @@
     "type": "git",
     "url": "https://github.com/NAME0x0/NAME0x0.github.io.git"
   },
-  "homepage": "https://name0x0.vercel.app",
+  "homepage": "https://portfolio.afsah.xyz",
   "dependencies": {
     "@gsap/react": "^2.1.2",
     "@heroicons/react": "^2.2.0",

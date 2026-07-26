@@ -1,8 +1,11 @@
 name: CI + Pages redirect stub
 
-# The portfolio is deployed on Vercel (name0x0.vercel.app). GitHub Pages now
-# only serves a redirect stub so the legacy https://NAME0x0.github.io link keeps
-# working and bounces to the Vercel deployment.
+# The portfolio is deployed on Vercel and canonical at portfolio.afsah.xyz.
+# GitHub Pages now only serves a redirect stub so the legacy
+# https://NAME0x0.github.io link keeps working and bounces to the live site.
+# Pages cannot issue a real 301, so meta refresh + location.replace is the
+# ceiling here; the stub points straight at the canonical host to avoid
+# chaining through the retired name0x0.vercel.app redirect.
 
 on:
   pull_request:
@@ -62,16 +65,16 @@ jobs:
           <head>
             <meta charset="utf-8">
             <title>Redirecting…</title>
-            <link rel="canonical" href="https://name0x0.vercel.app/">
-            <meta http-equiv="refresh" content="0; url=https://name0x0.vercel.app/">
+            <link rel="canonical" href="https://portfolio.afsah.xyz/">
+            <meta http-equiv="refresh" content="0; url=https://portfolio.afsah.xyz/">
             <meta name="robots" content="noindex">
             <style>html{background:#000;color:#E8E4DE;font-family:system-ui,sans-serif}</style>
             <script>
-              location.replace("https://name0x0.vercel.app/" + location.search + location.hash);
+              location.replace("https://portfolio.afsah.xyz/" + location.search + location.hash);
             </script>
           </head>
           <body>
-            Redirecting to <a href="https://name0x0.vercel.app/">name0x0.vercel.app</a>…
+            Redirecting to <a href="https://portfolio.afsah.xyz/">portfolio.afsah.xyz</a>…
           </body>
           </html>
           HTML

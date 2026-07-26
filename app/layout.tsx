@@ -3,6 +3,7 @@ import { Manrope, Space_Grotesk } from "next/font/google";
 import { GeistMono } from "geist/font/mono";
 import { Analytics } from "@vercel/analytics/next";
 import { identity } from "@/content/identity";
+import { SITE_URL } from "@/lib/site";
 import { CursorDot } from "@/components/site/CursorDot";
 import { Footer } from "@/components/site/Footer";
 import { FluidInkMount } from "@/components/site/FluidInkMount";
@@ -27,7 +28,7 @@ const manrope = Manrope({
 
 const monoFont = GeistMono;
 
-const siteUrl = "https://name0x0.vercel.app";
+const siteUrl = SITE_URL;
 const siteDescription =
   "Systems & ML engineer. I build machines that think, on hardware that shouldn't be able to.";
 
