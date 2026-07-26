@@ -34,6 +34,19 @@ const nextConfig = {
   poweredByHeader: false,
   compress: true,
   generateEtags: true,
+  // The .vercel.app production hostname is system-assigned and cannot be set to
+  // redirect from the dashboard, so the old canonical is retired here instead.
+  // Host-matched, so preview deployments (*-git-*.vercel.app) are unaffected.
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "name0x0.vercel.app" }],
+        destination: "https://portfolio.afsah.xyz/:path*",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {
